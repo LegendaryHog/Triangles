@@ -15,9 +15,9 @@ namespace
 
 
 enum LocPoints {
-    In_Same = 1,
-    In_Different = -1,
-    On_Line = 0,
+    InSame = 1,
+    InDifferent = -1,
+    OnLine = 0,
 };
 
 LocPoints laying_in_same_half(const Point& A, const Point& B, const Point& C, const Point& D)
@@ -27,11 +27,11 @@ LocPoints laying_in_same_half(const Point& A, const Point& B, const Point& C, co
     auto prod = scalar_product(vector_product(AB, AC), vector_product(AB, AD));
 
     if (cmp::are_equal(prod, 0.0))
-        return LocPoints::On_Line;
+        return LocPoints::OnLine;
     else if (prod > 0.0)
-        return  LocPoints::In_Same;
+        return  LocPoints::InSame;
     else
-        return LocPoints::In_Different;
+        return LocPoints::InDifferent;
 }
 
 bool point_belong_triangle(const Point& point_A, const Triangle& tr)
@@ -39,9 +39,9 @@ bool point_belong_triangle(const Point& point_A, const Triangle& tr)
     if (magic_product(tr.P(), tr.Q(), tr.R(), point_A) != Loc3D::On)
         return false;
     
-    return laying_in_same_half(tr.P(), tr.Q(), tr.R(), point_A) != LocPoints::In_Different &&
-           laying_in_same_half(tr.Q(), tr.R(), tr.P(), point_A) != LocPoints::In_Different &&
-           laying_in_same_half(tr.R(), tr.P(), tr.Q(), point_A) != LocPoints::In_Different;
+    return laying_in_same_half(tr.P(), tr.Q(), tr.R(), point_A) != LocPoints::InDifferent &&
+           laying_in_same_half(tr.Q(), tr.R(), tr.P(), point_A) != LocPoints::InDifferent &&
+           laying_in_same_half(tr.R(), tr.P(), tr.Q(), point_A) != LocPoints::InDifferent;
 }
 
 bool are_intersecting(const Segment& seg1, const Segment& seg2)
@@ -72,8 +72,8 @@ bool are_intersecting(const Segment& seg1, const Segment& seg2)
         return prod_B1A2_B2A1 > 0.0 || cmp::are_equal(prod_B1A2_B2A1, 0.0); 
     }
 
-    return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != LocPoints::In_Same &&
-           laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != LocPoints::In_Same;
+    return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != LocPoints::InSame &&
+           laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != LocPoints::InSame;
 }
 
 bool seg_tr_intersecting_2D(const Segment& seg, const Triangle& tr)
@@ -148,15 +148,15 @@ void space_transformation (Triangle &tr_1, Triangle &tr_2)
 }
 
 enum class Case {       //   3^1     3^0
-    Point_n_Point       = 0 * 3 + 0 * 1,
-    Point_n_Segment     = 0 * 3 + 1 * 1,
-    Point_n_Triangle    = 0 * 3 + 2 * 1,
-    Segment_n_Point     = 1 * 3 + 0 * 1,
-    Segment_n_Segment   = 1 * 3 + 1 * 1,
-    Segment_n_Triangle  = 1 * 3 + 2 * 1,
-    Triangle_n_Point    = 2 * 3 + 0 * 1,
-    Triangle_n_Segment  = 2 * 3 + 1 * 1,
-    Triangle_n_Triangle = 2 * 3 + 2 * 1,
+    PointnPoint       = 0 * 3 + 0 * 1,
+    PointAndSegment     = 0 * 3 + 1 * 1,
+    PointAndTriangle    = 0 * 3 + 2 * 1,
+    SegmentAndPoint     = 1 * 3 + 0 * 1,
+    SegmentAndSegment   = 1 * 3 + 1 * 1,
+    SegmentAndTriangle  = 1 * 3 + 2 * 1,
+    TriangleAndPoint    = 2 * 3 + 0 * 1,
+    TriangleAndSegment  = 2 * 3 + 1 * 1,
+    TriangleAndTriangle = 2 * 3 + 2 * 1,
 };
 
 Case case_of_intersection(const Triangle& tr1, const Triangle& tr2)
@@ -337,23 +337,23 @@ bool are_intersecting (const Triangle &tr_1, const Triangle &tr_2)
 {
     switch(case_of_intersection(tr_1, tr_2))
     {
-        case Case::Point_n_Point:
+        case Case::PointAndPoint:
             return tr_1.P() == tr_2.P();
-        case Case::Point_n_Segment:
+        case Case::PointAndSegment:
             return point_belong_segment(tr_1.P(), Segment {tr_2});
-        case Case::Point_n_Triangle:
+        case Case::PointAndTriangle:
             return point_belong_triangle(tr_1.P(), tr_2);
-        case Case::Segment_n_Point:
+        case Case::SegmentAndPoint:
             return point_belong_segment(tr_2.P(), Segment {tr_1});
-        case Case::Segment_n_Segment:
+        case Case::SegmentAndSegment:
             return are_intersecting(Segment {tr_1}, Segment {tr_2});
-        case Case::Segment_n_Triangle:
+        case Case::SegmentAndTriangle:
             return segment_and_triangle_intersecting(Segment {tr_1}, tr_2);
-        case Case::Triangle_n_Point:
+        case Case::TriangleAndPoint:
             return point_belong_triangle(tr_2.P(), tr_1);
-        case Case::Triangle_n_Segment:
+        case Case::TriangleAndSegment:
             return segment_and_triangle_intersecting(Segment {tr_2}. tr_1);
-        case Case::Triangle_n_Triangle:
+        case Case::TriangleAndTriangle:
         {
             auto P1_loc = magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.P());
             auto Q1_loc = magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.Q());

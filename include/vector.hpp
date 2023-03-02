@@ -1,6 +1,4 @@
-#ifndef INCLUDE_VECTOR_HPP
-#define INCLUDE_VECTOR_HPP
-
+#pragma once
 #include "double_comparison.hpp"
 #include "point.hpp"
 
@@ -151,5 +149,3 @@ inline bool are_orthogonal (const Vector &first, const Vector &second)
 }
 
 } // namespace Geom_Objects
-
-#endif // INCLUDE_VECTOR_HPP

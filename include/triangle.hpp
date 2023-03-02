@@ -1,6 +1,4 @@
-#ifndef INCLUDE_TRIANGLE_HPP
-#define INCLUDE_TRIANGLE_HPP
-
+#pragma once
 #include "point.hpp"
 #include "vector.hpp"
 
@@ -77,5 +75,3 @@ class Triangle
 };
 
 } // namespace Geom_Objects
-
-#endif // INCLUDE_TRIANGLE_HPP

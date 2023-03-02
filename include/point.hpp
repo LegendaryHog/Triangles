@@ -1,8 +1,5 @@
-#ifndef INCLUDE_POINT_HPP
-#define INCLUDE_POINT_HPP
-
+#pragma once
 #include "double_comparison.hpp"
-
 #include <cmath> // for std::sqrt
 #include <iostream>
 
@@ -109,5 +106,3 @@ inline Loc_2D magic_product (const Point &P, const Point &Q, const Point &M)
 }
 
 } // namespace Geom_Objects
-
-#endif // INCLUDE_POINT_HPP

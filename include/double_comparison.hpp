@@ -1,6 +1,4 @@
-#ifndef INCLUDE_DOUBLE_COMPARISON_HPP
-#define INCLUDE_DOUBLE_COMPARISON_HPP
-
+#pragma once
 #include <algorithm>
 #include <cmath>
 
@@ -21,5 +19,3 @@ inline bool are_equal (const double first, const double second, const double zer
 }
 
 } // namespace cmp
-
-#endif // INCLUDE_DOUBLE_COMPARISON_HPP

@@ -6,7 +6,7 @@
 
 namespace Geometry{
 
-enum Tr_Type {
+enum TriangleType {
     Triangle_ = 2,
     Segment_ = 1,
     Point_ = 0,
@@ -16,7 +16,7 @@ enum Tr_Type {
 class Triangle
 {
     Point P_, Q_, R_;
-    Tr_Type type_;
+    TriangleType type_;
 
     public:
     Triangle (const Point &P, const Point &Q, const Point &R) : P_ {P}, Q_ {Q}, R_ {R}, type_ {type_calc()} {}
@@ -26,7 +26,7 @@ class Triangle
         return (P_ == rhs.P_ && Q_ == rhs.Q_ && R_ == rhs.R_);
     }
 
-    Tr_Type type() const & {return type_;};
+    TriangleType type() const & {return type_;};
 
     void swap_QR () { std::swap (Q_, R_); }
 
@@ -53,14 +53,14 @@ class Triangle
     }
 
     private:
-    Tr_Type type_calc() const
+    TriangleType type_calc() const
     {
         if (is_point())
-            return Tr_Type::Point_;
+            return TriangleType::Point_;
         else if (is_segment())
-            return Tr_Type::Segment_;
+            return TriangleType::Segment_;
         else
-            return Tr_Type::Triangle_;
+            return TriangleType::Triangle_;
     }
 
     public:

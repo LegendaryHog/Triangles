@@ -23,7 +23,7 @@ struct Segment {
     Segment(const Triangle& tr)
     {
         #ifndef RELEASE
-        if (tr.type() != Tr_Type::Segment_)
+        if (tr.type() != TriangleType::Segment_)
             throw std::logic_error{"In ctor Segmnet by Triangle type of Triangle isnt Segemnt_"};
         #endif
 

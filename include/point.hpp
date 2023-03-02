@@ -45,14 +45,14 @@ inline double distance (const Point &first, const Point &second)
     }
 }
 
-enum class Loc_3D
+enum class Loc3D
 {
     Below = -1,
     On    = 0,
     Above = 1
 };
 
-enum Loc_2D
+enum Loc2D
 {
     Negative = -1,
     Neutral  = 0,
@@ -70,7 +70,7 @@ enum Loc_2D
  * with initial point Q and terminal point M, v_RM - vector
  * with initial point R and terminal point M.
  */
-inline Loc_3D magic_product (const Point &P, const Point &Q, const Point &R, const Point &M)
+inline Loc3D magic_product (const Point &P, const Point &Q, const Point &R, const Point &M)
 {
     auto elem_21 = M.x_ - Q.x_;
     auto elem_22 = M.y_ - Q.y_;
@@ -85,23 +85,23 @@ inline Loc_3D magic_product (const Point &P, const Point &Q, const Point &R, con
                    (M.z_ - P.z_) * (elem_21 * elem_32 - elem_22 * elem_31);
 
     if (Cmp::are_equal (product, 0.0))
-        return Loc_3D::On;
+        return Loc3D::On;
     else if (product > 0)
-        return Loc_3D::Above;
+        return Loc3D::Above;
     else
-        return Loc_3D::Below;
+        return Loc3D::Below;
 }
 
-inline Loc_2D magic_product (const Point &P, const Point &Q, const Point &M)
+inline Loc2D magic_product (const Point &P, const Point &Q, const Point &M)
 {
     auto product = (P.x_ - M.x_) * (Q.y_ - M.y_) - (P.y_ - M.y_) * (Q.x_ - M.x_);
     //  Positive product is considered when points locate in counterclockwise ordering
     if (Cmp::are_equal (product, 0.0))
-        return Loc_2D::Neutral;
+        return Loc2D::Neutral;
     else if (product > 0)
-        return Loc_2D::Positive;
+        return Loc2D::Positive;
     else
-        return Loc_2D::Negative;
+        return Loc2D::Negative;
 }
 
 } // namespace Geometry

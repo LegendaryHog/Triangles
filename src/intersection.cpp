@@ -14,34 +14,34 @@ namespace
 #endif // ALGORITHM_TESTING
 
 
-enum Loc_Points {
+enum LocPoints {
     In_Same = 1,
     In_Different = -1,
     On_Line = 0,
 };
 
-Loc_Points laying_in_same_half(const Point& A, const Point& B, const Point& C, const Point& D)
+LocPoints laying_in_same_half(const Point& A, const Point& B, const Point& C, const Point& D)
 {
     Vector AB {A, B}, AC {A, C}, AD {A, D};
 
     auto prod = scalar_product(vector_product(AB, AC), vector_product(AB, AD));
 
     if (cmp::are_equal(prod, 0.0))
-        return Loc_Points::On_Line;
+        return LocPoints::On_Line;
     else if (prod > 0.0)
-        return  Loc_Points::In_Same;
+        return  LocPoints::In_Same;
     else
-        return Loc_Points::In_Different;
+        return LocPoints::In_Different;
 }
 
 bool point_belong_triangle(const Point& point_A, const Triangle& tr)
 {
-    if (magic_product(tr.P(), tr.Q(), tr.R(), point_A) != Loc_3D::On)
+    if (magic_product(tr.P(), tr.Q(), tr.R(), point_A) != Loc3D::On)
         return false;
     
-    return laying_in_same_half(tr.P(), tr.Q(), tr.R(), point_A) != Loc_Points::In_Different &&
-           laying_in_same_half(tr.Q(), tr.R(), tr.P(), point_A) != Loc_Points::In_Different &&
-           laying_in_same_half(tr.R(), tr.P(), tr.Q(), point_A) != Loc_Points::In_Different;
+    return laying_in_same_half(tr.P(), tr.Q(), tr.R(), point_A) != LocPoints::In_Different &&
+           laying_in_same_half(tr.Q(), tr.R(), tr.P(), point_A) != LocPoints::In_Different &&
+           laying_in_same_half(tr.R(), tr.P(), tr.Q(), point_A) != LocPoints::In_Different;
 }
 
 bool are_intersecting(const Segment& seg1, const Segment& seg2)
@@ -72,8 +72,8 @@ bool are_intersecting(const Segment& seg1, const Segment& seg2)
         return prod_B1A2_B2A1 > 0.0 || cmp::are_equal(prod_B1A2_B2A1, 0.0); 
     }
 
-    return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != Loc_Points::In_Same &&
-           laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != Loc_Points::In_Same;
+    return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != LocPoints::In_Same &&
+           laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != LocPoints::In_Same;
 }
 
 bool seg_tr_intersecting_2D(const Segment& seg, const Triangle& tr)
@@ -107,10 +107,10 @@ bool segment_and_triangle_intersecting(const Segment& seg, const Triangle& tr)
     auto F_loc = magic_product(tr.P(), tr.Q(), tr.R(), seg.F_);
     auto S_loc = magic_product(tr.P(), tr.Q(), tr.R(), seg.S_);
 
-    if (F_loc != Loc_3D::On && S_loc != Loc_3D::On && F_loc == S_loc)
+    if (F_loc != Loc3D::On && S_loc != Loc3D::On && F_loc == S_loc)
         return false;
 
-    if (F_loc == Loc_3D::On && S_loc == Loc_3D::On)
+    if (F_loc == Loc3D::On && S_loc == Loc3D::On)
         return seg_tr_intersecting_2D(seg, tr);
     else
         return seg_tr_intersecting_3D(seg, tr);
@@ -166,20 +166,20 @@ Case case_of_intersection(const Triangle& tr1, const Triangle& tr2)
 
 bool test_intersection_R1 (const Triangle &tr_1, const Triangle &tr_2)
 {
-    if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc_2D::Negative)
+    if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc2D::Negative)
     {
-        return !(magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc_2D::Negative ||
-                 magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Loc_2D::Negative ||
-                 magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc_2D::Negative);
+        return !(magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc2D::Negative ||
+                 magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Loc2D::Negative ||
+                 magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc2D::Negative);
     }
     else 
     {
-        if (magic_product (tr_2.R(), tr_1.P(), tr_1.Q()) == Loc_2D::Negative)
+        if (magic_product (tr_2.R(), tr_1.P(), tr_1.Q()) == Loc2D::Negative)
             return false;
-        else if (magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) != Loc_2D::Negative)
+        else if (magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) != Loc2D::Negative)
             return true;
-        else if (magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc_2D::Negative ||
-                 magic_product (tr_1.Q(), tr_1.R(), tr_2.P()) == Loc_2D::Negative)
+        else if (magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc2D::Negative ||
+                 magic_product (tr_1.Q(), tr_1.R(), tr_2.P()) == Loc2D::Negative)
             return false;
         else
             return true;
@@ -188,35 +188,35 @@ bool test_intersection_R1 (const Triangle &tr_1, const Triangle &tr_2)
 
 bool test_intersection_R2 (const Triangle &tr_1, const Triangle &tr_2)
 {
-    if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc_2D::Negative)
+    if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc2D::Negative)
     {
-        if (magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc_2D::Negative)
+        if (magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc2D::Negative)
             return false;
-        else if (magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Loc_2D::Negative)
+        else if (magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Loc2D::Negative)
         {
-            return !(magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Loc_2D::Negative ||
-                     magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Loc_2D::Negative);
+            return !(magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Loc2D::Negative ||
+                     magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Loc2D::Negative);
         }
         else
-            return !(magic_product (tr_1.R(), tr_1.P(), tr_2.P()) == Loc_2D::Negative);
+            return !(magic_product (tr_1.R(), tr_1.P(), tr_2.P()) == Loc2D::Negative);
     }
     else
     {
-        if (magic_product (tr_2.Q(), tr_2.R(), tr_1.Q()) == Loc_2D::Negative)
+        if (magic_product (tr_2.Q(), tr_2.R(), tr_1.Q()) == Loc2D::Negative)
         {
-            return !(magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Loc_2D::Positive ||
-                     magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Loc_2D::Negative ||
-                     magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Loc_2D::Negative);
+            return !(magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Loc2D::Positive ||
+                     magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Loc2D::Negative ||
+                     magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Loc2D::Negative);
         }
         else
         {
-            if (magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) == Loc_2D::Negative)
+            if (magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) == Loc2D::Negative)
             {
-                return !(magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc_2D::Negative ||
-                         magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc_2D::Negative);
+                return !(magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Loc2D::Negative ||
+                         magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Loc2D::Negative);
             }
             else 
-                return !(magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Loc_2D::Positive);
+                return !(magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Loc2D::Positive);
         }
     }
 }
@@ -228,7 +228,7 @@ bool intersection_in_2D (const Triangle &tr_1_, const Triangle &tr_2_)
     space_transformation (tr_1, tr_2);
 
     //  if swap tr_2.Q() and tr_2.R()
-    if (magic_product (tr_2.P(), tr_2.Q(), tr_2.R()) == Loc_2D::Negative)
+    if (magic_product (tr_2.P(), tr_2.Q(), tr_2.R()) == Loc2D::Negative)
         tr_2.swap_QR ();
 
     auto P2_loc = magic_product (tr_1.P(), tr_1.Q(), tr_2.P()) *
@@ -236,49 +236,49 @@ bool intersection_in_2D (const Triangle &tr_1_, const Triangle &tr_2_)
                   magic_product (tr_1.R(), tr_1.P(), tr_2.P());
 
     //  interior of tr_2
-    if (P1_P2_Q2 == Loc_2D::Positive &&
-        P1_Q2_R2 == Loc_2D::Positive && 
-        P1_R2_P2 == Loc_2D::Positive)
+    if (P1_P2_Q2 == Loc2D::Positive &&
+        P1_Q2_R2 == Loc2D::Positive && 
+        P1_R2_P2 == Loc2D::Positive)
         return true;
-    else if (P1_loc == Loc_2D::Neutral &&
-            (sum_locs == Loc_2D::Is_vertice || sum_locs == Loc_2D::On_side))
+    else if (P1_loc == Loc2D::Neutral &&
+            (sum_locs == Loc2D::Is_vertice || sum_locs == Loc2D::On_side))
         return true;
-    else if (P1_loc == Loc_2D::Negative ||
-            ((P1_loc == Loc_2D::Neutral) && (sum_locs == Loc_2D::Neutral)))
+    else if (P1_loc == Loc2D::Negative ||
+            ((P1_loc == Loc2D::Neutral) && (sum_locs == Loc2D::Neutral)))
         return test_intersection_R1 (tr_1, tr_2);
     else
         return test_intersection_R2 (tr_1, tr_2);
 }
 
-void transform_triangle (Triangle &tr_1, const Loc_3D P1_loc, const Loc_3D Q1_loc, const Loc_3D R1_loc, Triangle &tr_2)
+void transform_triangle (Triangle &tr_1, const Loc3D P1_loc, const Loc3D Q1_loc, const Loc3D R1_loc, Triangle &tr_2)
 {
-    if (P1_loc == Loc_3D::Above)
+    if (P1_loc == Loc3D::Above)
     {
-        if (Q1_loc == Loc_3D::Above && R1_loc != Loc_3D::Above)
+        if (Q1_loc == Loc3D::Above && R1_loc != Loc3D::Above)
         {
             tr_1.swap_clockwise ();
             tr_2.swap_QR ();
         }
-        else if (Q1_loc != Loc_3D::Above && R1_loc == Loc_3D::Above)
+        else if (Q1_loc != Loc3D::Above && R1_loc == Loc3D::Above)
         {
             tr_1.swap_counterclockwise ();
             tr_2.swap_QR ();
         }
     }
-    else if (P1_loc == Loc_3D::On)
+    else if (P1_loc == Loc3D::On)
     {
-        if (Q1_loc == Loc_3D::Above && R1_loc == Loc_3D::Above)
+        if (Q1_loc == Loc3D::Above && R1_loc == Loc3D::Above)
             tr_2.swap_QR ();
-        else if (Q1_loc == Loc_3D::Above && R1_loc != Loc_3D::Above)
+        else if (Q1_loc == Loc3D::Above && R1_loc != Loc3D::Above)
             tr_1.swap_counterclockwise ();
-        else if (Q1_loc != Loc_3D::Above && R1_loc == Loc_3D::Above)
+        else if (Q1_loc != Loc3D::Above && R1_loc == Loc3D::Above)
             tr_1.swap_clockwise ();
-        else if (Q1_loc == Loc_3D::On && R1_loc == Loc_3D::Below)
+        else if (Q1_loc == Loc3D::On && R1_loc == Loc3D::Below)
         {
             tr_1.swap_clockwise ();
             tr_2.swap_QR ();
         }
-        else if (Q1_loc == Loc_3D::Below && R1_loc == Loc_3D::On)
+        else if (Q1_loc == Loc3D::Below && R1_loc == Loc3D::On)
         {
             tr_1.swap_counterclockwise ();
             tr_2.swap_QR ();
@@ -288,17 +288,17 @@ void transform_triangle (Triangle &tr_1, const Loc_3D P1_loc, const Loc_3D Q1_lo
     {
         if (Q1_loc == R1_loc)
             tr_2.swap_QR ();
-        else if (Q1_loc == Loc_3D::Below && R1_loc != Loc_3D::Below)
+        else if (Q1_loc == Loc3D::Below && R1_loc != Loc3D::Below)
             tr_1.swap_clockwise ();
-        else if (Q1_loc != Loc_3D::Below && R1_loc == Loc_3D::Below)
+        else if (Q1_loc != Loc3D::Below && R1_loc == Loc3D::Below)
             tr_1.swap_counterclockwise ();
         else
             tr_2.swap_QR ();
     }
 }
 
-bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc_3D P1_loc,
-                         const Loc_3D Q1_loc, const Loc_3D R1_loc)
+bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc3D P1_loc,
+                         const Loc3D Q1_loc, const Loc3D R1_loc)
 {
     Triangle tr_1 = tr_1_;
     Triangle tr_2 = tr_2_;
@@ -307,7 +307,7 @@ bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc
     auto Q2_loc = magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.Q());
     auto R2_loc = magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.R());
 
-    if (P2_loc != Loc_3D::On && P2_loc == Q2_loc && Q2_loc == R2_loc)
+    if (P2_loc != Loc3D::On && P2_loc == Q2_loc && Q2_loc == R2_loc)
         return false;
     else
     {
@@ -317,14 +317,14 @@ bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc
         auto new_P1_loc = magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.P());
         auto new_P2_loc = magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.P());
 
-        if (new_P1_loc == Loc_3D::On && new_P2_loc == Loc_3D::On)
+        if (new_P1_loc == Loc3D::On && new_P2_loc == Loc3D::On)
             return (tr_1.P() == tr_2.P());
         else
         {
             auto KJ_mut_pos = magic_product (tr_1.P(), tr_1.Q(), tr_2.P(), tr_2.Q());
             auto LI_mut_pos = magic_product (tr_1.P(), tr_1.R(), tr_2.P(), tr_2.R());
 
-            return (LI_mut_pos != Loc_3D::Below && KJ_mut_pos != Loc_3D::Above);
+            return (LI_mut_pos != Loc3D::Below && KJ_mut_pos != Loc3D::Above);
         }
     }
 }
@@ -359,9 +359,9 @@ bool are_intersecting (const Triangle &tr_1, const Triangle &tr_2)
             auto Q1_loc = magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.Q());
             auto R1_loc = magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.R());
 
-            if (P1_loc != Loc_3D::On && P1_loc == Q1_loc && Q1_loc == R1_loc)
+            if (P1_loc != Loc3D::On && P1_loc == Q1_loc && Q1_loc == R1_loc)
                 return false;
-            else if (P1_loc == Loc_3D::On && Q1_loc == Loc_3D::On && R1_loc == Loc_3D::On)
+            else if (P1_loc == Loc3D::On && Q1_loc == Loc3D::On && R1_loc == Loc3D::On)
                 return intersection_in_2D (tr_1, tr_2);
             else
                 return intersection_in_3D (tr_1, tr_2, P1_loc, Q1_loc, R1_loc);

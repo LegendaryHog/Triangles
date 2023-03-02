@@ -3,8 +3,7 @@
 #include <cmath> // for std::sqrt
 #include <iostream>
 
-namespace Geom_Objects
-{
+namespace Geometry{
 
 struct Point
 {
@@ -16,8 +15,8 @@ struct Point
 
     bool operator== (const Point &other) const
     {
-        return (cmp::are_equal (x_, other.x_) && cmp::are_equal (y_, other.y_) &&
-                cmp::are_equal (z_, other.z_));
+        return (Cmp::are_equal (x_, other.x_) && Cmp::are_equal (y_, other.y_) &&
+                Cmp::are_equal (z_, other.z_));
     }
 
     bool operator!= (const Point &other) const { return !(*this == other); }
@@ -85,7 +84,7 @@ inline Loc_3D magic_product (const Point &P, const Point &Q, const Point &R, con
                    (M.y_ - P.y_) * (elem_21 * elem_33 - elem_23 * elem_31) +
                    (M.z_ - P.z_) * (elem_21 * elem_32 - elem_22 * elem_31);
 
-    if (cmp::are_equal (product, 0.0))
+    if (Cmp::are_equal (product, 0.0))
         return Loc_3D::On;
     else if (product > 0)
         return Loc_3D::Above;
@@ -97,7 +96,7 @@ inline Loc_2D magic_product (const Point &P, const Point &Q, const Point &M)
 {
     auto product = (P.x_ - M.x_) * (Q.y_ - M.y_) - (P.y_ - M.y_) * (Q.x_ - M.x_);
     //  Positive product is considered when points locate in counterclockwise ordering
-    if (cmp::are_equal (product, 0.0))
+    if (Cmp::are_equal (product, 0.0))
         return Loc_2D::Neutral;
     else if (product > 0)
         return Loc_2D::Positive;
@@ -105,4 +104,4 @@ inline Loc_2D magic_product (const Point &P, const Point &Q, const Point &M)
         return Loc_2D::Negative;
 }
 
-} // namespace Geom_Objects
+} // namespace Geometry

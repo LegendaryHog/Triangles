@@ -3,8 +3,7 @@
 #include "point.hpp"
 #include "vector.hpp"
 
-namespace Geom_Objects
-{
+namespace Geometry{
 
 class Line
 {
@@ -99,4 +98,4 @@ inline bool in_plane (const Line &line1, const Line &line2)
     return are_parallel (line1, line2) || are_intersecting (line1, line2);
 }
 
-} //namespace Geom_Objects
+} //namespace Geometry

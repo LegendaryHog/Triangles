@@ -4,7 +4,7 @@
 #include "vector.hpp"
 #include "double_comparison.hpp"
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 TEST(IntersectionTest_2D, SpaceTransformation)
 {

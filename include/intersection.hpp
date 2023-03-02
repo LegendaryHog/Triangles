@@ -3,9 +3,9 @@
 #include "point.hpp"
 #include "vector.hpp"
 
-namespace Geom_Objects
+namespace Geometry
 {
 
 bool are_intersecting (Triangle &tr_1, Triangle &tr_2);
 
-} // namespace Geom_Objects
+} // namespace Geometry

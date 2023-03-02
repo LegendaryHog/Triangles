@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 TEST(Segment_, ctor_by_triangle)
 {

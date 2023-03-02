@@ -7,8 +7,7 @@
 #include "triangle.hpp"
 #include <iostream>
 
-namespace Geom_Objects
-{
+namespace Geometry{
 
 struct Segment {
     Point F_, S_;
@@ -65,4 +64,4 @@ inline bool point_belong_segment(const Point& point, const Segment& segment)
         return false;
 }
 
-} //namespace Geom_Objects
+} //namespace Geometry

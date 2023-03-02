@@ -4,8 +4,7 @@
 
 #include <algorithm> // for std::swap
 
-namespace Geom_Objects
-{
+namespace Geometry{
 
 enum Tr_Type {
     Triangle_ = 2,
@@ -74,4 +73,4 @@ class Triangle
     Point& R() & noexcept {return R_;}
 };
 
-} // namespace Geom_Objects
+} // namespace Geometry

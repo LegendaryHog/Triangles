@@ -7,8 +7,7 @@
 
 #include <stdexcept> //  std::invalid_argument
 
-namespace Geom_Objects
-{
+namespace Geometry{
 
 class Plane
 {
@@ -32,9 +31,9 @@ public:
         normal_ = {A, B, C};
         if (normal_.is_zero ())
             throw std::invalid_argument {"Zero vector was given to constructor of Plane\n"};
-        if (cmp::are_equal (A, 0.0))
+        if (Cmp::are_equal (A, 0.0))
         {
-            if (cmp::are_equal (B, 0.0))
+            if (Cmp::are_equal (B, 0.0))
                 origin_ = {0, 0, -D / C};
             else
                 origin_ = {0, -D / B, 0};
@@ -60,7 +59,7 @@ inline double distance (const Plane &pl, const Point &p) { return (distance (p, 
 
 inline bool is_belong (const Point &p, const Plane &pl)
 {
-    return cmp::are_equal (distance (p, pl), 0.0);
+    return Cmp::are_equal (distance (p, pl), 0.0);
 }
 
 //  block with Plane and Line
@@ -112,4 +111,4 @@ inline double distance (const Plane &pl1, const Plane &pl2)
     return std::abs (scalar_product (pl1.norm_vec (), diff));
 }
 
-} //  namespace Geom_Objects
+} //  namespace Geometry

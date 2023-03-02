@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 TEST (Triangles, Swap_QR)
 {

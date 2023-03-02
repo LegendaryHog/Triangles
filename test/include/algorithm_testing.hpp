@@ -4,7 +4,7 @@
 #include "triangle.hpp"
 #include "segment.hpp"
 
-namespace Geom_Objects
+namespace Geometry
 {
 
 enum Loc_Points {

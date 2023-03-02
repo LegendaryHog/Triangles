@@ -5,7 +5,7 @@
 
 #define ALGORITHM_TESTING
 
-namespace Geom_Objects
+namespace Geometry
 {
 
 #ifndef ALGORITHM_TESTING
@@ -369,4 +369,4 @@ bool are_intersecting (const Triangle &tr_1, const Triangle &tr_2)
     }
 }
 
-} // namespace Geom_Objects
+} // namespace Geometry

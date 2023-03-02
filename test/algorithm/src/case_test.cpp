@@ -2,7 +2,7 @@
 #include "algorithm_testing.hpp"
 #include <gtest/gtest.h>
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 TEST(Case_, case_of_intersection_)
 {

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace cmp
+namespace Cmp
 {
 
 constexpr double epsilon = 1e-6;

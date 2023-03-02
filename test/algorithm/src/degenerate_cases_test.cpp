@@ -2,7 +2,7 @@
 #include "algorithm_testing.hpp"
 #include <gtest/gtest.h>
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 TEST(Triangles, point_belong_triangle_)
 {

@@ -1,7 +1,7 @@
 #include "algorithm_testing.hpp"
 #include <gtest/gtest.h>
 
-using namespace Geom_Objects;
+using namespace Geometry;
 
 #define COMMON_PART                                                                         \
 do                                                                                          \

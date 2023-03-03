@@ -1,7 +1,7 @@
 #include "double_comparison.hpp"
 #include <gtest/gtest.h>
 
-using namespace Cmp;
+using namespace Compare;
 
 TEST (Double_Comparison, Normalized)
 {

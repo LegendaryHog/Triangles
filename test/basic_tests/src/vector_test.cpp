@@ -110,23 +110,23 @@ TEST (Vectors, Inversion)
 TEST (Vectors, Module)
 {
     Vector null {};
-    EXPECT_TRUE (Cmp::are_equal (null.module (), 0.0));
+    EXPECT_TRUE (Compare::are_equal (null.module (), 0.0));
 
     Vector vec_1 {1.0, 2.0, 3.0};
-    EXPECT_TRUE (Cmp::are_equal (vec_1.module (), 3.74165738));
+    EXPECT_TRUE (Compare::are_equal (vec_1.module (), 3.74165738));
 
     Vector vec_2 {1.0, 1.0, 1.0};
-    EXPECT_TRUE (Cmp::are_equal (vec_2.module (), 1.73205081));
+    EXPECT_TRUE (Compare::are_equal (vec_2.module (), 1.73205081));
 
     double really_big_number = 1563413432.2;
     Vector vec_3 {1.0, 1.0, really_big_number};
-    EXPECT_TRUE (Cmp::are_equal (vec_3.module (), really_big_number));
+    EXPECT_TRUE (Compare::are_equal (vec_3.module (), really_big_number));
 
     Vector vec_4 {-2.0, -3.0, 6.0};
-    EXPECT_TRUE (Cmp::are_equal (vec_4.module (), 7.0));
+    EXPECT_TRUE (Compare::are_equal (vec_4.module (), 7.0));
 
     Vector vec_5 {12.0, 16.0, 21.0};
-    EXPECT_TRUE (Cmp::are_equal (vec_5.module (), 29.0));
+    EXPECT_TRUE (Compare::are_equal (vec_5.module (), 29.0));
 }
 
 TEST (Vectors, Is_Zero)
@@ -149,28 +149,28 @@ TEST (Vectors, Scalar_Product)
 
     Vector vec_3 {1.0, 0.0, 4.0};
     Vector vec_4 {0.0, -6.0, 0.0};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_3, vec_4), 0.0));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_3, vec_4), 0.0));
 
     Vector vec_5 {876325.1357, 79812.234412, -7671.122};
     Vector null {};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_5, null), 0.0));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_5, null), 0.0));
 
     Vector vec_6 {34.354, 1088.12, -882.0231};
     Vector vec_7 {78989.0, -414.177, 972.13};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_6, vec_7), 1'405'472));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_6, vec_7), 1'405'472));
 
     Vector vec_8 {6712.98213, -0.000014145, 72653.45};
     Vector vec_9 {0.0000007862, -0.0000094781, 21.7532};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_8, vec_9), 1'580'445));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_8, vec_9), 1'580'445));
 
     // Edge cases: two vectors are orthogonal
     Vector vec_10 {8583.23098, 14712.30};
     Vector vec_11 {22500.0 * 14712.30, -8583.23098 * 22500.0};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_10, vec_11), 0.0));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_10, vec_11), 0.0));
 
     Vector vec_12 {12840854.3457, 78648714912.235};
     Vector vec_13 {78648714912.235 * 0.000006, -12840854.3457 * 0.000006};
-    EXPECT_TRUE (Cmp::are_equal (scalar_product (vec_12, vec_13), 0.0));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_12, vec_13), 0.0));
 }
 
 TEST (Vectors, Vector_Product)

@@ -62,9 +62,9 @@ TEST (Lines, distance_btw_line_n_pt)
 
     Line line {pt1, vec1};
 
-    EXPECT_TRUE (Cmp::are_equal (distance (line, pt1), 0.0));
-    EXPECT_TRUE (Cmp::are_equal (distance (line, pt2), 1.0));
-    EXPECT_TRUE (Cmp::are_equal (distance (line, pt3), 1.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line, pt1), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line, pt2), 1.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line, pt3), 1.0));
 }
 
 TEST (Lines, distance_btw_lines)
@@ -79,18 +79,18 @@ TEST (Lines, distance_btw_lines)
 
     Line line1 {pt1, vec1};
     Line line2 {pt2, vec2};
-    EXPECT_TRUE (Cmp::are_equal (distance (line1, line2), 1.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line1, line2), 1.0));
 
     Line line3 {pt3, vec1};
-    EXPECT_TRUE (Cmp::are_equal (distance (line1, line3), 1.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line1, line3), 1.0));
 
     Line line4 {pt1, vec2};
     Line line5 {pt3, vec2};
-    EXPECT_TRUE (Cmp::are_equal (distance (line4, line5), 1.0 / std::sqrt (2.0)));
+    EXPECT_TRUE (Compare::are_equal (distance (line4, line5), 1.0 / std::sqrt (2.0)));
 
     Line line6 {pt2, vec3};
-    EXPECT_TRUE (Cmp::are_equal (distance (line1, line6), std::sqrt (2.0)));
+    EXPECT_TRUE (Compare::are_equal (distance (line1, line6), std::sqrt (2.0)));
 
-    EXPECT_TRUE (Cmp::are_equal (distance (line1, line4), 0.0));
-    EXPECT_TRUE (Cmp::are_equal (distance (line2, line6), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line1, line4), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line2, line6), 0.0));
 }

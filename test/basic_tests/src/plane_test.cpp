@@ -28,7 +28,7 @@ TEST (PlaneTest, Constructors)
     Point check_point {-42.0, 0.0, 0.0};
     Plane pl {1.0, 0.0, 0.0, 42};
     EXPECT_TRUE (check_point == pl.origin ());                    //  check origin
-    EXPECT_TRUE (Cmp::are_equal (pl.norm_vec ().module (), 1.0)); //  check module of unit vector
+    EXPECT_TRUE (Compare::are_equal (pl.norm_vec ().module (), 1.0)); //  check module of unit vector
 }
 
 TEST (PlaneTest, PlanePoint)
@@ -38,7 +38,7 @@ TEST (PlaneTest, PlanePoint)
     Point p_in {-1.0, -2.0, -5.0};
     Point p_out {-1.0, -2.0, 0.0};
 
-    EXPECT_TRUE (Cmp::are_equal (distance (p, pl), 5.0));
+    EXPECT_TRUE (Compare::are_equal (distance (p, pl), 5.0));
 
     EXPECT_TRUE (is_belong (p_in, pl));
     EXPECT_FALSE (is_belong (p_out, pl));
@@ -69,8 +69,8 @@ TEST (PlaneTest, PlaneLine)
     EXPECT_FALSE (is_belong (line_par, pl));
     EXPECT_FALSE (is_belong (line_inter, pl));
 
-    EXPECT_TRUE (Cmp::are_equal (distance (line_par, pl), 5.0));
-    EXPECT_TRUE (Cmp::are_equal (distance (line_con, pl), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line_par, pl), 5.0));
+    EXPECT_TRUE (Compare::are_equal (distance (line_con, pl), 0.0));
     EXPECT_THROW ({ distance (line_inter, pl); }, std::logic_error);
 }
 
@@ -89,7 +89,7 @@ TEST (PlaneTest, PlanePlane)
     EXPECT_FALSE (are_equal (pl_back, pl_inter));
     EXPECT_TRUE (are_equal (pl_inter, pl_inter_2));
 
-    EXPECT_TRUE (Cmp::are_equal (distance (pl_back, pl_front), 2.0));
-    EXPECT_TRUE (Cmp::are_equal (distance (pl_inter, pl_inter_2), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (pl_back, pl_front), 2.0));
+    EXPECT_TRUE (Compare::are_equal (distance (pl_inter, pl_inter_2), 0.0));
     EXPECT_THROW ({ distance (pl_back, pl_inter); }, std::logic_error);
 }

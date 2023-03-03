@@ -6,6 +6,7 @@
 namespace Geometry
 {
 
-bool are_intersecting (Triangle &tr_1, Triangle &tr_2);
+template<std::floating_point Float>
+bool are_intersecting (const Triangle<Float>& tr_1, const Triangle<Float>& tr_2);
 
 } // namespace Geometry

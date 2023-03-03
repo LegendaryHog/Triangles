@@ -5,15 +5,14 @@
 
 namespace Geometry{
 
+template<std::floating_point F>
 class Line
 {
-    Vector drc_vec_;
-
+    Vector<F> drc_vec_;
 public:
+    Point<F> point_;
 
-    Point point_;
-
-    Line (const Point &p1, const Point &p2)
+    Line (const Point<F> &p1, const Point<F> &p2)
         : point_ {p1}, drc_vec_ {p1.x_ - p2.x_, p1.y_ - p2.y_, p1.z_ - p2.z_}
     {
 #ifndef RELEASE
@@ -22,7 +21,7 @@ public:
 #endif
     }
 
-    Line (const Point &p, const Vector &vec) : point_ {p}, drc_vec_ {vec}
+    Line (const Point<F> &p, const Vector<F> &vec) : point_ {p}, drc_vec_ {vec}
     {
 #ifndef RELEASE
         if (vec.is_zero ())
@@ -30,9 +29,9 @@ public:
 #endif
     }
 
-    const Vector &drc_vec () const & { return drc_vec_; }
+    const Vector<F> &drc_vec () const { return drc_vec_; }
 
-    const Vector &drc_vec(const Vector &new_vec) &
+    const Vector<F> &drc_vec(const Vector<F> &new_vec) &
     {
 #ifndef RELEASE
         if (new_vec.is_zero ())
@@ -40,11 +39,6 @@ public:
 #endif
 
         drc_vec_ = new_vec;
-        return drc_vec_;
-    }
-
-    Vector drc_vec() const && 
-    {
         return drc_vec_;
     }
 
@@ -58,21 +52,26 @@ public:
     bool operator!= (const Line &other) const { return !(*this == other); }
 };
 
-inline bool are_parallel (const Line &line1, const Line &line2)
+template<std::floating_point F>
+bool are_parallel (const Line<F> &line1, const Line<F> &line2)
 {
     return are_collinear (line1.drc_vec (), line2.drc_vec ());
 }
 
-inline double distance (const Line &line, const Point &pt)
+template<std::floating_point F>
+F distance (const Line<F> &line, const Point<F> &pt)
 {
     Vector dot_vec {pt, line.point_};
-    double coef = scalar_product (dot_vec, line.drc_vec ()) /
+    auto coef = scalar_product (dot_vec, line.drc_vec ()) /
                   scalar_product (line.drc_vec (), line.drc_vec ());
     return (dot_vec - coef * line.drc_vec ()).module ();
 }
-inline double distance (const Point &pt, const Line &line) { return distance (line, pt); }
 
-inline double distance (const Line &line1, const Line &line2)
+template<std::floating_point F>
+F distance (const Point<F> &pt, const Line<F> &line) { return distance (line, pt); }
+
+template<std::floating_point F>
+F distance (const Line<F> &line1, const Line<F> &line2)
 {
     if (are_parallel (line1, line2))
         return distance (line1.point_, line2);
@@ -82,18 +81,23 @@ inline double distance (const Line &line1, const Line &line2)
            vector_product (line1.drc_vec (), line2.drc_vec ()).module ();
 }
 
-inline bool are_intersecting (const Line &line1, const Line &line2)
+template<std::floating_point F>
+bool are_intersecting (const Line<F> &line1, const Line<F> &line2)
 {
-    return cmp::are_equal (distance (line1, line2), 0);
+    return Compare::are_equal (distance (line1, line2), 0);
 }
 
-inline bool is_belong (const Point &pt, const Line &line)
+template<std::floating_point F>
+bool is_belong (const Point<F> &pt, const Line<F> &line)
 {
-    return cmp::are_equal (distance (pt, line), 0);
+    return Compare::are_equal (distance (pt, line), 0);
 }
-inline bool is_belong (const Line &line, const Point &pt) { return is_belong (pt, line); }
 
-inline bool in_plane (const Line &line1, const Line &line2)
+template<std::floating_point F>
+bool is_belong (const Line<F> &line, const Point<F> &pt) { return is_belong (pt, line); }
+
+template<std::floating_point F>
+bool in_plane (const Line<F> &line1, const Line<F> &line2)
 {
     return are_parallel (line1, line2) || are_intersecting (line1, line2);
 }

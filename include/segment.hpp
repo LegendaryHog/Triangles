@@ -2,17 +2,16 @@
 
 #include "point.hpp"
 #include "vector.hpp"
-#include "line.hpp"
-#include "plane.hpp"
 #include "triangle.hpp"
 #include <iostream>
 
 namespace Geometry{
 
+template<std::floating_point F>
 struct Segment {
-    Point F_, S_;
+    Point<F> F_, S_;
     
-    Segment(const Point& F, const Point& S): F_ {F}, S_ {S}
+    Segment(const Point<F>& F, const Point<F>& S): F_ {F}, S_ {S}
     {
         #ifndef RELEASE
         if (F_ == S_)
@@ -20,10 +19,10 @@ struct Segment {
         #endif
     }
 
-    Segment(const Triangle& tr)
+    Segment(const Triangle<F>& tr)
     {
         #ifndef RELEASE
-        if (tr.type() != TriangleType::Segment_)
+        if (tr.type() != TriangleType::Segment)
             throw std::logic_error{"In ctor Segmnet by Triangle type of Triangle isnt Segemnt_"};
         #endif
 
@@ -51,7 +50,8 @@ struct Segment {
     }
 };
 
-inline bool point_belong_segment(const Point& point, const Segment& segment)
+template<std::floating_point F>
+bool point_belong_segment(const Point<F>& point, const Segment<F>& segment)
 {
     Vector PF {point, segment.F_};
     Vector PS {point, segment.S_};

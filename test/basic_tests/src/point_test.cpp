@@ -40,15 +40,15 @@ TEST (Points, Distance)
 {
     Point A {10000000};
     Point B {10000001};
-    EXPECT_TRUE (Cmp::are_equal (distance (A, B), 0.0));
+    EXPECT_TRUE (Compare::are_equal (distance (A, B), 0.0));
 
     Point C {7824.911267, 0.00007648923, -1327012.8};
     Point D {-646302456.76891, 873927.1216, 0.000000001324241};
-    EXPECT_TRUE (Cmp::are_equal (distance (C, D), 646312234.85));
+    EXPECT_TRUE (Compare::are_equal (distance (C, D), 646312234.85));
 
     Point E {0.0000000376418, 0.000003512, 0.00008487};
     Point F {0.0000000141879, 0.000001824, -0.00009831};
-    EXPECT_TRUE (Cmp::are_equal (distance (E, F), 0.000183187778779));
+    EXPECT_TRUE (Compare::are_equal (distance (E, F), 0.000183187778779));
 }
 
 TEST (Points, Validity)

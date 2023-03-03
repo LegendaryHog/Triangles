@@ -1,14 +1,13 @@
 #pragma once
 #include <algorithm>
 #include <cmath>
+#include <concepts>
 
-namespace Cmp
+namespace Compare
 {
 
-constexpr double epsilon = 1e-6;
-
-inline bool are_equal (const double first, const double second, const double zero_diff = epsilon,
-                       const double rel_diff = epsilon)
+template<std::floating_point Float>
+inline bool are_equal (Float first, Float second, Float zero_diff = 1e-6, Float rel_diff = 1e-6)
 {
     auto diff = std::abs (first - second);
 

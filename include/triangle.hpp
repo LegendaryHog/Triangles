@@ -7,19 +7,19 @@
 namespace Geometry{
 
 enum TriangleType {
-    Triangle_ = 2,
-    Segment_ = 1,
-    Point_ = 0,
+    Triangle = 2,
+    Segment  = 1,
+    Point    = 0,
 };
 
-
+template<std::floating_point F>
 class Triangle
 {
-    Point P_, Q_, R_;
+    Point<F> P_, Q_, R_;
     TriangleType type_;
 
-    public:
-    Triangle (const Point &P, const Point &Q, const Point &R) : P_ {P}, Q_ {Q}, R_ {R}, type_ {type_calc()} {}
+public:
+    Triangle (const Point<F> &P, const Point<F> &Q, const Point<F> &R) : P_ {P}, Q_ {Q}, R_ {R}, type_ {type_calc()} {}
 
     bool operator== (const Triangle &rhs) const
     {
@@ -52,25 +52,25 @@ class Triangle
         return are_collinear (PQ, PR);
     }
 
-    private:
+private:
     TriangleType type_calc() const
     {
         if (is_point())
-            return TriangleType::Point_;
+            return TriangleType::Point;
         else if (is_segment())
-            return TriangleType::Segment_;
+            return TriangleType::Segment;
         else
-            return TriangleType::Triangle_;
+            return TriangleType::Triangle;
     }
 
     public:
-    const Point& P() const & noexcept {return P_;}
-    const Point& Q() const & noexcept {return Q_;}
-    const Point& R() const & noexcept {return R_;}
+    const Point<F>& P() const & noexcept {return P_;}
+    const Point<F>& Q() const & noexcept {return Q_;}
+    const Point<F>& R() const & noexcept {return R_;}
     
-    Point& P() & noexcept {return P_;}
-    Point& Q() & noexcept {return Q_;}
-    Point& R() & noexcept {return R_;}
+    Point<F>& P() & noexcept {return P_;}
+    Point<F>& Q() & noexcept {return Q_;}
+    Point<F>& R() & noexcept {return R_;}
 };
 
 } // namespace Geometry

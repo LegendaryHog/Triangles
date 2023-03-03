@@ -5,18 +5,17 @@
 
 namespace Geometry{
 
+template<std::floating_point F>
 struct Point
 {
-    double x_, y_, z_;
+    F x_, y_, z_;
 
-    Point (const double x = 0.0, const double y = 0.0, const double z = 0.0)
-        : x_ {x}, y_ {y}, z_ {z}
-    {}
+    Point (F x = 0.0, F y = 0.0, F z = 0.0): x_ {x}, y_ {y}, z_ {z} {}
 
     bool operator== (const Point &other) const
     {
-        return (Cmp::are_equal (x_, other.x_) && Cmp::are_equal (y_, other.y_) &&
-                Cmp::are_equal (z_, other.z_));
+        return (Compare::are_equal (x_, other.x_) && Compare::are_equal (y_, other.y_) &&
+                Compare::are_equal (z_, other.z_));
     }
 
     bool operator!= (const Point &other) const { return !(*this == other); }
@@ -26,12 +25,14 @@ struct Point
     std::ostream& print (std::ostream& out = std::cout) const { return out << "(" << x_ << ", " << y_ << ", " << z_ << ")"; }
 };
 
-inline std::ostream& operator<<(std::ostream& out, const Point& p)
+template<std::floating_point F>
+std::ostream& operator<<(std::ostream& out, const Point<F>& p)
 {
     return p.print(out);
 }
 
-inline double distance (const Point &first, const Point &second)
+template<std::floating_point F>
+F distance (const Point<F>& first, const Point<F>& second)
 {
     if (first == second)
         return 0.0;
@@ -70,7 +71,8 @@ enum Loc2D
  * with initial point Q and terminal point M, v_RM - vector
  * with initial point R and terminal point M.
  */
-inline Loc3D magic_product (const Point &P, const Point &Q, const Point &R, const Point &M)
+template<std::floating_point F>
+Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, const Point<F>& M)
 {
     auto elem_21 = M.x_ - Q.x_;
     auto elem_22 = M.y_ - Q.y_;
@@ -84,7 +86,7 @@ inline Loc3D magic_product (const Point &P, const Point &Q, const Point &R, cons
                    (M.y_ - P.y_) * (elem_21 * elem_33 - elem_23 * elem_31) +
                    (M.z_ - P.z_) * (elem_21 * elem_32 - elem_22 * elem_31);
 
-    if (Cmp::are_equal (product, 0.0))
+    if (Compare::are_equal (product, 0.0))
         return Loc3D::On;
     else if (product > 0)
         return Loc3D::Above;
@@ -92,11 +94,12 @@ inline Loc3D magic_product (const Point &P, const Point &Q, const Point &R, cons
         return Loc3D::Below;
 }
 
-inline Loc2D magic_product (const Point &P, const Point &Q, const Point &M)
+template<std::floating_point F>
+Loc2D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& M)
 {
     auto product = (P.x_ - M.x_) * (Q.y_ - M.y_) - (P.y_ - M.y_) * (Q.x_ - M.x_);
     //  Positive product is considered when points locate in counterclockwise ordering
-    if (Cmp::are_equal (product, 0.0))
+    if (Compare::are_equal (product, 0.0))
         return Loc2D::Neutral;
     else if (product > 0)
         return Loc2D::Positive;

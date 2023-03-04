@@ -7,9 +7,9 @@
 namespace Geometry{
 
 enum TriangleType {
-    Triangle = 2,
-    Segment  = 1,
-    Point    = 0,
+    Triangle_ = 2,
+    Segment_  = 1,
+    Point_    = 0,
 };
 
 template<std::floating_point F>
@@ -56,11 +56,11 @@ private:
     TriangleType type_calc() const
     {
         if (is_point())
-            return TriangleType::Point;
+            return TriangleType::Point_;
         else if (is_segment())
-            return TriangleType::Segment;
+            return TriangleType::Segment_;
         else
-            return TriangleType::Triangle;
+            return TriangleType::Triangle_;
     }
 
     public:

@@ -7,11 +7,11 @@
 
 namespace Geometry{
 
-template<std::floating_point F>
+template<std::floating_point Float>
 struct Segment {
-    Point<F> F_, S_;
+    Point<Float> F_, S_;
     
-    Segment(const Point<F>& F, const Point<F>& S): F_ {F}, S_ {S}
+    Segment(const Point<Float>& F, const Point<Float>& S): F_ {F}, S_ {S}
     {
         #ifndef RELEASE
         if (F_ == S_)
@@ -19,10 +19,10 @@ struct Segment {
         #endif
     }
 
-    Segment(const Triangle<F>& tr)
+    Segment(const Triangle<Float>& tr)
     {
         #ifndef RELEASE
-        if (tr.type() != TriangleType::Segment)
+        if (tr.type() != TriangleType::Segment_)
             throw std::logic_error{"In ctor Segmnet by Triangle type of Triangle isnt Segemnt_"};
         #endif
 

@@ -20,13 +20,14 @@ enum LocPoints {
     OnLine = 0,
 };
 
-LocPoints laying_in_same_half(const Point& A, const Point& B, const Point& C, const Point& D)
+template<std::floating_point F>
+LocPoints laying_in_same_half(const Point<F>& A, const Point<F>& B, const Point<F>& C, const Point<F>& D)
 {
     Vector AB {A, B}, AC {A, C}, AD {A, D};
 
     auto prod = scalar_product(vector_product(AB, AC), vector_product(AB, AD));
 
-    if (cmp::are_equal(prod, 0.0))
+    if (Compare::are_equal(prod, 0.0))
         return LocPoints::OnLine;
     else if (prod > 0.0)
         return  LocPoints::InSame;
@@ -34,7 +35,8 @@ LocPoints laying_in_same_half(const Point& A, const Point& B, const Point& C, co
         return LocPoints::InDifferent;
 }
 
-bool point_belong_triangle(const Point& point_A, const Triangle& tr)
+template<std::floating_point F>
+bool point_belong_triangle(const Point<F>& point_A, const Triangle<F>& tr)
 {
     if (magic_product(tr.P(), tr.Q(), tr.R(), point_A) != Loc3D::On)
         return false;
@@ -44,7 +46,8 @@ bool point_belong_triangle(const Point& point_A, const Triangle& tr)
            laying_in_same_half(tr.R(), tr.P(), tr.Q(), point_A) != LocPoints::InDifferent;
 }
 
-bool are_intersecting(const Segment& seg1, const Segment& seg2)
+template<std::floating_point F>
+bool are_intersecting(const Segment<F>& seg1, const Segment<F>& seg2)
 {
     Vector F1S1 {seg1.F_, seg1.S_};
     Vector F2S2 {seg2.F_, seg2.S_};
@@ -57,26 +60,27 @@ bool are_intersecting(const Segment& seg1, const Segment& seg2)
     {
         Segment seg2_cpy {seg2};
 
-        const Point& A1 = seg1.F_;
-        const Point& B1 = seg1.S_;
+        const auto& A1 = seg1.F_;
+        const auto& B1 = seg1.S_;
         if (scalar_product(F1S1, F2S2) < 0.0)
             seg2_cpy.swap_points();
-        const Point& A2 = seg2_cpy.F_;
-        const Point& B2 = seg2_cpy.S_;
+        const auto& A2 = seg2_cpy.F_;
+        const auto& B2 = seg2_cpy.S_;
 
         Vector B1A2 {B1, A2};
         Vector B2A1 {B2, A1};
 
         auto prod_B1A2_B2A1 = scalar_product(B1A2, B2A1);
 
-        return prod_B1A2_B2A1 > 0.0 || cmp::are_equal(prod_B1A2_B2A1, 0.0); 
+        return prod_B1A2_B2A1 > 0.0 || Compare::are_equal(prod_B1A2_B2A1, 0.0); 
     }
 
     return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != LocPoints::InSame &&
            laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != LocPoints::InSame;
 }
 
-bool seg_tr_intersecting_2D(const Segment& seg, const Triangle& tr)
+template<std::floating_point F>
+bool seg_tr_intersecting_2D(const Segment<F>& seg, const Triangle<F>& tr)
 {
     if (point_belong_triangle(seg.F_, tr) || point_belong_triangle(seg.S_, tr))
         return true;
@@ -86,13 +90,14 @@ bool seg_tr_intersecting_2D(const Segment& seg, const Triangle& tr)
            are_intersecting(seg, Segment {tr.R(), tr.P()});
 }
 
-bool seg_tr_intersecting_3D(const Segment& seg, const Triangle& tr)
+template<std::floating_point Float>
+bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr)
 {
-    const Point& P = tr.P(), Q = tr.Q(), R = tr.R(), F = seg.F_, S = seg.S_;
+    const auto& P = tr.P(), Q = tr.Q(), R = tr.R(), F = seg.F_, S = seg.S_;
 
     if (point_belong_segment(P, seg) ||
         point_belong_segment(Q, seg) ||
-        point_belong_segment(R, seg))
+        point_belong_segment(R, seg))   
         return true;
 
     if (magic_product(P, F, S, Q) != magic_product(P, F, S, R) &&
@@ -102,7 +107,8 @@ bool seg_tr_intersecting_3D(const Segment& seg, const Triangle& tr)
     return false;
 }
 
-bool segment_and_triangle_intersecting(const Segment& seg, const Triangle& tr)
+template<std::floating_point F>
+bool segment_and_triangle_intersecting(const Segment<F>& seg, const Triangle<F>& tr)
 {
     auto F_loc = magic_product(tr.P(), tr.Q(), tr.R(), seg.F_);
     auto S_loc = magic_product(tr.P(), tr.Q(), tr.R(), seg.S_);
@@ -116,8 +122,9 @@ bool segment_and_triangle_intersecting(const Segment& seg, const Triangle& tr)
         return seg_tr_intersecting_3D(seg, tr);
 }
 
-void point_transformation (Point &point, const Point &origin, const Vector &x_axis,
-                           const Vector &y_axis)
+template<std::floating_point F>
+void point_transformation (Point<F> &point, const Point<F> &origin, const Vector<F> &x_axis,
+                           const Vector<F> &y_axis)
 {
     auto diff_x = point.x_ - origin.x_;
     auto diff_y = point.y_ - origin.y_;
@@ -128,7 +135,8 @@ void point_transformation (Point &point, const Point &origin, const Vector &x_ax
     point.z_ = 0.0;
 }
 
-void space_transformation (Triangle &tr_1, Triangle &tr_2)
+template<std::floating_point F>
+void space_transformation (Triangle<F> &tr_1, Triangle<F> &tr_2)
 {
     Vector x_axis {tr_1.P(), tr_1.Q()};
     x_axis *= (1 / x_axis.module ());
@@ -148,7 +156,7 @@ void space_transformation (Triangle &tr_1, Triangle &tr_2)
 }
 
 enum class Case {       //   3^1     3^0
-    PointnPoint       = 0 * 3 + 0 * 1,
+    PointAndPoint       = 0 * 3 + 0 * 1,
     PointAndSegment     = 0 * 3 + 1 * 1,
     PointAndTriangle    = 0 * 3 + 2 * 1,
     SegmentAndPoint     = 1 * 3 + 0 * 1,
@@ -159,12 +167,14 @@ enum class Case {       //   3^1     3^0
     TriangleAndTriangle = 2 * 3 + 2 * 1,
 };
 
-Case case_of_intersection(const Triangle& tr1, const Triangle& tr2)
+template<std::floating_point F>
+Case case_of_intersection(const Triangle<F>& tr1, const Triangle<F>& tr2)
 {
     return static_cast<Case>(3 * tr1.type() + 1 * tr2.type());
 }
 
-bool test_intersection_R1 (const Triangle &tr_1, const Triangle &tr_2)
+template<std::floating_point F>
+bool test_intersection_R1 (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 {
     if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc2D::Negative)
     {
@@ -186,7 +196,8 @@ bool test_intersection_R1 (const Triangle &tr_1, const Triangle &tr_2)
     }
 }
 
-bool test_intersection_R2 (const Triangle &tr_1, const Triangle &tr_2)
+template<std::floating_point F>
+bool test_intersection_R2 (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 {
     if (magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Loc2D::Negative)
     {
@@ -221,7 +232,8 @@ bool test_intersection_R2 (const Triangle &tr_1, const Triangle &tr_2)
     }
 }
 
-bool intersection_in_2D (const Triangle &tr_1_, const Triangle &tr_2_)
+template<std::floating_point F>
+bool intersection_in_2D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_)
 {
     Triangle tr_1 = tr_1_;
     Triangle tr_2 = tr_2_;
@@ -234,6 +246,13 @@ bool intersection_in_2D (const Triangle &tr_1_, const Triangle &tr_2_)
     auto P2_loc = magic_product (tr_1.P(), tr_1.Q(), tr_2.P()) *
                   magic_product (tr_1.Q(), tr_1.R(), tr_2.P()) *
                   magic_product (tr_1.R(), tr_1.P(), tr_2.P());
+
+    auto P1_loc = Loc2D::Positive;
+
+    auto P1_P2_Q2 = Loc2D::Is_vertice;
+    auto P1_Q2_R2 = Loc2D::Is_vertice;
+    auto P1_R2_P2 = Loc2D::Is_vertice;
+    auto sum_locs = Loc2D::Is_vertice;
 
     //  interior of tr_2
     if (P1_P2_Q2 == Loc2D::Positive &&
@@ -250,7 +269,8 @@ bool intersection_in_2D (const Triangle &tr_1_, const Triangle &tr_2_)
         return test_intersection_R2 (tr_1, tr_2);
 }
 
-void transform_triangle (Triangle &tr_1, const Loc3D P1_loc, const Loc3D Q1_loc, const Loc3D R1_loc, Triangle &tr_2)
+template<std::floating_point F>
+void transform_triangle (Triangle<F> &tr_1, const Loc3D P1_loc, const Loc3D Q1_loc, const Loc3D R1_loc, Triangle<F> &tr_2)
 {
     if (P1_loc == Loc3D::Above)
     {
@@ -297,7 +317,8 @@ void transform_triangle (Triangle &tr_1, const Loc3D P1_loc, const Loc3D Q1_loc,
     }
 }
 
-bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc3D P1_loc,
+template<std::floating_point F>
+bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, const Loc3D P1_loc,
                          const Loc3D Q1_loc, const Loc3D R1_loc)
 {
     Triangle tr_1 = tr_1_;
@@ -333,7 +354,8 @@ bool intersection_in_3D (const Triangle &tr_1_, const Triangle &tr_2_, const Loc
 } // anonymous namespace
 #endif // ALGORITHM_TESTING
 
-bool are_intersecting (const Triangle &tr_1, const Triangle &tr_2)
+template<std::floating_point F>
+bool are_intersecting (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 {
     switch(case_of_intersection(tr_1, tr_2))
     {

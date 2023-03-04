@@ -90,14 +90,14 @@ struct Vector
 };
 
 template<std::floating_point F>
-Vector operator* (const Vector<F> &vec, F coeff)
+Vector<F> operator* (const Vector<F> &vec, F coeff)
 {
     Vector product = vec;
     return (product *= coeff);
 }
 
 template<std::floating_point F>
-Vector operator* (F coeff, const Vector<F> &vec) { return vec * coeff; }
+Vector<F> operator* (F coeff, const Vector<F> &vec) { return vec * coeff; }
 
 template<std::floating_point F>
 F scalar_product (const Vector<F> &lhs, const Vector<F> &rhs)

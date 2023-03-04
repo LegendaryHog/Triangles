@@ -14,12 +14,4 @@ set(CMAKE_CXX_STANDARD          20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS        OFF)
 
-aux_source_directory(./src SRC)
-
-add_library(triangles_intersection
-            STATIC ${SRC})
-
-target_include_directories(triangles_intersection
-                           PRIVATE ./include)
-
 add_subdirectory(test)

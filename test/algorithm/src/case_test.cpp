@@ -1,8 +1,25 @@
 #include "intersection.hpp"
-#include "algorithm_testing.hpp"
 #include <gtest/gtest.h>
 
 using namespace Geometry;
+
+enum class Case {       //   3^1     3^0
+    PointAndPoint       = 0 * 3 + 0 * 1,
+    PointAndSegment     = 0 * 3 + 1 * 1,
+    PointAndTriangle    = 0 * 3 + 2 * 1,
+    SegmentAndPoint     = 1 * 3 + 0 * 1,
+    SegmentAndSegment   = 1 * 3 + 1 * 1,
+    SegmentAndTriangle  = 1 * 3 + 2 * 1,
+    TriangleAndPoint    = 2 * 3 + 0 * 1,
+    TriangleAndSegment  = 2 * 3 + 1 * 1,
+    TriangleAndTriangle = 2 * 3 + 2 * 1,
+};
+
+template<std::floating_point F>
+Case case_of_intersection(const Triangle<F>& tr1, const Triangle<F>& tr2)
+{
+    return static_cast<Case>(3 * tr1.type() + 1 * tr2.type());
+}
 
 TEST(Case_, case_of_intersection_)
 {

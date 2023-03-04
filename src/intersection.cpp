@@ -1,3 +1,5 @@
+#if 0
+
 #include "intersection.hpp"
 #include "point.hpp"
 #include "vector.hpp"
@@ -392,3 +394,4 @@ bool are_intersecting (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 }
 
 } // namespace Geometry
+#endif

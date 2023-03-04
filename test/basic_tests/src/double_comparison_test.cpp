@@ -1,6 +1,8 @@
 #include "double_comparison.hpp"
 #include <gtest/gtest.h>
 
+constexpr double epsilon = 1e-6;
+
 using namespace Compare;
 
 TEST (Double_Comparison, Normalized)

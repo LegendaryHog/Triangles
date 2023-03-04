@@ -38,8 +38,8 @@ TEST (Points, Inequality)
 
 TEST (Points, Distance)
 {
-    Point A {10000000};
-    Point B {10000001};
+    Point A {10000000.0};
+    Point B {10000001.0};
     EXPECT_TRUE (Compare::are_equal (distance (A, B), 0.0));
 
     Point C {7824.911267, 0.00007648923, -1327012.8};
@@ -53,34 +53,19 @@ TEST (Points, Distance)
 
 TEST (Points, Validity)
 {
-    EXPECT_FALSE ((Point {NAN, NAN, NAN}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {NAN, NAN, NAN}.is_valid ()));
 
-    EXPECT_FALSE ((Point {NAN, NAN, 0.0}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {NAN, NAN, 0.0}.is_valid ()));
 
-    EXPECT_FALSE ((Point {NAN, 0.0, NAN}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {NAN, 0.0, NAN}.is_valid ()));
 
-    EXPECT_FALSE ((Point {0.0, NAN, NAN}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {0.0, NAN, NAN}.is_valid ()));
 
-    EXPECT_FALSE ((Point {NAN, 0.0, 0.0}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {NAN, 0.0, 0.0}.is_valid ()));
 
-    EXPECT_FALSE ((Point {0.0, NAN, 0.0}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {0.0, NAN, 0.0}.is_valid ()));
 
-    EXPECT_FALSE ((Point {0.0, 0.0, NAN}.is_valid ()));
+    EXPECT_FALSE ((Point<double> {0.0, 0.0, NAN}.is_valid ()));
 
-    EXPECT_TRUE (Point {}.is_valid ());
-}
-
-TEST (Points, Magic_Product_3D)
-{
-    Point pt_11 {1.0, 0.0, 0.0};
-    Point pt_21 {0.0, 1.0, 0.0};
-    Point pt_31 {0.0, 0.0, 0.0};
-
-    EXPECT_EQ (magic_product (pt_11, pt_21, pt_31, {802.82, -872.85, 48.14}),  Loc_3D::Above);
-    EXPECT_EQ (magic_product (pt_11, pt_21, pt_31, {802.82, -872.85, 0.0}),    Loc_3D::On);
-    EXPECT_EQ (magic_product (pt_11, pt_21, pt_31, {802.82, -872.85, -2.865}), Loc_3D::Below);
-
-    EXPECT_EQ (magic_product (pt_11, pt_31, pt_21, {802.82, -872.85, 48.14}),  Loc_3D::Below);
-    EXPECT_EQ (magic_product (pt_11, pt_31, pt_21, {802.82, -872.85, 0.0}),    Loc_3D::On);
-    EXPECT_EQ (magic_product (pt_11, pt_31, pt_21, {802.82, -872.85, -2.865}), Loc_3D::Above);
+    EXPECT_TRUE (Point<double> {}.is_valid ());
 }

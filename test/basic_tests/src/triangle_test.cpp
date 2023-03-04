@@ -7,8 +7,8 @@ using namespace Geometry;
 
 TEST (Triangles, Swap_QR)
 {
-    Point P {872892, 15231284, 0.000024578};
-    Point Q {1635.98561, 337618.98, -8841};
+    Point P {872892.0, 15231284.0, 0.000024578};
+    Point Q {1635.98561, 337618.98, -8841.0};
     Point R {-8374.61, -0.387491, 0.01367};
     Triangle tr {P, Q, R};
 
@@ -33,7 +33,7 @@ TEST (Triangles, Swap_Counterclockwise)
 {
     Point P {747891.8348, -0.00058741, -12653.147};
     Point Q {4789734.8975, -357891.578, -0.0000736518};
-    Point R {0.000276851, 15736.81, -96124};
+    Point R {0.000276851, 15736.81, -96124.0};
 
     Triangle tr {P, Q, R};
     tr.swap_counterclockwise ();
@@ -43,7 +43,7 @@ TEST (Triangles, Swap_Counterclockwise)
 
 TEST (Triangles, Is_Point)
 {
-    Point pt_1 {743874, 9817498.19, -0.017847};
+    Point pt_1 {743874.0, 9817498.19, -0.017847};
 
     Triangle tr_1 {pt_1, pt_1, pt_1};
     EXPECT_TRUE (tr_1.is_point ());
@@ -55,7 +55,7 @@ TEST (Triangles, Is_Point)
     Triangle tr_2 {pt_21, pt_22, pt_23};
     EXPECT_TRUE (tr_2.is_point ());
 
-    Point pt_31 {48752,   -104581.25, 8502.1924};
+    Point pt_31 {48752.0, -104581.25, 8502.1924};
     Point pt_32 {0.00014, -582.561,   523.154};
     Point pt_33 {671.1581, 0.0,       98714.051};
 

@@ -26,7 +26,7 @@ TEST (PlaneTest, Constructors)
 
     //  Test normal creation of a plane
     Point check_point {-42.0, 0.0, 0.0};
-    Plane pl {1.0, 0.0, 0.0, 42};
+    Plane pl {1.0, 0.0, 0.0, 42.0};
     EXPECT_TRUE (check_point == pl.origin ());                    //  check origin
     EXPECT_TRUE (Compare::are_equal (pl.norm_vec ().module (), 1.0)); //  check module of unit vector
 }

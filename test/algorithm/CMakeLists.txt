@@ -7,7 +7,6 @@ target_link_libraries(algorithm_tests
                       PRIVATE ${GTEST_LIBRARIES})
 
 target_include_directories(algorithm_tests
-                           PRIVATE ../include
                            PRIVATE ../../include)
 
 gtest_discover_tests(algorithm_tests)

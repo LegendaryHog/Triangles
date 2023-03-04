@@ -3,7 +3,9 @@
 #include "point.hpp"
 #include "vector.hpp"
 #include "line.hpp"
-#include "segemnt.hpp"
+#include "segment.hpp"
+#include "location.hpp"
+#include "triangle_intersect_algorithms.hpp"
 
 namespace Geometry
 {
@@ -28,36 +30,15 @@ bool are_intersecting (const Point<F>& point, const Segment<F>& segment)
         return false;
 }
 
-enum LocPoints {
-    InSame = 1,
-    InDifferent = -1,
-    OnLine = 0,
-};
-
-template<std::floating_point F>
-LocPoints laying_in_same_half(const Point<F>& A, const Point<F>& B, const Point<F>& C, const Point<F>& D)
-{
-    Vector AB {A, B}, AC {A, C}, AD {A, D};
-
-    auto prod = scalar_product(vector_product(AB, AC), vector_product(AB, AD));
-
-    if (Compare::are_equal(prod, 0.0))
-        return LocPoints::OnLine;
-    else if (prod > 0.0)
-        return  LocPoints::InSame;
-    else
-        return LocPoints::InDifferent;
-}
-
 template<std::floating_point F>
 bool are_intersecting (const Point<F>& point, const Triangle<F>& triangle)
 {
-    if (magic_product(tr.P(), tr.Q(), tr.R(), point) != Loc3D::On)
+    if (Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), point) != Location::Loc3D::On)
         return false;
     
-    return laying_in_same_half(triangle.P(), triangle.Q(), triangle.R(), point) != LocPoints::InDifferent &&
-           laying_in_same_half(triangle.Q(), triangle.R(), triangle.P(), point) != LocPoints::InDifferent &&
-           laying_in_same_half(triangle.R(), triangle.P(), triangle.Q(), point) != LocPoints::InDifferent;
+    return Location::laying_in_same_half(triangle.P(), triangle.Q(), triangle.R(), point) != Location::LocPoints::InDifferent &&
+           Location::laying_in_same_half(triangle.Q(), triangle.R(), triangle.P(), point) != Location::LocPoints::InDifferent &&
+           Location::laying_in_same_half(triangle.R(), triangle.P(), triangle.Q(), point) != Location::LocPoints::InDifferent;
 }
 
 template<std::floating_point F>
@@ -95,38 +76,81 @@ bool are_intersecting (const Segment<F>& seg1, const Segment<F>& seg2)
         return prod_B1A2_B2A1 > 0.0 || Compare::are_equal(prod_B1A2_B2A1, 0.0); 
     }
 
-    return laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != LocPoints::InSame &&
-           laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != LocPoints::InSame;
+    return Location::laying_in_same_half(seg1.F_, seg1.S_, seg2.F_, seg2.S_) != Location::LocPoints::InSame &&
+           Location::laying_in_same_half(seg2.F_, seg2.S_, seg1.F_, seg1.S_) != Location::LocPoints::InSame;
 }
+
+namespace Algorithm
+{
+
+template<std::floating_point F>
+bool seg_tr_intersecting_2D(const Segment<F>& seg, const Triangle<F>& tr)
+{
+    if (are_intersecting(seg.F_, tr) || are_intersecting(seg.S_, tr))
+        return true;
+
+    return are_intersecting(seg, Segment {tr.P(), tr.Q()}) ||
+           are_intersecting(seg, Segment {tr.Q(), tr.R()}) ||
+           are_intersecting(seg, Segment {tr.R(), tr.P()});
+}
+
+template<std::floating_point Float>
+bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr)
+{
+    const auto& P = tr.P(), Q = tr.Q(), R = tr.R(), F = seg.F_, S = seg.S_;
+
+    if (are_intersecting(P, seg) ||
+        are_intersecting(Q, seg) ||
+        are_intersecting(R, seg))   
+        return true;
+
+    if (magic_product(P, F, S, Q) != magic_product(P, F, S, R) &&
+        magic_product(Q, F, S, P) != magic_product(Q, F, S, R) &&
+        magic_product(R, F, S, P) != magic_product(R, F, S, Q))
+        return true;
+    return false;
+}
+} // namespace Algorithm
 
 template<std::floating_point F>
 bool are_intersecting (const Segment<F>& segment, const Triangle<F>& triangle)
 {
-    auto F_loc = magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.F_);
-    auto S_loc = magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.S_);
+    auto F_loc = Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.F_);
+    auto S_loc = Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.S_);
 
-    if (F_loc != Loc3D::On && S_loc != Loc3D::On && F_loc == S_loc)
+    if (F_loc != Location::Loc3D::On && S_loc != Location::Loc3D::On && F_loc == S_loc)
         return false;
 
-    if (F_loc == Loc3D::On && S_loc == Loc3D::On)
-        return seg_tr_intersecting_2D(segment, triangle);
+    if (F_loc == Location::Loc3D::On && S_loc == Location::Loc3D::On)
+        return Algorithm::seg_tr_intersecting_2D(segment, triangle);
     else
-        return seg_tr_intersecting_3D(segment, triangle);
+        return Algorithm::seg_tr_intersecting_3D(segment, triangle);
+}
+
+template<std::floating_point F>
+bool are_intersecting (const Triangle<F>& triangle, const Point<F>& point)
+{
+    return are_intersecting(point, triangle);
+}
+
+template<std::floating_point F>
+bool are_intersecting (const Triangle<F>& triangle, const Segment<F>& segment)
+{
+    return are_intersecting(segment, triangle);
 }
 
 template<std::floating_point F>
 bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
+{
+    auto P1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.P());
+    auto Q1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.Q());
+    auto R1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.R());
 
-template<std::floating_point F>
-bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
-
-template<std::floating_point F>
-bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
-
-template<std::floating_point F>
-bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
-template<std::floating_point F>
-
-bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
-
+    if (P1_loc != Location::Loc3D::On && P1_loc == Q1_loc && Q1_loc == R1_loc)
+        return false;
+    else if (P1_loc == Location::Loc3D::On && Q1_loc == Location::Loc3D::On && R1_loc == Location::Loc3D::On)
+        return Algorithm::intersection_in_2D (tr_1, tr_2);
+    else
+        return Algorithm::intersection_in_3D (tr_1, tr_2, P1_loc, Q1_loc, R1_loc);
+}
 } // namespace Geometry

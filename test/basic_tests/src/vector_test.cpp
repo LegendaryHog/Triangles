@@ -40,7 +40,7 @@ TEST (Vectors, Addition)
     Vector vec_1 {1.0, 2.0, 3.0};
     Vector vec_2 {2.0, 3.0, 4.0};
     Vector vec_3 {3.0, 4.0, 5.0};
-    Vector null {};
+    Vector<double> null {};
 
     EXPECT_TRUE (vec_1 + vec_2 == vec_2 + vec_1);
     EXPECT_TRUE ((vec_1 + vec_2) + vec_3 == vec_1 + (vec_2 + vec_3));
@@ -61,7 +61,7 @@ TEST (Vectors, Subtraction)
 {
     Vector vec_1 {1.0, 2.0, 3.0};
     Vector vec_2 {2.0, 3.0, 4.0};
-    Vector null {};
+    Vector<double> null {};
 
     EXPECT_FALSE (vec_1 - vec_2 == vec_2 - vec_1);
 
@@ -80,7 +80,7 @@ TEST (Vectors, Multiplication)
 {
     Vector vec_1 {1.0, 2.0, 3.0};
     Vector vec_2 {2.0, 3.0, 4.0};
-    Vector null {};
+    Vector<double> null {};
     const double num_1 = 4.0;
     const double num_2 = 5.0;
 
@@ -109,7 +109,7 @@ TEST (Vectors, Inversion)
 
 TEST (Vectors, Module)
 {
-    Vector null {};
+    Vector<double> null {};
     EXPECT_TRUE (Compare::are_equal (null.module (), 0.0));
 
     Vector vec_1 {1.0, 2.0, 3.0};
@@ -131,7 +131,7 @@ TEST (Vectors, Module)
 
 TEST (Vectors, Is_Zero)
 {
-    Vector null {};
+    Vector<double> null {};
     EXPECT_TRUE (null.is_zero ());
 
     Vector approx_null {-0.00000001, 0.0000009, 0.000000000008};
@@ -152,16 +152,16 @@ TEST (Vectors, Scalar_Product)
     EXPECT_TRUE (Compare::are_equal (scalar_product (vec_3, vec_4), 0.0));
 
     Vector vec_5 {876325.1357, 79812.234412, -7671.122};
-    Vector null {};
+    Vector<double> null {};
     EXPECT_TRUE (Compare::are_equal (scalar_product (vec_5, null), 0.0));
 
     Vector vec_6 {34.354, 1088.12, -882.0231};
     Vector vec_7 {78989.0, -414.177, 972.13};
-    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_6, vec_7), 1'405'472));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_6, vec_7), 1'405'472.0 ));
 
     Vector vec_8 {6712.98213, -0.000014145, 72653.45};
     Vector vec_9 {0.0000007862, -0.0000094781, 21.7532};
-    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_8, vec_9), 1'580'445));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_8, vec_9), 1'580'445.0));
 
     // Edge cases: two vectors are orthogonal
     Vector vec_10 {8583.23098, 14712.30};
@@ -191,9 +191,9 @@ TEST (Vectors, Vector_Product)
 TEST (Vectors, Ctor_From_Points)
 {
     // Edge case: constructing vector from 2 approximately matching points
-    Point remote_pt_1 {100000001};
-    Point remote_pt_2 {100000000};
+    Point remote_pt_1 {100000001.0};
+    Point remote_pt_2 {100000000.0};
     Vector vec {remote_pt_1, remote_pt_2};
-    Vector null {};
+    Vector<double> null {};
     EXPECT_TRUE (vec == null);
 }

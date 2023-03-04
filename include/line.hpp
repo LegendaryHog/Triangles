@@ -84,7 +84,7 @@ F distance (const Line<F> &line1, const Line<F> &line2)
 template<std::floating_point F>
 bool are_intersecting (const Line<F> &line1, const Line<F> &line2)
 {
-    return Compare::are_equal (distance (line1, line2), 0);
+    return Compare::are_equal (distance (line1, line2), 0.0);
 }
 
 template<std::floating_point F>

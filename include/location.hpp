@@ -45,13 +45,13 @@ enum Loc2D
 };
 
 /*
- * Let P, Q, R (in this very order) and M be points in R^3.
- *
- * Then magic_product(P, Q, R, M) is prcisely the sign of
- * triple product (v_PM, v_QM, v_RM), where v_PM is a vector
- * with initial point P and terminal point M, v_QM - vector
- * with initial point Q and terminal point M, v_RM - vector
- * with initial point R and terminal point M.
+ * Points P, Q, R make a plane. Let normal of this plane [RP, RQ]
+ * (vector of rotate with order of points P, Q, R), lets normal of PQR 
+ * make the up direction
+ * 
+ * If M is on the plane, than return    Loc3D::On 
+ * If M is above the plane, than return Loc3D::Above
+ * If M is below the plane, than retunr Loc3D::Below
  */
 template<std::floating_point F>
 Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, const Point<F>& M)
@@ -70,7 +70,7 @@ Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, co
 
     if (Compare::are_equal (product, 0.0))
         return Loc3D::On;
-    else if (product > 0)
+    else if (product > 0.0)
         return Loc3D::Above;
     else
         return Loc3D::Below;

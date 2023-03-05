@@ -90,7 +90,7 @@ bool are_intersecting (const Line<F> &line1, const Line<F> &line2)
 template<std::floating_point F>
 bool is_belong (const Point<F> &pt, const Line<F> &line)
 {
-    return Compare::are_equal (distance (pt, line), 0);
+    return Compare::are_equal (distance (pt, line), 0.0);
 }
 
 template<std::floating_point F>

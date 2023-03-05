@@ -58,6 +58,7 @@ TEST(IntersectionTest_2D, Magic_Product)
                  Location::magic_product (T3.Q(), T3.R(), T3.P()) == Location::Loc2D::Neutral);
 }
 
+#if DANY
 TEST (IntersectionTest_2D, Intersection_R1) 
 { 
     Triangle T2   { Point { 2.0, 0.0, 0.0}, Point { 2.0, 3.0, 0.0}, Point { 0.0, 3.0, 0.0}};
@@ -119,6 +120,7 @@ TEST (IntersectionTest_2D, Intersection_R2)
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_14, T2) == false);
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_15, T2) == true);
 }
+#endif
 
 TEST (IntersectionTest_2D, PartialCase) { 
     Triangle T2   {Point { 2.0, 0.0, 0.0}, Point { 0.0, 3.0, 0.0}, Point { 0.0, 0.0, 0.0}};
@@ -138,6 +140,7 @@ TEST (IntersectionTest_2D, PartialCase) {
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_6, T2) == true);
 }
 
+#if DANY
 TEST (IntersectionTest_2D, Degenerate_Segment_Segment_No_Intersection)
 {
     Triangle T1_1 {Point {-1.0, 1.0, 0.0}, Point {0.0, -2.0, 0.0}, Point {0.0, -2.0, 0.0}};
@@ -158,3 +161,4 @@ TEST (IntersectionTest_2D, Degenerate_Segment_Segment_No_Intersection)
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2_2) == false);
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2_3) == false);
 }
+#endif

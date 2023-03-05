@@ -95,20 +95,29 @@ bool seg_tr_intersecting_2D(const Segment<F>& seg, const Triangle<F>& tr)
 }
 
 template<std::floating_point Float>
-bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr)
+bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr, Location::Loc3D F_loc, Location::Loc3D S_loc)
 {
-    const auto& P = tr.P(), Q = tr.Q(), R = tr.R(), F = seg.F_, S = seg.S_;
+    const auto& P = tr.P(), Q = tr.Q(), R = tr.R();
+    Segment seg_cpy = seg;
 
-    if (are_intersecting(P, seg) ||
-        are_intersecting(Q, seg) ||
-        are_intersecting(R, seg))   
-        return true;
+    if (F_loc == Location::Loc3D::On)
+    {
+        seg_cpy.swap_points();
+        F_loc = S_loc;
+    }
 
-    if (magic_product(P, F, S, Q) != magic_product(P, F, S, R) &&
-        magic_product(Q, F, S, P) != magic_product(Q, F, S, R) &&
-        magic_product(R, F, S, P) != magic_product(R, F, S, Q))
-        return true;
-    return false;
+    const auto& F = seg_cpy.F_, S = seg_cpy.S_;
+
+    Location::Loc3D outside {};
+    if (F_loc == Location::Loc3D::Above)
+        outside = Location::Loc3D::Below;
+    else
+        outside = Location::Loc3D::Above;
+
+
+    return Location::magic_product(P, R, F, S) != outside &&
+           Location::magic_product(R, Q, F, S) != outside &&
+           Location::magic_product(Q, P, F, S) != outside;
 }
 } // namespace Algorithm
 
@@ -124,7 +133,7 @@ bool are_intersecting (const Segment<F>& segment, const Triangle<F>& triangle)
     if (F_loc == Location::Loc3D::On && S_loc == Location::Loc3D::On)
         return Algorithm::seg_tr_intersecting_2D(segment, triangle);
     else
-        return Algorithm::seg_tr_intersecting_3D(segment, triangle);
+        return Algorithm::seg_tr_intersecting_3D(segment, triangle, F_loc, S_loc);
 }
 
 template<std::floating_point F>

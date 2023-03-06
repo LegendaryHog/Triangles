@@ -10,7 +10,7 @@ namespace Location
 enum LocPoints {
     InSame = 1,
     InDifferent = -1,
-    OnLine = 0,
+    Undefined = 0,
 };
 
 template<std::floating_point F>
@@ -21,7 +21,7 @@ LocPoints laying_in_same_half(const Point<F>& A, const Point<F>& B, const Point<
     auto prod = scalar_product(vector_product(AB, AC), vector_product(AB, AD));
 
     if (Compare::are_equal(prod, 0.0))
-        return LocPoints::OnLine;
+        return LocPoints::Undefined;
     else if (prod > 0.0)
         return  LocPoints::InSame;
     else

@@ -3,7 +3,7 @@
 
 using namespace Geometry;
 
-TEST(Triangles, are_intersecting_)
+TEST(Degenerate_Cases, Point_and_Triangle)
 {
     Point A1 {0.0, 0.0}, B1 {3.0, 0.0}, C1 {0.0, 3.0};
     Triangle tr1 {A1, B1, C1};
@@ -13,6 +13,7 @@ TEST(Triangles, are_intersecting_)
 
     Point D1 {1.5, 1.5}, D2 {2.5, 0.5}, D3 {1.0, 1.0}, D4 {2.0, 2.0}, D5 {-0.5, 4.0 };
     Point D6 {0.0, -0.5}, D7 {1.0, -1.0}, D8 {-2.5, -1.5}, D9 {1.0, -0.5}, D10 {2.5001, -0.5};
+    Point D11 {1.5, 1.5, 2.0}, D12 {2.5, 0.5, -0.5};
 
     EXPECT_TRUE(are_intersecting(A1, tr1));
     EXPECT_TRUE(are_intersecting(B1, tr1));
@@ -23,6 +24,8 @@ TEST(Triangles, are_intersecting_)
     EXPECT_TRUE(are_intersecting(D3, tr1));
     EXPECT_FALSE(are_intersecting(D4, tr1));
     EXPECT_FALSE(are_intersecting(D5, tr1));
+    EXPECT_FALSE(are_intersecting(D11, tr1));
+    EXPECT_FALSE(are_intersecting(D12, tr1));
 
     EXPECT_TRUE(are_intersecting(A2, tr2));
     EXPECT_TRUE(are_intersecting(B2, tr2));
@@ -33,9 +36,31 @@ TEST(Triangles, are_intersecting_)
     EXPECT_FALSE(are_intersecting(D8, tr2));
     EXPECT_TRUE(are_intersecting(D9, tr2));
     EXPECT_FALSE(are_intersecting(D10, tr2));
+
+    EXPECT_TRUE(are_intersecting(tr1, A1));
+    EXPECT_TRUE(are_intersecting(tr1, B1));
+    EXPECT_TRUE(are_intersecting(tr1, C1));
+
+    EXPECT_TRUE(are_intersecting(tr1, D1));
+    EXPECT_TRUE(are_intersecting(tr1, D2));
+    EXPECT_TRUE(are_intersecting(tr1, D3));
+    EXPECT_FALSE(are_intersecting(tr1, D4));
+    EXPECT_FALSE(are_intersecting(tr1, D5));
+    EXPECT_FALSE(are_intersecting(tr1, D11));
+    EXPECT_FALSE(are_intersecting(tr1, D12));
+
+    EXPECT_TRUE(are_intersecting(tr2, A2));
+    EXPECT_TRUE(are_intersecting(tr2, B2));
+    EXPECT_TRUE(are_intersecting(tr2, C2));
+
+    EXPECT_TRUE(are_intersecting(tr2, D6));
+    EXPECT_TRUE(are_intersecting(tr2, D7));
+    EXPECT_FALSE(are_intersecting(tr2, D8));
+    EXPECT_TRUE(are_intersecting(tr2, D9));
+    EXPECT_FALSE(are_intersecting(tr2, D10));
 }
 
-TEST(Segment_, point_belong_segment_)
+TEST(Degenerate_Cases, Point_and_Segment)
 {
     Segment seg1 {Point {3.2}, Point {-5.7}};
     Point A1 {0.0}, B1 {3.7}, C1 {1.0, 0.2};
@@ -46,20 +71,20 @@ TEST(Segment_, point_belong_segment_)
     Segment seg3 {Point {-9.0, -10.0}, Point {3.5, 2.5}};
     Point A3 {3.5, 2.5}, B3 {0.0, 0.0}, C3 {1.0, 0.0};
 
-    EXPECT_TRUE(point_belong_segment(A1, seg1));
-    EXPECT_FALSE(point_belong_segment(B1, seg1));
-    EXPECT_FALSE(point_belong_segment(C1, seg1));
+    EXPECT_TRUE(are_intersecting(A1, seg1));
+    EXPECT_FALSE(are_intersecting(B1, seg1));
+    EXPECT_FALSE(are_intersecting(C1, seg1));
 
-    EXPECT_FALSE(point_belong_segment(A2, seg2));
-    EXPECT_TRUE(point_belong_segment(B2, seg2));
-    EXPECT_FALSE(point_belong_segment(C2, seg2));
+    EXPECT_FALSE(are_intersecting(A2, seg2));
+    EXPECT_TRUE(are_intersecting(B2, seg2));
+    EXPECT_FALSE(are_intersecting(C2, seg2));
 
-    EXPECT_TRUE(point_belong_segment(A3, seg3));
-    EXPECT_FALSE(point_belong_segment(B3, seg3));
-    EXPECT_TRUE(point_belong_segment(C3, seg3));
+    EXPECT_TRUE(are_intersecting(A3, seg3));
+    EXPECT_FALSE(are_intersecting(B3, seg3));
+    EXPECT_TRUE(are_intersecting(C3, seg3));
 }
 
-TEST(Segment_, are_intersecting)
+TEST(Degenerate_Cases, Segmnet_and_Segment)
 {
     Segment seg1 {Point {0.0, 0.0}, Point {8.0, 8.0}};
     Segment seg2 {Point {1.0, 0.0}, Point {0.0, 1.0}};
@@ -86,7 +111,7 @@ TEST(Segment_, are_intersecting)
     EXPECT_FALSE(are_intersecting(seg11, seg10));
 }
 
-TEST(Segment_, seg_tr_intersecting_2D)
+TEST(Degenerate_Cases, Segment_and_Triangle_2D)
 {
     Triangle tr {Point {-1.0, 3.0}, Point {0.0, 0.0}, Point {3.0, 0.0}};
     Segment seg1 {Point {-1.0, 2.0}, Point {0.5, 2.0}}, seg2 {Point {-2.0, 3.0}, Point {0.0, 3.0}};
@@ -107,7 +132,7 @@ TEST(Segment_, seg_tr_intersecting_2D)
     EXPECT_TRUE(Algorithm::seg_tr_intersecting_2D(seg10, tr));
 }
 
-TEST(Segment, seg_tr_intersection_3D)
+TEST(Degenerate_Cases, Segment_and_Triangle_3D)
 {
     Triangle tr {Point {-3.0, 0.0}, Point {0.0, 4.0}, Point {2.0, 0.0}};
 
@@ -140,7 +165,7 @@ TEST(Segment, seg_tr_intersection_3D)
                                                                Location::magic_product(tr.P(), tr.Q(), tr.R(), seg4.S_)));
             }
 }
-TEST(Segment, are_intersecting_)
+TEST(Degenerate_Cases, Segment_and_Triangle)
 {
     Point P {12.0, 0.0}, Q {0.0, 13.0}, R {0.0, 0.0};
     Triangle tr {P, Q, R};

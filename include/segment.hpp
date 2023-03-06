@@ -49,19 +49,4 @@ struct Segment {
         std::swap(F_, S_);
     }
 };
-
-template<std::floating_point F>
-bool point_belong_segment(const Point<F>& point, const Segment<F>& segment)
-{
-    Vector PF {point, segment.F_};
-    Vector PS {point, segment.S_};
-
-    if (!are_collinear(PF, PS))
-        return false;
-    else if (scalar_product(PF,PS) < 0.0 || segment.F_ == point || segment.S_ == point)
-        return true;
-    else
-        return false;
-}
-
 } //namespace Geometry

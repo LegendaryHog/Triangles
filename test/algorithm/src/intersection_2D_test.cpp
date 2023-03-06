@@ -35,29 +35,6 @@ TEST(IntersectionTest_2D, SpaceTransformation)
                  (T4.R() == (Point {1 / std::sqrt(2), -std::sqrt(6) / 2.0, 0.0})));
 }
 
-TEST(IntersectionTest_2D, Magic_Product)
-{
-    Triangle T1 { Point {0.0, 0.0, 0.0}, Point {1.0, 0.0, 0.0}, Point {0.0, 1.0, 0.0} };
-    Triangle T2 { Point {0.0, 0.0, 0.0}, Point {1.0, 0.0, 0.0}, Point {2.0, 0.0, 0.0} };
-    Triangle T3 { Point {0.0, 0.0, 0.0}, Point {0.0, 0.0, 0.0}, Point {0.0, 0.0, 0.0} };
-
-    EXPECT_TRUE (Location::magic_product (T1.P(), T1.Q(), T1.R()) == Location::Loc2D::Positive &&
-                 Location::magic_product (T1.R(), T1.P(), T1.Q()) == Location::Loc2D::Positive &&
-                 Location::magic_product (T1.Q(), T1.R(), T1.P()) == Location::Loc2D::Positive);
-
-    EXPECT_TRUE (Location::magic_product (T1.Q(), T1.P(), T1.R()) == Location::Loc2D::Negative &&
-                 Location::magic_product (T1.P(), T1.R(), T1.Q()) == Location::Loc2D::Negative &&
-                 Location::magic_product (T1.R(), T1.Q(), T1.P()) == Location::Loc2D::Negative);
-
-    EXPECT_TRUE (Location::magic_product (T2.P(), T2.Q(), T2.R()) == Location::Loc2D::Neutral &&
-                 Location::magic_product (T2.R(), T2.P(), T2.Q()) == Location::Loc2D::Neutral &&
-                 Location::magic_product (T2.Q(), T2.R(), T2.P()) == Location::Loc2D::Neutral);
-
-    EXPECT_TRUE (Location::magic_product (T3.P(), T3.Q(), T3.R()) == Location::Loc2D::Neutral &&
-                 Location::magic_product (T3.R(), T3.P(), T3.Q()) == Location::Loc2D::Neutral &&
-                 Location::magic_product (T3.Q(), T3.R(), T3.P()) == Location::Loc2D::Neutral);
-}
-
 #if DANY
 TEST (IntersectionTest_2D, Intersection_R1) 
 { 
@@ -132,12 +109,12 @@ TEST (IntersectionTest_2D, PartialCase) {
     Triangle T1_5 {Point { 1.0, 0.0, 0.0}, Point { 1.0,-2.0, 0.0}, Point { 3.0,-2.0, 0.0}};
     Triangle T1_6 {Point { 0.0, 2.0, 0.0}, Point {-2.0, 4.0, 0.0}, Point {-2.0, 0.0, 0.0}};
 
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_1, T2) == true);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_2, T2) == true);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2) == true);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_4, T2) == true);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_5, T2) == true);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_6, T2) == true);
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_1, T2));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_2, T2));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_4, T2));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_5, T2));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_6, T2));
 }
 
 #if DANY

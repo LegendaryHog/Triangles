@@ -13,15 +13,8 @@
 namespace Task
 {
 
-enum ShapeType
-{
-    IsPoint    = 0,
-    IsSegment  = 1,
-    IsTriangle = 2,
-};
-
 template<std::floating_point F>
-using Shape = std::pair<ShapeType, std::variant<Geometry::Point<F>, Geometry::Segment<F>, Geometry::Triangle<F>>>;
+using Shape = std::variant<Geometry::Point<F>, Geometry::Segment<F>, Geometry::Triangle<F>>;
 
 template<std::floating_point F>
 Geometry::Point<F> scan_point()
@@ -42,20 +35,20 @@ Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Poin
         if (Compare::are_equal(prod, 0.0))
             if (p1p2.is_zero())
                 if (p1p3.is_zero())
-                    return std::make_pair(ShapeType::IsPoint, p1);
+                    return p1;
                 else
-                    return std::make_pair(ShapeType::IsSegment, Geometry::Segment{p1, p3});
+                    return Geometry::Segment{p1, p3};
             else
-                return std::make_pair(ShapeType::IsSegment, Geometry::Segment{p1, p2});
+                return Geometry::Segment{p1, p2};
         else if (prod < 0)
-            return std::make_pair(ShapeType::IsSegment, Geometry::Segment{p2, p3});
+            return Geometry::Segment{p2, p3};
         else if (p1p2.module() > p1p3.module())
-            return std::make_pair(ShapeType::IsSegment, Geometry::Segment{p1, p2});
+            return Geometry::Segment{p1, p2};
         else
-            return std::make_pair(ShapeType::IsSegment, Geometry::Segment{p1, p3});
+            return Geometry::Segment{p1, p3};
     }
     else
-        return std::make_pair(ShapeType::IsTriangle, Geometry::Triangle{p1, p2, p3});
+        return Geometry::Triangle{p1, p2, p3};
 }
 
 template<std::floating_point F>
@@ -88,7 +81,7 @@ void intersect_shapes(const std::vector<Shape<F>>& shapes)
     for (std::size_t i = 0; i < size - 1; i++)
         for (std::size_t j = i + 1; j < size; j++)
             if (std::visit([](const auto& obj1, const auto& obj2) {return Geometry::are_intersecting(obj1, obj2);},
-            shapes[i].second, shapes[j].second))
+            shapes[i], shapes[j]))
             {
                 indexs.insert(i);
                 indexs.insert(j);

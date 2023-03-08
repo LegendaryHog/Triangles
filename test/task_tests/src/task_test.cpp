@@ -43,9 +43,6 @@ TEST(Task, test_is_obj)
     EXPECT_FALSE(is_point(shape_tr));
     EXPECT_FALSE(is_segment(shape_tr));
     EXPECT_TRUE(is_triangle(shape_tr));
-
-    Geometry::Point A4 {1.0, 1.0}, A5 {6.0, 6.0}, A6 {2.0, 2.0};
-    Geometry::Point A7 {0.9999999999987, 1.000000004, -0.000000003};
 }
 
 TEST(Task, make_shape_point)
@@ -54,7 +51,7 @@ TEST(Task, make_shape_point)
     Geometry::Point origin {1.0, 1.0, 1.0};
     
     auto shape1 = make_shape(A1, A2, A3);
-    auto shape2 = make_shape(A1, A3, A3);
+    auto shape2 = make_shape(A1, A3, A2);
     auto shape3 = make_shape(A2, A1, A3);
     auto shape4 = make_shape(A2, A3, A1);
     auto shape5 = make_shape(A3, A1, A2);
@@ -89,7 +86,7 @@ TEST(Task, make_shape_segment)
     Geometry::Segment origin {A1, A3};
     
     auto shape1 = make_shape(A1, A2, A3);
-    auto shape2 = make_shape(A1, A3, A3);
+    auto shape2 = make_shape(A1, A3, A2);
     auto shape3 = make_shape(A2, A1, A3);
     auto shape4 = make_shape(A2, A3, A1);
     auto shape5 = make_shape(A3, A1, A2);
@@ -124,7 +121,7 @@ TEST(Task, make_shape_segment_epsilon)
     Geometry::Segment origin {A1, A3};
     
     auto shape1 = make_shape(A1, A2, A3);
-    auto shape2 = make_shape(A1, A3, A3);
+    auto shape2 = make_shape(A1, A3, A2);
     auto shape3 = make_shape(A2, A1, A3);
     auto shape4 = make_shape(A2, A3, A1);
     auto shape5 = make_shape(A3, A1, A2);
@@ -155,28 +152,27 @@ TEST(Task, make_shape_segment_epsilon)
 
 TEST(Task, make_shape_triangle)
 {
-    Geometry::Point A1 {1.0, 1.0}, A2 {6.0000000021, 5.999999996, -0.0000000001}, A3 {0.0, 0.0};
-    Geometry::Segment origin {A1, A3};
+    Geometry::Point A1 {1.0, 1.0}, A2 {6.0000000021, 5.999999996, -0.0000000001}, A3 {2.0, 2.0, -1.0};
     
     auto shape1 = make_shape(A1, A2, A3);
-    auto shape2 = make_shape(A1, A3, A3);
+    auto shape2 = make_shape(A1, A3, A2);
     auto shape3 = make_shape(A2, A1, A3);
     auto shape4 = make_shape(A2, A3, A1);
     auto shape5 = make_shape(A3, A1, A2);
     auto shape6 = make_shape(A3, A2, A1);
 
-    EXPECT_TRUE(is_segment(shape1));
-    EXPECT_TRUE(is_segment(shape2));
-    EXPECT_TRUE(is_segment(shape3));
-    EXPECT_TRUE(is_segment(shape4));
-    EXPECT_TRUE(is_segment(shape5));
-    EXPECT_TRUE(is_segment(shape6));
+    EXPECT_TRUE(is_triangle(shape1));
+    EXPECT_TRUE(is_triangle(shape2));
+    EXPECT_TRUE(is_triangle(shape3));
+    EXPECT_TRUE(is_triangle(shape4));
+    EXPECT_TRUE(is_triangle(shape5));
+    EXPECT_TRUE(is_triangle(shape6));
     
-    Geometry::Segment<double> shape_res1 {}, shape_res2 {}, shape_res3 {}, shape_res4 {}, shape_res5 {}, shape_res6 {};
-    EXPECT_NO_THROW(shape_res1 = std::get<Geometry::Segment<double>>(shape1));
-    EXPECT_NO_THROW(shape_res2 = std::get<Geometry::Segment<double>>(shape2));
-    EXPECT_NO_THROW(shape_res3 = std::get<Geometry::Segment<double>>(shape3));
-    EXPECT_NO_THROW(shape_res4 = std::get<Geometry::Segment<double>>(shape4));
-    EXPECT_NO_THROW(shape_res5 = std::get<Geometry::Segment<double>>(shape5));
-    EXPECT_NO_THROW(shape_res6 = std::get<Geometry::Segment<double>>(shape6));
+    Geometry::Triangle<double> shape_res1 {}, shape_res2 {}, shape_res3 {}, shape_res4 {}, shape_res5 {}, shape_res6 {};
+    EXPECT_NO_THROW(shape_res1 = std::get<Geometry::Triangle<double>>(shape1));
+    EXPECT_NO_THROW(shape_res2 = std::get<Geometry::Triangle<double>>(shape2));
+    EXPECT_NO_THROW(shape_res3 = std::get<Geometry::Triangle<double>>(shape3));
+    EXPECT_NO_THROW(shape_res4 = std::get<Geometry::Triangle<double>>(shape4));
+    EXPECT_NO_THROW(shape_res5 = std::get<Geometry::Triangle<double>>(shape5));
+    EXPECT_NO_THROW(shape_res6 = std::get<Geometry::Triangle<double>>(shape6));
 }

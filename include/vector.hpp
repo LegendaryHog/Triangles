@@ -21,15 +21,7 @@ struct Vector
      z_ {Compare::are_equal (first.z_, second.z_) ? 0.0 : second.z_ - first.z_}
     {}
 
-    bool operator== (const Vector &other) const
-    {
-        return (Compare::are_equal (x_, other.x_) && Compare::are_equal (y_, other.y_) &&
-                Compare::are_equal (z_, other.z_));
-    }
-
-    bool operator!= (const Vector &other) const { return !(*this == other); }
-
-    Vector &operator+= (const Vector &rhs)
+    Vector& operator+=(const Vector &rhs)
     {
         x_ = Compare::are_equal (x_, -rhs.x_) ? 0.0 : x_ + rhs.x_;
         y_ = Compare::are_equal (y_, -rhs.y_) ? 0.0 : y_ + rhs.y_;
@@ -38,13 +30,7 @@ struct Vector
         return *this;
     }
 
-    Vector operator+ (const Vector &other) const
-    {
-        Vector sum = *this;
-        return (sum += other);
-    }
-
-    Vector &operator-= (const Vector &rhs)
+    Vector& operator-=(const Vector &rhs)
     {
         x_ = Compare::are_equal (x_, rhs.x_) ? 0.0 : x_ - rhs.x_;
         y_ = Compare::are_equal (y_, rhs.y_) ? 0.0 : y_ - rhs.y_;
@@ -53,13 +39,7 @@ struct Vector
         return *this;
     }
 
-    Vector operator- (const Vector &other) const
-    {
-        Vector diff = *this;
-        return (diff -= other);
-    }
-
-    Vector &operator*= (F coeff)
+    Vector& operator*=(F coeff)
     {
         x_ *= coeff;
         y_ *= coeff;
@@ -68,16 +48,13 @@ struct Vector
         return *this;
     }
 
-    Vector operator- () const { return Vector {-x_, -y_, -z_}; }
+    F norm() const {return x_ * x_ + y_ * y_ + z_ * z_;}
 
-    F norm () const { return x_ * x_ + y_ * y_ + z_ * z_; }
+    F module() const {return std::sqrt(norm());}
 
-    F module () const { return std::sqrt (norm ()); }
-
-    Vector &normalize ()
+    Vector& normalize()
     {
-        operator*= (1 / module ());
-
+        operator*=(1 / module());
         return *this;
     }
 
@@ -85,9 +62,34 @@ struct Vector
     {
         return (Compare::are_equal (x_, 0.0) && Compare::are_equal (y_, 0.0) && Compare::are_equal (z_, 0.0));
     }
-
-    void print () const { std::cout << "(" << x_ << ", " << y_ << ", " << z_ << ")" << std::endl; }
 };
+
+template<std::floating_point F>
+bool operator==(const Vector<F>& lhs, const Vector<F>& rhs)
+{
+    return (Compare::are_equal (lhs.x_, rhs.x_) && Compare::are_equal (lhs.y_, rhs.y_)
+            && Compare::are_equal (lhs.z_, rhs.z_));
+}
+
+template<std::floating_point F>
+Vector<F> operator+(const Vector<F>& lhs, const Vector<F>& rhs)
+{
+    Vector lhs_cpy = lhs;
+    return (lhs_cpy += rhs);
+}
+
+template<std::floating_point F>
+Vector<F> operator-(const Vector<F>& vec)
+{
+    return Vector{-vec.x_, -vec.y_, -vec.z_};
+}
+
+template<std::floating_point F>
+Vector<F> operator-(const Vector<F>& lhs, const Vector<F>& rhs)
+{
+    Vector lhs_cpy = lhs;
+    return (lhs_cpy -= rhs);
+}
 
 template<std::floating_point F>
 Vector<F> operator* (const Vector<F> &vec, F coeff)

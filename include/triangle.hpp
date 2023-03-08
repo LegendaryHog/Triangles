@@ -11,6 +11,8 @@ struct Triangle
 {
     Point<F> P_, Q_, R_;
 
+    Triangle() = default;
+
     Triangle(const Point<F>& P, const Point<F>& Q, const Point<F>& R)
     :P_ {P}, Q_ {Q}, R_ {R}
     {}
@@ -18,12 +20,6 @@ struct Triangle
     Triangle(Point<F>&& P, Point<F>&& Q, Point<F>&& R)
     :P_ {std::move(P)}, Q_ {std::move(Q)}, R_ {std::move(R)}
     {}
-
-
-    bool operator== (const Triangle &rhs) const
-    {
-        return (P_ == rhs.P_ && Q_ == rhs.Q_ && R_ == rhs.R_);
-    }
 
     void swap_QR () { std::swap (Q_, R_); }
 
@@ -39,5 +35,11 @@ struct Triangle
         std::swap (R_, Q_);
     }
 };
+
+template<std::floating_point F>
+bool operator==(const Triangle<F>& lhs, const Triangle<F>& rhs)
+{
+    return lhs.P_ == rhs.P_ && lhs.Q_ == rhs.Q_ && lhs.R_ == rhs.R_;
+}
 
 } // namespace Geometry

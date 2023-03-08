@@ -1,4 +1,4 @@
-add_subdirectory(algorithm)
+add_subdirectory(algorithm_tests)
 add_subdirectory(basic_tests)
-add_subdirectory(task_test)
+add_subdirectory(task_tests)
 

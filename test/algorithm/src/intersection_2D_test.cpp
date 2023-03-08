@@ -16,23 +16,23 @@ TEST(IntersectionTest_2D, SpaceTransformation)
 
     Algorithm::space_transformation (T1, T2);
 
-    EXPECT_TRUE ((T1.P() == (Point {0.0, 0.0, 0.0})) &&
-                 (T1.Q() == (Point {2.0, 0.0, 0.0})) &&
-                 (T1.R() == (Point {0.0, 1.0, 0.0})));
+    EXPECT_TRUE ((T1.P_ == (Point {0.0, 0.0, 0.0})) &&
+                 (T1.Q_ == (Point {2.0, 0.0, 0.0})) &&
+                 (T1.R_ == (Point {0.0, 1.0, 0.0})));
 
-    EXPECT_TRUE ((T2.P() == (Point {3.0, 0.0, 0.0})) &&
-                 (T2.Q() == (Point {4.0, 0.0, 0.0})) &&
-                 (T2.R() == (Point {4.0, 2.0, 0.0})));
+    EXPECT_TRUE ((T2.P_ == (Point {3.0, 0.0, 0.0})) &&
+                 (T2.Q_ == (Point {4.0, 0.0, 0.0})) &&
+                 (T2.R_ == (Point {4.0, 2.0, 0.0})));
 
     Algorithm::space_transformation (T3, T4);
 
-    EXPECT_TRUE ((T3.P() == (Point {0.0, 0.0, 0.0})) &&
-                 (T3.Q() == (Point {2.0*std::sqrt(2.0), 0.0, 0.0})) &&
-                 (T3.R() == (Point {-1 / std::sqrt(2.0), std::sqrt(6) / 2.0, 0.0})));
+    EXPECT_TRUE ((T3.P_ == (Point {0.0, 0.0, 0.0})) &&
+                 (T3.Q_ == (Point {2.0*std::sqrt(2.0), 0.0, 0.0})) &&
+                 (T3.R_ == (Point {-1 / std::sqrt(2.0), std::sqrt(6) / 2.0, 0.0})));
 
-    EXPECT_TRUE ((T4.P() == (Point {0.0, std::sqrt(6.0), 0.0})) && 
-                 (T4.Q() == (Point {std::sqrt(2.0), std::sqrt(6.0), 0.0})) &&
-                 (T4.R() == (Point {1 / std::sqrt(2), -std::sqrt(6) / 2.0, 0.0})));
+    EXPECT_TRUE ((T4.P_ == (Point {0.0, std::sqrt(6.0), 0.0})) && 
+                 (T4.Q_ == (Point {std::sqrt(2.0), std::sqrt(6.0), 0.0})) &&
+                 (T4.R_ == (Point {1 / std::sqrt(2), -std::sqrt(6) / 2.0, 0.0})));
 }
 
 #if DANY

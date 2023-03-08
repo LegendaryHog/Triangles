@@ -155,14 +155,14 @@ TEST(Degenerate_Cases, Segment_and_Triangle_3D)
                 Point S4 {A4.x_ - dx, A4.y_ - dy, A4.z_ - dz};
                 
                 Segment seg1 {F1, S1}, seg2 {F2, S2}, seg3 {F3, S3}, seg4 {F4, S4};
-                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg1, tr, Location::magic_product(tr.P(), tr.Q(), tr.R(), seg1.F_), 
-                                                              Location::magic_product(tr.P(), tr.Q(), tr.R(), seg1.S_)));
-                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg2, tr, Location::magic_product(tr.P(), tr.Q(), tr.R(), seg2.F_),
-                                                              Location::magic_product(tr.P(), tr.Q(), tr.R(), seg2.S_)));
-                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg3, tr, Location::magic_product(tr.P(), tr.Q(), tr.R(), seg2.F_),
-                                                              Location::magic_product(tr.P(), tr.Q(), tr.R(), seg3.S_)));
-                EXPECT_FALSE(Algorithm::seg_tr_intersecting_3D(seg4, tr, Location::magic_product(tr.P(), tr.Q(), tr.R(), seg4.F_),
-                                                               Location::magic_product(tr.P(), tr.Q(), tr.R(), seg4.S_)));
+                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg1, tr, Location::magic_product(tr.P_, tr.Q_, tr.R_, seg1.F_), 
+                                                              Location::magic_product(tr.P_, tr.Q_, tr.R_, seg1.S_)));
+                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg2, tr, Location::magic_product(tr.P_, tr.Q_, tr.R_, seg2.F_),
+                                                              Location::magic_product(tr.P_, tr.Q_, tr.R_, seg2.S_)));
+                EXPECT_TRUE(Algorithm::seg_tr_intersecting_3D(seg3, tr, Location::magic_product(tr.P_, tr.Q_, tr.R_, seg2.F_),
+                                                              Location::magic_product(tr.P_, tr.Q_, tr.R_, seg3.S_)));
+                EXPECT_FALSE(Algorithm::seg_tr_intersecting_3D(seg4, tr, Location::magic_product(tr.P_, tr.Q_, tr.R_, seg4.F_),
+                                                               Location::magic_product(tr.P_, tr.Q_, tr.R_, seg4.S_)));
             }
 }
 TEST(Degenerate_Cases, Segment_and_Triangle)

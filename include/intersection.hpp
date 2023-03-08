@@ -33,12 +33,12 @@ bool are_intersecting (const Point<F>& point, const Segment<F>& segment)
 template<std::floating_point F>
 bool are_intersecting (const Point<F>& point, const Triangle<F>& triangle)
 {
-    if (Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), point) != Location::Loc3D::On)
+    if (Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, point) != Location::Loc3D::On)
         return false;
     
-    return Location::laying_in_same_half(triangle.P(), triangle.Q(), triangle.R(), point) != Location::LocPoints::InDifferent &&
-           Location::laying_in_same_half(triangle.Q(), triangle.R(), triangle.P(), point) != Location::LocPoints::InDifferent &&
-           Location::laying_in_same_half(triangle.R(), triangle.P(), triangle.Q(), point) != Location::LocPoints::InDifferent;
+    return Location::laying_in_same_half(triangle.P_, triangle.Q_, triangle.R_, point) != Location::LocPoints::InDifferent &&
+           Location::laying_in_same_half(triangle.Q_, triangle.R_, triangle.P_, point) != Location::LocPoints::InDifferent &&
+           Location::laying_in_same_half(triangle.R_, triangle.P_, triangle.Q_, point) != Location::LocPoints::InDifferent;
 }
 
 template<std::floating_point F>
@@ -89,15 +89,15 @@ bool seg_tr_intersecting_2D(const Segment<F>& seg, const Triangle<F>& tr)
     if (are_intersecting(seg.F_, tr) || are_intersecting(seg.S_, tr))
         return true;
 
-    return are_intersecting(seg, Segment {tr.P(), tr.Q()}) ||
-           are_intersecting(seg, Segment {tr.Q(), tr.R()}) ||
-           are_intersecting(seg, Segment {tr.R(), tr.P()});
+    return are_intersecting(seg, Segment {tr.P_, tr.Q_}) ||
+           are_intersecting(seg, Segment {tr.Q_, tr.R_}) ||
+           are_intersecting(seg, Segment {tr.R_, tr.P_});
 }
 
 template<std::floating_point Float>
 bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr, Location::Loc3D F_loc, Location::Loc3D S_loc)
 {
-    const auto& P = tr.P(), Q = tr.Q(), R = tr.R();
+    const auto& P = tr.P_, Q = tr.Q_, R = tr.R_;
     Segment seg_cpy = seg;
 
     if (F_loc == Location::Loc3D::On)
@@ -124,8 +124,8 @@ bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr
 template<std::floating_point F>
 bool are_intersecting (const Segment<F>& segment, const Triangle<F>& triangle)
 {
-    auto F_loc = Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.F_);
-    auto S_loc = Location::magic_product(triangle.P(), triangle.Q(), triangle.R(), segment.S_);
+    auto F_loc = Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, segment.F_);
+    auto S_loc = Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, segment.S_);
 
     if (F_loc != Location::Loc3D::On && S_loc != Location::Loc3D::On && F_loc == S_loc)
         return false;
@@ -151,9 +151,9 @@ bool are_intersecting (const Triangle<F>& triangle, const Segment<F>& segment)
 template<std::floating_point F>
 bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
 {
-    auto P1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.P());
-    auto Q1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.Q());
-    auto R1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.R());
+    auto P1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
+    auto Q1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.Q_);
+    auto R1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.R_);
 
     if (P1_loc != Location::Loc3D::On && P1_loc == Q1_loc && Q1_loc == R1_loc)
         return false;

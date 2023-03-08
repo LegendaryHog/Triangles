@@ -24,40 +24,40 @@ void point_transformation (Point<F> &point, const Point<F> &origin, const Vector
 template<std::floating_point F>
 void space_transformation (Triangle<F> &tr_1, Triangle<F> &tr_2)
 {
-    Vector x_axis {tr_1.P(), tr_1.Q()};
+    Vector x_axis {tr_1.P_, tr_1.Q_};
     x_axis *= (1 / x_axis.module ());
 
-    Vector normal = vector_product (Vector {tr_1.P(), tr_1.Q()}, Vector {tr_1.P(), tr_1.R()});
+    Vector normal = vector_product (Vector {tr_1.P_, tr_1.Q_}, Vector {tr_1.P_, tr_1.R_});
     normal *= (1 / normal.module ());
 
     Vector y_axis = vector_product (normal, x_axis);
 
-    point_transformation (tr_1.Q(), tr_1.P(), x_axis, y_axis);
-    point_transformation (tr_1.R(), tr_1.P(), x_axis, y_axis);
+    point_transformation (tr_1.Q_, tr_1.P_, x_axis, y_axis);
+    point_transformation (tr_1.R_, tr_1.P_, x_axis, y_axis);
 
-    point_transformation (tr_2.P(), tr_1.P(), x_axis, y_axis);
-    point_transformation (tr_2.Q(), tr_1.P(), x_axis, y_axis);
-    point_transformation (tr_2.R(), tr_1.P(), x_axis, y_axis);
-    tr_1.P() = {0.0, 0.0, 0.0}; //  this is origin
+    point_transformation (tr_2.P_, tr_1.P_, x_axis, y_axis);
+    point_transformation (tr_2.Q_, tr_1.P_, x_axis, y_axis);
+    point_transformation (tr_2.R_, tr_1.P_, x_axis, y_axis);
+    tr_1.P_ = {0.0, 0.0, 0.0}; //  this is origin
 }
 
 template<std::floating_point F>
 bool test_intersection_R1 (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 {
-    if (Location::magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Location::Loc2D::Negative)
+    if (Location::magic_product (tr_2.R_, tr_2.P_, tr_1.Q_) == Location::Loc2D::Negative)
     {
-        return !(Location::magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative ||
-                 Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Location::Loc2D::Negative ||
-                 Location::magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative);
+        return !(Location::magic_product (tr_2.R_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative ||
+                 Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.R_) == Location::Loc2D::Negative ||
+                 Location::magic_product (tr_1.P_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative);
     }
     else 
     {
-        if (Location::magic_product (tr_2.R(), tr_1.P(), tr_1.Q()) == Location::Loc2D::Negative)
+        if (Location::magic_product (tr_2.R_, tr_1.P_, tr_1.Q_) == Location::Loc2D::Negative)
             return false;
-        else if (Location::magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) != Location::Loc2D::Negative)
+        else if (Location::magic_product (tr_1.P_, tr_2.P_, tr_1.Q_) != Location::Loc2D::Negative)
             return true;
-        else if (Location::magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative ||
-                 Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.P()) == Location::Loc2D::Negative)
+        else if (Location::magic_product (tr_1.P_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative ||
+                 Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.P_) == Location::Loc2D::Negative)
             return false;
         else
             return true;
@@ -67,35 +67,35 @@ bool test_intersection_R1 (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 template<std::floating_point F>
 bool test_intersection_R2 (const Triangle<F> &tr_1, const Triangle<F> &tr_2)
 {
-    if (Location::magic_product (tr_2.R(), tr_2.P(), tr_1.Q()) == Location::Loc2D::Negative)
+    if (Location::magic_product (tr_2.R_, tr_2.P_, tr_1.Q_) == Location::Loc2D::Negative)
     {
-        if (Location::magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative)
+        if (Location::magic_product (tr_2.R_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative)
             return false;
-        else if (Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.R()) == Location::Loc2D::Negative)
+        else if (Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.R_) == Location::Loc2D::Negative)
         {
-            return !(Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Location::Loc2D::Negative ||
-                     Location::magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Location::Loc2D::Negative);
+            return !(Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.Q_) == Location::Loc2D::Negative ||
+                     Location::magic_product (tr_2.Q_, tr_2.R_, tr_1.R_) == Location::Loc2D::Negative);
         }
         else
-            return !(Location::magic_product (tr_1.R(), tr_1.P(), tr_2.P()) == Location::Loc2D::Negative);
+            return !(Location::magic_product (tr_1.R_, tr_1.P_, tr_2.P_) == Location::Loc2D::Negative);
     }
     else
     {
-        if (Location::magic_product (tr_2.Q(), tr_2.R(), tr_1.Q()) == Location::Loc2D::Negative)
+        if (Location::magic_product (tr_2.Q_, tr_2.R_, tr_1.Q_) == Location::Loc2D::Negative)
         {
-            return !(Location::magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Location::Loc2D::Positive ||
-                     Location::magic_product (tr_2.Q(), tr_2.R(), tr_1.R()) == Location::Loc2D::Negative ||
-                     Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.Q()) == Location::Loc2D::Negative);
+            return !(Location::magic_product (tr_1.P_, tr_2.Q_, tr_1.Q_) == Location::Loc2D::Positive ||
+                     Location::magic_product (tr_2.Q_, tr_2.R_, tr_1.R_) == Location::Loc2D::Negative ||
+                     Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.Q_) == Location::Loc2D::Negative);
         }
         else
         {
-            if (Location::magic_product (tr_1.P(), tr_2.P(), tr_1.Q()) == Location::Loc2D::Negative)
+            if (Location::magic_product (tr_1.P_, tr_2.P_, tr_1.Q_) == Location::Loc2D::Negative)
             {
-                return !(Location::magic_product (tr_1.P(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative ||
-                         Location::magic_product (tr_2.R(), tr_2.P(), tr_1.R()) == Location::Loc2D::Negative);
+                return !(Location::magic_product (tr_1.P_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative ||
+                         Location::magic_product (tr_2.R_, tr_2.P_, tr_1.R_) == Location::Loc2D::Negative);
             }
             else 
-                return !(Location::magic_product (tr_1.P(), tr_2.Q(), tr_1.Q()) == Location::Loc2D::Positive);
+                return !(Location::magic_product (tr_1.P_, tr_2.Q_, tr_1.Q_) == Location::Loc2D::Positive);
         }
     }
 }
@@ -107,13 +107,13 @@ bool intersection_in_2D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_)
     Triangle tr_2 = tr_2_;
     space_transformation (tr_1, tr_2);
 
-    //  if swap tr_2.Q() and tr_2.R()
-    if (Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R()) == Location::Loc2D::Negative)
+    //  if swap tr_2.Q_ and tr_2.R_
+    if (Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_) == Location::Loc2D::Negative)
         tr_2.swap_QR ();
 
-    auto P2_loc = Location::magic_product (tr_1.P(), tr_1.Q(), tr_2.P()) *
-                  Location::magic_product (tr_1.Q(), tr_1.R(), tr_2.P()) *
-                  Location::magic_product (tr_1.R(), tr_1.P(), tr_2.P());
+    auto P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_2.P_) *
+                  Location::magic_product (tr_1.Q_, tr_1.R_, tr_2.P_) *
+                  Location::magic_product (tr_1.R_, tr_1.P_, tr_2.P_);
 
     auto P1_loc = Location::Loc2D::Positive;
 
@@ -192,9 +192,9 @@ bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, con
     Triangle tr_1 = tr_1_;
     Triangle tr_2 = tr_2_;
     
-    auto P2_loc = Location::magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.P());
-    auto Q2_loc = Location::magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.Q());
-    auto R2_loc = Location::magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.R());
+    auto P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
+    auto Q2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
+    auto R2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
 
     if (P2_loc != Location::Loc3D::On && P2_loc == Q2_loc && Q2_loc == R2_loc)
         return false;
@@ -203,15 +203,15 @@ bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, con
         transform_triangle (tr_1, P1_loc, Q1_loc, R1_loc, tr_2);
         transform_triangle (tr_2, P2_loc, Q2_loc, R2_loc, tr_1);
 
-        auto new_P1_loc = Location::magic_product (tr_2.P(), tr_2.Q(), tr_2.R(), tr_1.P());
-        auto new_P2_loc = Location::magic_product (tr_1.P(), tr_1.Q(), tr_1.R(), tr_2.P());
+        auto new_P1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
+        auto new_P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
 
         if (new_P1_loc == Location::Loc3D::On && new_P2_loc == Location::Loc3D::On)
-            return (tr_1.P() == tr_2.P());
+            return (tr_1.P_ == tr_2.P_);
         else
         {
-            auto KJ_mut_pos = Location::magic_product (tr_1.P(), tr_1.Q(), tr_2.P(), tr_2.Q());
-            auto LI_mut_pos = Location::magic_product (tr_1.P(), tr_1.R(), tr_2.P(), tr_2.R());
+            auto KJ_mut_pos = Location::magic_product (tr_1.P_, tr_1.Q_, tr_2.P_, tr_2.Q_);
+            auto LI_mut_pos = Location::magic_product (tr_1.P_, tr_1.R_, tr_2.P_, tr_2.R_);
 
             return (LI_mut_pos != Location::Loc3D::Below && KJ_mut_pos != Location::Loc3D::Above);
         }

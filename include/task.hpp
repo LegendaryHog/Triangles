@@ -27,7 +27,7 @@ Geometry::Point<F> scan_point()
 template<std::floating_point F>
 Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Point<F> p3)
 {
-    Geometry::Vector<F> p1p2 {p1, p2}, p1p3 {p1, p3};
+    Geometry::Vector p1p2 {p1, p2}, p1p3 {p1, p3};
 
     if (Geometry::are_collinear(p1p2, p1p3))
     {   
@@ -40,7 +40,7 @@ Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Poin
                     return Geometry::Segment{p1, p3};
             else
                 return Geometry::Segment{p1, p2};
-        else if (prod < 0)
+        else if (prod < 0.0)
             return Geometry::Segment{p2, p3};
         else if (p1p2.module() > p1p3.module())
             return Geometry::Segment{p1, p2};
@@ -54,7 +54,7 @@ Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Poin
 template<std::floating_point F>
 Shape<F> scan_shape()
 {
-    Geometry::Point<F> p1 = scan_point<F>(), p2 = scan_point<F>(), p3 = scan_point<F>();
+    Geometry::Point p1 = scan_point<F>(), p2 = scan_point<F>(), p3 = scan_point<F>();
     return make_shape(p1, p2, p3);
 }
 
@@ -78,14 +78,11 @@ void intersect_shapes(const std::vector<Shape<F>>& shapes)
 {
     std::unordered_set<int> indexs {};
     auto size = shapes.size();
-    for (std::size_t i = 0; i < size - 1; i++)
-        for (std::size_t j = i + 1; j < size; j++)
+    for (int i = 0; i < size - 1; i++)
+        for (int j = i + 1; j < size; j++)
             if (std::visit([](const auto& obj1, const auto& obj2) {return Geometry::are_intersecting(obj1, obj2);},
             shapes[i], shapes[j]))
-            {
-                indexs.insert(i);
-                indexs.insert(j);
-            }
+                indexs.insert({i, j});
     
     for (auto index: indexs)
         std::cout << index << ' ';

@@ -13,21 +13,10 @@ public:
     Point<F> point_;
 
     Line (const Point<F> &p1, const Point<F> &p2)
-        : point_ {p1}, drc_vec_ {p1.x_ - p2.x_, p1.y_ - p2.y_, p1.z_ - p2.z_}
-    {
-#ifndef RELEASE
-        if (p1 == p2)
-            throw std::invalid_argument {"In constructor of Line(Point, Point): two equal points"};
-#endif
-    }
+    :point_ {p1}, drc_vec_ {p1.x_ - p2.x_, p1.y_ - p2.y_, p1.z_ - p2.z_}
+    {}
 
-    Line (const Point<F> &p, const Vector<F> &vec) : point_ {p}, drc_vec_ {vec}
-    {
-#ifndef RELEASE
-        if (vec.is_zero ())
-            throw std::invalid_argument {"In constructor of Line(Point, Vector): null drc vector"};
-#endif
-    }
+    Line (const Point<F> &p, const Vector<F> &vec): point_ {p}, drc_vec_ {vec} {}
 
     const Vector<F> &drc_vec () const { return drc_vec_; }
 

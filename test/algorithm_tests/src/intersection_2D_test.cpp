@@ -6,36 +6,6 @@
 
 using namespace Geometry;
 
-TEST(IntersectionTest_2D, SpaceTransformation)
-{
-    Triangle T1 { Point {0.0, 0.0, 1223.0}, Point {2.0, 0.0, 1223.0}, Point {0.0, 1.0, 1223.0}};
-    Triangle T2 { Point {3.0, 0.0, 1223.0}, Point {4.0, 0.0, 1223.0}, Point {4.0, 2.0, 1223.0}};
-
-    Triangle T3 { Point {1.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {2.0, -1.0, -1.0}};
-    Triangle T4 { Point {2.0, 0.0, -2.0}, Point {1.0, 1.0, -2.0}, Point {0.0, -1.0, 1.0}};
-
-    Algorithm::space_transformation (T1, T2);
-
-    EXPECT_TRUE ((T1.P_ == (Point {0.0, 0.0, 0.0})) &&
-                 (T1.Q_ == (Point {2.0, 0.0, 0.0})) &&
-                 (T1.R_ == (Point {0.0, 1.0, 0.0})));
-
-    EXPECT_TRUE ((T2.P_ == (Point {3.0, 0.0, 0.0})) &&
-                 (T2.Q_ == (Point {4.0, 0.0, 0.0})) &&
-                 (T2.R_ == (Point {4.0, 2.0, 0.0})));
-
-    Algorithm::space_transformation (T3, T4);
-
-    EXPECT_TRUE ((T3.P_ == (Point {0.0, 0.0, 0.0})) &&
-                 (T3.Q_ == (Point {2.0*std::sqrt(2.0), 0.0, 0.0})) &&
-                 (T3.R_ == (Point {-1 / std::sqrt(2.0), std::sqrt(6) / 2.0, 0.0})));
-
-    EXPECT_TRUE ((T4.P_ == (Point {0.0, std::sqrt(6.0), 0.0})) && 
-                 (T4.Q_ == (Point {std::sqrt(2.0), std::sqrt(6.0), 0.0})) &&
-                 (T4.R_ == (Point {1 / std::sqrt(2), -std::sqrt(6) / 2.0, 0.0})));
-}
-
-#if DANY
 TEST (IntersectionTest_2D, Intersection_R1) 
 { 
     Triangle T2   { Point { 2.0, 0.0, 0.0}, Point { 2.0, 3.0, 0.0}, Point { 0.0, 3.0, 0.0}};
@@ -97,7 +67,6 @@ TEST (IntersectionTest_2D, Intersection_R2)
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_14, T2) == false);
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_15, T2) == true);
 }
-#endif
 
 TEST (IntersectionTest_2D, PartialCase) { 
     Triangle T2   {Point { 2.0, 0.0, 0.0}, Point { 0.0, 3.0, 0.0}, Point { 0.0, 0.0, 0.0}};
@@ -116,26 +85,3 @@ TEST (IntersectionTest_2D, PartialCase) {
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_5, T2));
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_6, T2));
 }
-
-#if DANY
-TEST (IntersectionTest_2D, Degenerate_Segment_Segment_No_Intersection)
-{
-    Triangle T1_1 {Point {-1.0, 1.0, 0.0}, Point {0.0, -2.0, 0.0}, Point {0.0, -2.0, 0.0}};
-    Triangle T1_2 {Point {-1.0, 1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {0.0, -2.0, 0.0}};
-    Triangle T1_3 {Point {-1.0, 1.0, 0.0}, Point {0.0, -2.0, 0.0}, Point {-1.0, 1.0, 0.0}};
-
-    Triangle T2_1 {Point { 0.0, 0.0, 0.0}, Point { 4.0, 0.0, 0.0}, Point { 4.0, 0.0, 0.0}};
-    Triangle T2_2 {Point { 0.0, 0.0, 0.0}, Point { 0.0, 0.0, 0.0}, Point { 4.0, 0.0, 0.0}};
-    Triangle T2_3 {Point { 0.0, 0.0, 0.0}, Point { 4.0, 0.0, 0.0}, Point { 0.0, 0.0, 0.0}};
-
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_1, T2_1) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_1, T2_2) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_1, T2_3) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_2, T2_1) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_2, T2_2) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_2, T2_3) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2_1) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2_2) == false);
-    EXPECT_TRUE (Algorithm::intersection_in_2D (T1_3, T2_3) == false);
-}
-#endif

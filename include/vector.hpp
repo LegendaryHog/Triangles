@@ -76,7 +76,9 @@ struct Vector
 
     Vector &normalize ()
     {
-        operator*= (1 / module ());
+        auto module_vec = module ();
+        if (!Compare::are_equal(module_vec, 0.0))
+            operator*= (1 / module_vec);
 
         return *this;
     }

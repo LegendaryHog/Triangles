@@ -129,6 +129,17 @@ TEST (Vectors, Module)
     EXPECT_TRUE (Compare::are_equal (vec_5.module (), 29.0));
 }
 
+TEST (Vectors, Normalize)
+{
+    Vector<double> vec_1 {3, 0, 0};
+    Vector<double> vec_1_norm {1, 0, 0};
+
+    EXPECT_TRUE (vec_1.normalize() == vec_1_norm);
+
+    Vector<double> null {};
+    EXPECT_TRUE (null.normalize() == null);
+}
+
 TEST (Vectors, Is_Zero)
 {
     Vector<double> null {};

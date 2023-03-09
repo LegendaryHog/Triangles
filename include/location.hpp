@@ -37,11 +37,9 @@ enum class Loc3D
 
 enum Loc2D
 {
-    Negative = -1,
-    Neutral  = 0,
-    Positive = 1,
-    Is_vertice = 1,
-    On_side = 2
+    Right = -1,
+    On = 0,
+    Left = 1
 };
 
 /*
@@ -76,17 +74,5 @@ Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, co
         return Loc3D::Below;
 }
 
-template<std::floating_point F>
-Loc2D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& M)
-{
-    auto product = (P.x_ - M.x_) * (Q.y_ - M.y_) - (P.y_ - M.y_) * (Q.x_ - M.x_);
-    //  Positive product is considered when points locate in counterclockwise ordering
-    if (Compare::are_equal (product, 0.0))
-        return Loc2D::Neutral;
-    else if (product > 0)
-        return Loc2D::Positive;
-    else
-        return Loc2D::Negative;
-}
 } // namespace Location
 } // namespace Geometry

@@ -69,13 +69,10 @@ def generate_shapes():
     for _ in range(num_of_shapes):
         shape_type = rand.randint(0, 10)
         if shape_type in range(0, 7):
-            print("triangle")
             list_of_shapes.append(generate_triangle(list_of_points))
         elif shape_type in range(8, 9):
-            print("segment")
             list_of_shapes.append(generate_segment(list_of_points))
         else:
-            print("point")
             list_of_shapes.append(generate_point(list_of_points))
     return list_of_shapes, list_of_points
 
@@ -92,7 +89,11 @@ def intersect_shapes(list_of_shapes):
 def print_list_of_points(list_of_points: List[geom.Point]):
     file = open(name_of_file + "_task", 'w')
     file.write(str(num_of_shapes) + '\n')
+    j = 0
     for i in list_of_points:
+        if j % 3 == 0:
+            file.write('\n')
+        j+=1
         file.write(str(i.x) + ' ' + str(i.y) + ' ' +  str(i.z) + '\n')
     file.write('\n')
 

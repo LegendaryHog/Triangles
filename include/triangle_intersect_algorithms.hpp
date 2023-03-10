@@ -174,12 +174,9 @@ void transform_triangle (Triangle<F> &tr_1, Location::Loc3D P1_loc, Location::Lo
 }
 
 template<std::floating_point F>
-bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, const Location::Loc3D P1_loc,
+bool intersection_in_3D (Triangle<F> tr_1, Triangle<F> tr_2, const Location::Loc3D P1_loc,
                          const Location::Loc3D Q1_loc, const Location::Loc3D R1_loc)
-{
-    Triangle tr_1 = tr_1_;
-    Triangle tr_2 = tr_2_;
-    
+{   
     auto P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
     auto Q2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
     auto R2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);

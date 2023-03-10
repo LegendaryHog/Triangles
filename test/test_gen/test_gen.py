@@ -6,34 +6,38 @@ import sys
 from typing import List
 
 # number of shapes    - 1 arg
-# min "size" of shape - 2 arg
-# max "size" of shape - 3 arg
-# size of space(cube) - 4 arg
-# name of file        - 5 arg
+# max "size" of shape - 2 arr
+# size of space(cube) - 3 arg
+# name of file        - 4 arg
 
 num_of_shapes = int(sys.argv[1])
-min_size      = float(sys.argv[2])
-max_size      = float(sys.argv[3])
-size_of_space = float(sys.argv[4])
-name_of_file  = sys.argv[5]
+max_size      = float(sys.argv[2])
+size_of_space = float(sys.argv[3])
+name_of_file  = sys.argv[4]
+
+def make_base_for_point():
+    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     
 def generate_point(list_of_points):
     p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     list_of_points.append(p1)
     return p1
 
-def make_point():
-    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
-
+def make_point(point: geom.Point):
+    return geom.Point(rand.uniform(max(point.x - max_size, 0.0), max(point.x + max_size, size_of_space)),
+                      rand.uniform(max(point.y - max_size, 0.0), max(point.y + max_size, size_of_space)),
+                      rand.uniform(max(point.z - max_size, 0.0), max(point.z + max_size, size_of_space)))
+                      
 def is_triangle(tr: geom.ConvexPolygon):
     return not math.isclose(tr.area(), 0.0)
 
 def generate_triangle(list_of_points):
     is_tr = False
+    base = make_base_for_point()
     while is_tr == False:
-        p1 = make_point()
-        p2 = make_point()
-        p3 = make_point()
+        p1 = make_point(base)
+        p2 = make_point(base)
+        p3 = make_point(base)
         tr = geom.ConvexPolygon((p1, p2, p3))
         is_tr = is_triangle(tr)
     list_of_points.append(p1)
@@ -46,9 +50,10 @@ def is_segment(seg: geom.Segment):
 
 def generate_segment(list_of_points): 
     is_seg = False
+    base = make_base_for_point()
     while is_seg == False:
-        p1 = make_point()
-        p2 = make_point()
+        p1 = make_point(base)
+        p2 = make_point(base)
         seg = geom.Segment(p1, p2)
         is_seg = is_segment(seg)
     list_of_points.append(p1)

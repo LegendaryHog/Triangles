@@ -42,6 +42,23 @@ enum Loc2D
     Left = 1
 };
 
+//  prds - Position Related to Direction on the Surface
+template <std::floating_point F>
+Location::Loc2D define_prds (const Point<F>& def_point, const Point<F>& vec_origin, 
+                             const Point<F>& vec_end, const Vector<F>& normal)
+{
+    Vector<F> normal_def_point = vector_product (Vector<F> {def_point, vec_origin},
+                                                 Vector<F> {def_point, vec_end});
+    auto product = scalar_product (normal, normal_def_point);
+
+    if (Compare::are_equal (product, 0.0))
+        return Location::Loc2D::On;
+    else if (product < 0.0)
+        return Location::Loc2D::Right;
+    else
+        return Location::Loc2D::Left;
+}
+
 /*
  * Points P, Q, R make a plane. Let normal of this plane [RP, RQ]
  * (vector of rotate with order of points P, Q, R), lets normal of PQR 
@@ -73,6 +90,5 @@ Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, co
     else
         return Loc3D::Below;
 }
-
 } // namespace Location
 } // namespace Geometry

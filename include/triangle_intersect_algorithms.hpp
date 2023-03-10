@@ -8,46 +8,24 @@ namespace Geometry
 namespace Algorithm
 {
 
-//  prds - Position Related to Direction on the Plane 
-template <std::floating_point F>
-Location::Loc2D define_prds (const Point<F>& def_point, const Point<F>& vec_origin, 
-                             const Point<F>& vec_end, const Vector<F>& normal)
-{
-    Vector<F> normal_def_point = vector_product (Vector<F> {def_point, vec_origin},
-                                                 Vector<F> {def_point, vec_end}).normalize ();
-    auto sign = static_cast<int>(scalar_product (normal, normal_def_point));
-    //  Can I remake this with casting?
-    switch (sign)
-    {
-        case -1:
-            return Location::Loc2D::Right;
-        case 0:
-            return Location::Loc2D::On;
-        case 1:
-            return Location::Loc2D::Left;
-        default:
-            throw std::runtime_error ("Objects are located in different planes\n");
-    }
-}
-
 //  Vector normal which defined orientation of tr_1
 template <std::floating_point F>
 bool test_intersection_R1 (const Triangle<F> &tr_1, const Triangle<F> &tr_2, const Vector<F>& normal)
 {   
-    if (define_prds (tr_2.R_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
+    if (Location::define_prds (tr_2.R_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
     {
-        return !(define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                 define_prds (tr_1.Q_, tr_1.R_, tr_2.R_, normal) == Location::Loc2D::Right ||
-                 define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
+        return !(Location::define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
+                 Location::define_prds (tr_1.Q_, tr_1.R_, tr_2.R_, normal) == Location::Loc2D::Right ||
+                 Location::define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
     }
     else 
     {
-        if (define_prds (tr_2.R_, tr_1.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
+        if (Location::define_prds (tr_2.R_, tr_1.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
             return false;
-        else if (define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) != Location::Loc2D::Right)
+        else if (Location::define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) != Location::Loc2D::Right)
             return true;
-        else if (define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                 define_prds (tr_1.Q_, tr_1.R_, tr_2.P_, normal) == Location::Loc2D::Right)
+        else if (Location::define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
+                 Location::define_prds (tr_1.Q_, tr_1.R_, tr_2.P_, normal) == Location::Loc2D::Right)
             return false;
         else
             return true;
@@ -57,35 +35,35 @@ bool test_intersection_R1 (const Triangle<F> &tr_1, const Triangle<F> &tr_2, con
 template <std::floating_point F>
 bool test_intersection_R2 (const Triangle<F>& tr_1, const Triangle<F>& tr_2, const Vector<F>& normal)
 {
-    if (define_prds (tr_2.R_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
+    if (Location::define_prds (tr_2.R_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
     {
-        if (define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right)
+        if (Location::define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right)
             return false;
-        else if (define_prds (tr_1.Q_, tr_1.R_, tr_2.R_, normal) == Location::Loc2D::Right)
+        else if (Location::define_prds (tr_1.Q_, tr_1.R_, tr_2.R_, normal) == Location::Loc2D::Right)
         {
-            return !(define_prds (tr_1.Q_, tr_1.R_, tr_2.Q_, normal) == Location::Loc2D::Right ||
-                     define_prds (tr_2.Q_, tr_2.R_, tr_1.R_, normal) == Location::Loc2D::Right);
+            return !(Location::define_prds (tr_1.Q_, tr_1.R_, tr_2.Q_, normal) == Location::Loc2D::Right ||
+                     Location::define_prds (tr_2.Q_, tr_2.R_, tr_1.R_, normal) == Location::Loc2D::Right);
         }
         else
-            return !(define_prds (tr_1.R_, tr_1.P_, tr_2.P_, normal) == Location::Loc2D::Right);
+            return !(Location::define_prds (tr_1.R_, tr_1.P_, tr_2.P_, normal) == Location::Loc2D::Right);
     }
     else
     {
-        if (define_prds (tr_2.Q_, tr_2.R_, tr_1.Q_, normal) == Location::Loc2D::Right)
+        if (Location::define_prds (tr_2.Q_, tr_2.R_, tr_1.Q_, normal) == Location::Loc2D::Right)
         {
-            return !(define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left ||
-                     define_prds (tr_2.Q_, tr_2.R_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                     define_prds (tr_1.Q_, tr_1.R_, tr_2.Q_, normal) == Location::Loc2D::Right);
+            return !(Location::define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left ||
+                     Location::define_prds (tr_2.Q_, tr_2.R_, tr_1.R_, normal) == Location::Loc2D::Right ||
+                     Location::define_prds (tr_1.Q_, tr_1.R_, tr_2.Q_, normal) == Location::Loc2D::Right);
         }
         else
         {
-            if (define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
+            if (Location::define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
             {
-                return !(define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                         define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
+                return !(Location::define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
+                         Location::define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
             }
             else 
-                return !(define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left);
+                return !(Location::define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left);
         }
     }
 }
@@ -99,12 +77,12 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
                                        Vector<F> {tr_1.P_, tr_1.R_}).normalize();
 
     //  Swap tr_2.Q() and tr_2.R() if P2, Q2, R2 are clockwise
-    if (define_prds (tr_2.P_, tr_2.Q_, tr_2.R_, normal) == Location::Loc2D::Right)
+    if (Location::define_prds (tr_2.P_, tr_2.Q_, tr_2.R_, normal) == Location::Loc2D::Right)
         tr_2.swap_QR ();
 
-    auto P1_P2_Q2 = define_prds (tr_1.P_, tr_2.P_, tr_2.Q_, normal);
-    auto P1_Q2_R2 = define_prds (tr_1.P_, tr_2.Q_, tr_2.R_, normal);
-    auto P1_R2_P2 = define_prds (tr_1.P_, tr_2.R_, tr_2.P_, normal);
+    auto P1_P2_Q2 = Location::define_prds (tr_1.P_, tr_2.P_, tr_2.Q_, normal);
+    auto P1_Q2_R2 = Location::define_prds (tr_1.P_, tr_2.Q_, tr_2.R_, normal);
+    auto P1_R2_P2 = Location::define_prds (tr_1.P_, tr_2.R_, tr_2.P_, normal);
 
     //  Define position of P1
     if (P1_P2_Q2 == Location::Loc2D::Left && P1_Q2_R2 == Location::Loc2D::Left && P1_R2_P2 == Location::Loc2D::Left)

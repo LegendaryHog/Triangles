@@ -97,7 +97,6 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
     //  Return a normal vector by the 1st triangle
     Vector<F> normal = vector_product (Vector<F> {tr_1.P_, tr_1.Q_}, 
                                        Vector<F> {tr_1.P_, tr_1.R_}).normalize();
-    std::cout << "normal: (" << normal.x_ << " " << normal.y_ << " " << normal.z_ << ")" << std::endl;
 
     //  Swap tr_2.Q() and tr_2.R() if P2, Q2, R2 are clockwise
     if (define_prds (tr_2.P_, tr_2.Q_, tr_2.R_, normal) == Location::Loc2D::Right)

@@ -91,6 +91,7 @@ def intersect_shapes(list_of_shapes):
 
 def print_list_of_points(list_of_points: List[geom.Point]):
     file = open(name_of_file + "_task", 'w')
+    file.write(str(num_of_shapes) + '\n')
     for i in list_of_points:
         file.write(str(i.x) + ' ' + str(i.y) + ' ' +  str(i.z) + '\n')
     file.write('\n')

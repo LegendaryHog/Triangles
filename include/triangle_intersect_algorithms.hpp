@@ -110,43 +110,43 @@ void transform_triangle (Triangle<F> &tr_1, Location::Loc3D P1_loc, Location::Lo
         if (Q1_loc == Location::Loc3D::Above && R1_loc != Location::Loc3D::Above)
         {
             tr_1.swap_clockwise ();
-            tr_2.swap_QR ();
+            tr_2.swap_QR();
         }
         else if (Q1_loc != Location::Loc3D::Above && R1_loc == Location::Loc3D::Above)
         {
-            tr_1.swap_counterclockwise ();
-            tr_2.swap_QR ();
+            tr_1.swap_counterclockwise();
+            tr_2.swap_QR();
         }
     }
     else if (P1_loc == Location::Loc3D::On)
     {
         if (Q1_loc == Location::Loc3D::Above && R1_loc == Location::Loc3D::Above)
-            tr_2.swap_QR ();
+            tr_2.swap_QR();
         else if (Q1_loc == Location::Loc3D::Above && R1_loc != Location::Loc3D::Above)
-            tr_1.swap_counterclockwise ();
+            tr_1.swap_counterclockwise();
         else if (Q1_loc != Location::Loc3D::Above && R1_loc == Location::Loc3D::Above)
-            tr_1.swap_clockwise ();
+            tr_1.swap_clockwise();
         else if (Q1_loc == Location::Loc3D::On && R1_loc == Location::Loc3D::Below)
         {
-            tr_1.swap_clockwise ();
-            tr_2.swap_QR ();
+            tr_1.swap_clockwise();
+            tr_2.swap_QR();
         }
         else if (Q1_loc == Location::Loc3D::Below && R1_loc == Location::Loc3D::On)
         {
-            tr_1.swap_counterclockwise ();
-            tr_2.swap_QR ();
+            tr_1.swap_counterclockwise();
+            tr_2.swap_QR();
         }
     }
     else
     {
         if (Q1_loc == R1_loc)
             tr_2.swap_QR ();
-        else if (Q1_loc == Location::Loc3D::Below && R1_loc != Location::Loc3D::Below)
+        else if (Q1_loc == Location::Loc3D::Below)
             tr_1.swap_clockwise ();
-        else if (Q1_loc != Location::Loc3D::Below && R1_loc == Location::Loc3D::Below)
+        else if (R1_loc == Location::Loc3D::Below)
             tr_1.swap_counterclockwise ();
         else
-            tr_2.swap_QR ();
+            tr_2.swap_QR();
     }
 }
 
@@ -156,29 +156,34 @@ bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, con
 {
     Triangle tr_1 = tr_1_;
     Triangle tr_2 = tr_2_;
-    
-    auto P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
-    auto Q2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
-    auto R2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
+
+    auto P2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
+    auto Q2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
+    auto R2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
 
     if (P2_loc != Location::Loc3D::On && P2_loc == Q2_loc && Q2_loc == R2_loc)
         return false;
     else
     {
         transform_triangle (tr_1, P1_loc, Q1_loc, R1_loc, tr_2);
+
+        auto P2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
+        auto Q2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
+        auto R2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
+
         transform_triangle (tr_2, P2_loc, Q2_loc, R2_loc, tr_1);
 
-        auto new_P1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
-        auto new_P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
+        auto new_P1_loc = Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
+        auto new_P2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
 
         if (new_P1_loc == Location::Loc3D::On && new_P2_loc == Location::Loc3D::On)
             return (tr_1.P_ == tr_2.P_);
         else
         {
-            auto KJ_mut_pos = Location::magic_product (tr_1.P_, tr_1.Q_, tr_2.P_, tr_2.Q_);
-            auto LI_mut_pos = Location::magic_product (tr_1.P_, tr_1.R_, tr_2.P_, tr_2.R_);
+            auto KJ_mut_pos = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_2.P_, tr_2.Q_);
+            auto LI_mut_pos = Location::define_prhc (tr_1.P_, tr_1.R_, tr_2.R_, tr_2.P_);
 
-            return (LI_mut_pos != Location::Loc3D::Below && KJ_mut_pos != Location::Loc3D::Above);
+            return (LI_mut_pos != Location::Loc3D::Above && KJ_mut_pos != Location::Loc3D::Above);
         }
     }
 }

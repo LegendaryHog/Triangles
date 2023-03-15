@@ -68,8 +68,10 @@ Location::Loc2D define_prds (const Point<F>& def_point, const Point<F>& vec_orig
  * If M is above the plane, than return Loc3D::Above
  * If M is below the plane, than retunr Loc3D::Below
  */
+
+//  prhs - Position Related to Half by Counterclockwise
 template<std::floating_point F>
-Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, const Point<F>& M)
+Loc3D define_prhc (const Point<F>& P, const Point<F>& Q, const Point<F>& R, const Point<F>& M)
 {
     auto elem_21 = M.x_ - Q.x_;
     auto elem_22 = M.y_ - Q.y_;
@@ -92,3 +94,4 @@ Loc3D magic_product (const Point<F>& P, const Point<F>& Q, const Point<F>& R, co
 }
 } // namespace Location
 } // namespace Geometry
+

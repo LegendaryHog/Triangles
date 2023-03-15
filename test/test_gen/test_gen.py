@@ -21,12 +21,14 @@ def make_base_for_point():
 def generate_point(list_of_points):
     p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     list_of_points.append(p1)
+    list_of_points.append(p1)
+    list_of_points.append(p1)
     return p1
 
 def make_point(point: geom.Point):
-    return geom.Point(rand.uniform(max(point.x - max_size, 0.0), max(point.x + max_size, size_of_space)),
-                      rand.uniform(max(point.y - max_size, 0.0), max(point.y + max_size, size_of_space)),
-                      rand.uniform(max(point.z - max_size, 0.0), max(point.z + max_size, size_of_space)))
+    return geom.Point(rand.uniform(max(point.x - max_size, 0.0), min(point.x + max_size, size_of_space)),
+                      rand.uniform(max(point.y - max_size, 0.0), min(point.y + max_size, size_of_space)),
+                      rand.uniform(max(point.z - max_size, 0.0), min(point.z + max_size, size_of_space)))
                       
 def is_triangle(tr: geom.ConvexPolygon):
     return not math.isclose(tr.area(), 0.0)
@@ -58,6 +60,7 @@ def generate_segment(list_of_points):
         is_seg = is_segment(seg)
     list_of_points.append(p1)
     list_of_points.append(p2)
+    list_of_points.append(geom.Point((geom.Vector(p1) + geom.Vector(p2))*0.5))
     return seg
 
 def generate_shapes():
@@ -85,8 +88,13 @@ def intersect_shapes(list_of_shapes):
 
 def print_list_of_points(list_of_points: List[geom.Point]):
     file = open(name_of_file + "_task", 'w')
+    file.write(str(num_of_shapes) + '\n')
+    j = 0
     for i in list_of_points:
-        file.write(str(i.x) + ' ' + str(i.y) + ' ' +  str(i.y) + ' ')
+        if j % 3 == 0:
+            file.write('\n')
+        j+=1
+        file.write(str(i.x) + ' ' + str(i.y) + ' ' +  str(i.z) + '\n')
     file.write('\n')
 
 def print_list_of_ins_ind(set_of_ins_ind):

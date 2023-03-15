@@ -151,6 +151,7 @@ void transform_triangle (Triangle<F> &tr_1, Location::Loc3D P1_loc, Location::Lo
 }
 
 template<std::floating_point F>
+<<<<<<< HEAD
 bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, const Location::Loc3D P1_loc,
                          const Location::Loc3D Q1_loc, const Location::Loc3D R1_loc)
 {
@@ -160,6 +161,14 @@ bool intersection_in_3D (const Triangle<F> &tr_1_, const Triangle<F> &tr_2_, con
     auto P2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
     auto Q2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
     auto R2_loc = Location::define_prhc (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
+=======
+bool intersection_in_3D (Triangle<F> tr_1, Triangle<F> tr_2, Location::Loc3D P1_loc,
+                         Location::Loc3D Q1_loc, Location::Loc3D R1_loc)
+{   
+    auto P2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.P_);
+    auto Q2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.Q_);
+    auto R2_loc = Location::magic_product (tr_1.P_, tr_1.Q_, tr_1.R_, tr_2.R_);
+>>>>>>> LegHog
 
     if (P2_loc != Location::Loc3D::On && P2_loc == Q2_loc && Q2_loc == R2_loc)
         return false;

@@ -33,7 +33,7 @@ bool are_intersecting (const Point<F>& point, const Segment<F>& segment)
 template<std::floating_point F>
 bool are_intersecting (const Point<F>& point, const Triangle<F>& triangle)
 {
-    if (Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, point) != Location::Loc3D::On)
+    if (Location::define_prhc(triangle.P_, triangle.Q_, triangle.R_, point) != Location::Loc3D::On)
         return false;
     
     return Location::laying_in_same_half(triangle.P_, triangle.Q_, triangle.R_, point) != Location::LocPoints::InDifferent &&
@@ -115,17 +115,17 @@ bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr
         outside = Location::Loc3D::Above;
 
 
-    return Location::magic_product(P, R, F, S) != outside &&
-           Location::magic_product(R, Q, F, S) != outside &&
-           Location::magic_product(Q, P, F, S) != outside;
+    return Location::define_prhc(P, R, F, S) != outside &&
+           Location::define_prhc(R, Q, F, S) != outside &&
+           Location::define_prhc(Q, P, F, S) != outside;
 }
 } // namespace Algorithm
 
 template<std::floating_point F>
 bool are_intersecting (const Segment<F>& segment, const Triangle<F>& triangle)
 {
-    auto F_loc = Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, segment.F_);
-    auto S_loc = Location::magic_product(triangle.P_, triangle.Q_, triangle.R_, segment.S_);
+    auto F_loc = Location::define_prhc(triangle.P_, triangle.Q_, triangle.R_, segment.F_);
+    auto S_loc = Location::define_prhc(triangle.P_, triangle.Q_, triangle.R_, segment.S_);
 
     if (F_loc != Location::Loc3D::On && S_loc != Location::Loc3D::On && F_loc == S_loc)
         return false;
@@ -151,15 +151,15 @@ bool are_intersecting (const Triangle<F>& triangle, const Segment<F>& segment)
 template<std::floating_point F>
 bool are_intersecting (const Triangle<F>& tr_1, const Triangle<F>& tr_2)
 {
-    auto P1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
-    auto Q1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.Q_);
-    auto R1_loc = Location::magic_product (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.R_);
+    auto P1_loc = Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_);
+    auto Q1_loc = Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.Q_);
+    auto R1_loc = Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.R_);
 
     if (P1_loc != Location::Loc3D::On && P1_loc == Q1_loc && Q1_loc == R1_loc)
         return false;
-    else if (P1_loc == Location::Loc3D::On && Q1_loc == Location::Loc3D::On && R1_loc == Location::Loc3D::On)
+    else if (P1_loc == Location::Loc3D::On && Q1_loc == Location::Loc3D::On && R1_loc == Location::Loc3D::On) 
         return Algorithm::intersection_in_2D (tr_1, tr_2);
-    else
+    else 
         return Algorithm::intersection_in_3D (tr_1, tr_2, P1_loc, Q1_loc, R1_loc);
 }
 } // namespace Geometry

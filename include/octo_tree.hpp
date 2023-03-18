@@ -19,27 +19,27 @@ struct ObjectSphere
 };
 
 template<std::floating_point Float>
-std::ostream& operator<<(std::ostream& out, const ObjectSphere& obj)
+std::ostream& operator<<(std::ostream& out, const ObjectSphere<Float>& obj)
 {
-    return std::visit([](const auto& sh) {return out << sh;}, obj.shape_);
+    return std::visit([&out](const auto& sh) {return (out << sh);}, obj.shape_);
 }
 
 namespace detail
 {
 template<std::floating_point Float>
-ObjectSphere make_object(const Point<Float>& p)
+ObjectSphere make_object(const Geometry::Point<Float>& p)
 {
     return ObjectSphere{p, p, 1e-6};
 }
 
 template<std::floating_point Float>
-ObjectSphere make_object(const Segmnet<Float>& seg)
+ObjectSphere make_object(const Geometry::Segmnet<Float>& seg)
 {
     return ObjectSphere{seg, (seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + 1e-6};
 }
 
 template<std::floating_point Float>
-ObjectSphere make_object(const Triangle<Float>& tr)
+ObjectSphere make_object(const Geometry::Triangle<Float>& tr)
 {
     auto PQ = Geometry::distance(tr.P_, tr.Q_);
     auto QR = Geometry::distance(tr.Q_, tr.R_);
@@ -191,9 +191,9 @@ private:
             node->objects_.push_back(obj);
     }
 public:
-    void insert(const_reference obj)
+    void insert(const Geometry::Shape<Float>& shape)
     {
-        insert_object(root_, obj);
+        insert_object(root_, make_object(shape));
     }
 
 private:

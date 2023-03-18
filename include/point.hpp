@@ -12,28 +12,77 @@ struct Point
 
     Point (F x = 0.0, F y = 0.0, F z = 0.0): x_ {x}, y_ {y}, z_ {z} {}
 
-    bool operator== (const Point &other) const
+    Point& operator+=(const Point &rhs)
     {
-        return (Compare::are_equal (x_, other.x_) && Compare::are_equal (y_, other.y_) &&
-                Compare::are_equal (z_, other.z_));
+        x_ = Compare::are_equal (x_, -rhs.x_) ? 0.0 : x_ + rhs.x_;
+        y_ = Compare::are_equal (y_, -rhs.y_) ? 0.0 : y_ + rhs.y_;
+        z_ = Compare::are_equal (z_, -rhs.z_) ? 0.0 : z_ + rhs.z_;
+
+        return *this;
     }
 
-    bool operator!= (const Point &other) const { return !(*this == other); }
+    Point& operator-=(const Point &rhs)
+    {
+        x_ = Compare::are_equal (x_, rhs.x_) ? 0.0 : x_ - rhs.x_;
+        y_ = Compare::are_equal (y_, rhs.y_) ? 0.0 : y_ - rhs.y_;
+        z_ = Compare::are_equal (z_, rhs.z_) ? 0.0 : z_ - rhs.z_;
+
+        return *this;
+    }
+
+    Point& operator*=(F coeff)
+    {
+        x_ *= coeff;
+        y_ *= coeff;
+        z_ *= coeff;
+
+        return *this;
+    }
 
     bool is_valid () const { return (x_ == x_ && y_ == y_ && z_ == z_); }
-
-    std::ostream& print (std::ostream& out = std::cout) const { return out << "(" << x_ << ", " << y_ << ", " << z_ << ")"; }
 };
+
 template<std::floating_point F>
-Point<F> operator+(const Point<F>& p1, const Point<F>& p2)
+bool operator==(const Point<F>& lhs, const Point<F>& rhs)
 {
-    return Point{p1.x_ + p2.x_, p1.y_ + p2.y_, p1.z_ + p2.z_};
+    return (Compare::are_equal (lhs.x_, rhs.x_) && Compare::are_equal (lhs.y_, rhs.y_) &&
+            Compare::are_equal (lhs.z_, rhs.z_));
 }
+
+template<std::floating_point F>
+Point<F> operator+(const Point<F>& lhs, const Point<F>& rhs)
+{
+    Point lhs_cpy = lhs;
+    return (lhs_cpy += rhs);
+}
+
+template<std::floating_point F>
+Point<F> operator-(const Point<F>& vec)
+{
+    return Point{-vec.x_, -vec.y_, -vec.z_};
+}
+
+template<std::floating_point F>
+Point<F> operator-(const Point<F>& lhs, const Point<F>& rhs)
+{
+    Point lhs_cpy = lhs;
+    return (lhs_cpy -= rhs);
+}
+
+template<std::floating_point F>
+Point<F> operator* (const Point<F> &vec, F coeff)
+{
+    Point product = vec;
+    return (product *= coeff);
+}
+
+template<std::floating_point F>
+Point<F> operator* (F coeff, const Point<F> &vec) { return vec * coeff; }
 
 template<std::floating_point F>
 std::ostream& operator<<(std::ostream& out, const Point<F>& p)
 {
-    return p.print(out);
+    return out << "Point(" << p.x_ << ", " << p.y_ << ", " << p.z_ << ")";
 }
 
 template<std::floating_point F>

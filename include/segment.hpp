@@ -21,6 +21,12 @@ struct Segment {
     }
 };
 
+template<std::floating_point F>
+std::ostream& operator<<(std::ostream& out, const Segment<F>& seg)
+{
+    return out << "Segment(" << seg.F_ << ", " << seg.S_ << ")";
+}
+
 template<std::floating_point Float>
 bool operator==(const Segment<Float>& lhs, const Segment<Float>& rhs)
 {

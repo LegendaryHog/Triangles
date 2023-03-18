@@ -37,6 +37,12 @@ struct Triangle
 };
 
 template<std::floating_point F>
+std::ostream& operator<<(std::ostream& out, const Triangle<F>& tr)
+{
+    return out << "Triangle(" << tr.P_ << ", " << tr.Q_ << ", " << tr.R_ << ")";
+}
+
+template<std::floating_point F>
 bool operator==(const Triangle<F>& lhs, const Triangle<F>& rhs)
 {
     return lhs.P_ == rhs.P_ && lhs.Q_ == rhs.Q_ && lhs.R_ == rhs.R_;

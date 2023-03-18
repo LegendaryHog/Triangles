@@ -8,14 +8,62 @@
 namespace Task
 {
 
-constexpr int Eight = 3;
+constexpr int Eight = 8;
 
 template<std::floating_point Float>
 struct ObjectSphere
 {
+    Geometry::Shape<Float> shape_ {};
     Geometry::Point<Float> center_ {};
-    Float radius;
+    Float radius_ = 0;
 };
+
+template<std::floating_point Float>
+std::ostream& operator<<(std::ostream& out, const ObjectSphere& obj)
+{
+    return std::visit([](const auto& sh) {return out << sh;}, obj.shape_);
+}
+
+namespace detail
+{
+template<std::floating_point Float>
+ObjectSphere make_object(const Point<Float>& p)
+{
+    return ObjectSphere{p, p, 1e-6};
+}
+
+template<std::floating_point Float>
+ObjectSphere make_object(const Segmnet<Float>& seg)
+{
+    return ObjectSphere{seg, (seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + 1e-6};
+}
+
+template<std::floating_point Float>
+ObjectSphere make_object(const Triangle<Float>& tr)
+{
+    auto PQ = Geometry::distance(tr.P_, tr.Q_);
+    auto QR = Geometry::distance(tr.Q_, tr.R_);
+    auto RP = Geometry::distance(tr.R_, tr.P_);
+
+    if (PQ > QR)
+        if (PQ > RP)
+            return ObjectSphere{tr, tr.R_, std::max(QR, RP)};
+        else
+            return ObjectSphere{tr, tr.Q_, std::max(PQ, QR)};
+    else
+        if (QR > RP)
+            return ObjectSphere{tr, tr.P_, std::max(RP, PQ)};
+        else
+            return ObjectSphere{tr, tr.Q_, std::max(PQ, QR)};
+}
+
+}
+
+template<std::floating_point Float>
+ObjectSphere make_object(const Geometry::Shape<Float>& shape)
+{
+    return std::visit([](const auto& sh){return detail::make_object(sh);}, shape);
+}
 
 template<std::floating_point Float>
 struct Node
@@ -35,7 +83,10 @@ struct Node
     void dump(std::fstream& file)
     {
         file << "Node_" << this << "[color=brown, fillcolor=lightgreen, fontcolor=black" << ", label = \"{<_node_>ptr:\\n " << this
-        << "| center: " << center_ << "| {";
+        << "| center: " << center_ << "| objects: ";
+        for (auto x: objects_)
+            file << x << ", ";
+        file << "| {";
         for (int i = 0; i < Eight - 1; i++)
             file << "<" << i << ">" << i << ": \\n " << children_[i] << "| ";
         file << "<" << Eight - 1 << ">" << Eight - 1 << ": \\n " << children_[Eight - 1]; 
@@ -46,9 +97,14 @@ struct Node
 template<std::floating_point Float>
 class OctoTree
 {
-    using node_type = Node<Float>;
-    using node_ptr  = Node<Float>*;
-    using size_type = std::size_t;
+    using node_type  = Node<Float>;
+    using node_ptr   = Node<Float>*;
+    using size_type  = std::size_t;
+    using value_type = ObjectSphere<Float>;
+    using pointer    = value_type*;
+    using reference  = value_type&;
+    using const_reference = const value_type&;
+    using const_pointer   = const value_type*;
 
     size_type depth_ = 0;
     node_ptr  root_  = nullptr;
@@ -82,12 +138,6 @@ public:
         return (depth_ == 0);
     }
 
-    void descriptor_dump(std::fstream& file) const
-    {
-        file << "\tTree [fillcolor=purple, label = \"{ OctoTree\\ndescriptor| depth: " << depth_ <<
-        "| <root> root:\\n " << root_ << "}\"];" << std::endl;
-    }
-
     void debug_graph_dump(const std::string& filename) const
     {   
         std::fstream file {filename + ".dot", std::ofstream::out | std::ofstream::trunc};
@@ -102,6 +152,55 @@ public:
 
         std::system(("dot -T svg " + filename + ".dot -o " + filename + ".svg").c_str());
         std::system(("rm " + filename + ".dot").c_str());
+    }
+
+private:
+    std::pair<bool, int> straddle_compute(node_ptr node, const_reference obj)
+    {
+        Float delta = 0;
+        int index = 0;
+
+        delta = obj.center_.x_ - node->center_.x_;
+        if (std::abs(delta) < node->half_width_ + obj->radius_)
+            return {true, index};
+        if (delta > 0.0)
+            index |= (1 << 0);
+
+        delta = obj.center_.y_ - node->center_.y_;
+        if (std::abs(delta) < node->half_width_ + obj->radius_)
+            return {true, index};
+        if (delta > 0.0)
+            index |= (1 << 1);
+
+        delta = obj.center_.z_ - node->center_.z_;
+        if (std::abs(delta) < node->half_width_ + obj->radius_)
+            return {true, index};
+        if (delta > 0.0)
+            index |= (1 << 2);
+
+        return {false, index};
+    }
+
+    void insert_object(node_ptr node, const_reference obj)
+    {
+        auto [straddle, index] = straddle_compute(node, obj);
+
+        if (!straddle && node->children_[index])
+            insert_object(node->children_[index], obj);
+        else
+            node->objects_.push_back(obj);
+    }
+public:
+    void insert(const_reference obj)
+    {
+        insert_object(root_, obj);
+    }
+
+private:
+    void descriptor_dump(std::fstream& file) const
+    {
+        file << "\tTree [fillcolor=purple, label = \"{ OctoTree\\ndescriptor| depth: " << depth_ <<
+        "| <root> root:\\n " << root_ << "}\"];" << std::endl;
     }
 
     static void dump_node(std::fstream& file, node_ptr node)

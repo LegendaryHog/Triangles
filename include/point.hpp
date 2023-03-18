@@ -24,6 +24,11 @@ struct Point
 
     std::ostream& print (std::ostream& out = std::cout) const { return out << "(" << x_ << ", " << y_ << ", " << z_ << ")"; }
 };
+template<std::floating_point F>
+Point<F> operator+(const Point<F>& p1, const Point<F>& p2)
+{
+    return Point{p1.x_ + p2.x_, p1.y_ + p2.y_, p1.z_ + p2.z_};
+}
 
 template<std::floating_point F>
 std::ostream& operator<<(std::ostream& out, const Point<F>& p)

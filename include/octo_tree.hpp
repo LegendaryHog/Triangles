@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <list>
+#include <fstream>
 #include "point.hpp"
 #include "shape.hpp"
 
@@ -21,7 +22,7 @@ struct Node
 {
     using node_ptr = Node*;
 
-    Geometry::Point<Float> ceneter_ {};
+    Geometry::Point<Float> center_ {};
     Float half_width_ = 0;
     node_ptr parent_ = 0;
     int which_child_ = 0;
@@ -31,6 +32,15 @@ struct Node
     bool empty() const
     {
         return (children_[0] == nullptr);
+    }
+
+    void dump(std::fstream& file)
+    {
+        file << "Node_" << this << "[fillcolor=white" << ", label = \"{<_node_>ptr:\\n " << this
+        << "| parent:\\n " << parent_ << "| which child: " << which_child_ << "| center: " << center_ << "| {";
+        for (int i; i < Eight; i++)
+            file << "<" << i << ">" << i << ": \\n " << children_[i] << "| ";
+        file << "| }}\"];" << std::endl;
     }
 };
 
@@ -82,9 +92,63 @@ public:
         }
     }
 
-    void debug_graph_dump() const
+    bool empty() const
     {
-        
+        return (depth_ == 0);
+    }
+
+    void descriptor_dump(std::fstream& file) const
+    {
+        file << "\tTree [fillcolor=purple, label = \"{ OcvtoTree\\ndescriptor| depth: " << depth_ <<
+        "| <root> root:\\n " << root_ << "}\"];" << std::endl;
+    }
+
+    void debug_graph_dump(const std::string& filename) const
+    {   
+        std::fstream file {filename + ".dot", std::ofstream::out | std::ofstream::trunc};
+
+        file << "digraph G {" << std::endl;
+        file << "\trankdir=\"TB\"" << std::endl;
+        file << "\tnode[shape=record, penwidth=3.0, style=filled, color=black, fontcolor=white];" << std::endl;
+        descriptor_dump(file);
+        tree_dump(file);
+        file << "}" << std::endl;
+        file.close();
+
+        std::system(("dot -T svg " + filename + ".dot -o " + filename + ".svg").c_str());
+        std::system(("rm " + filename + ".dot").c_str());
+    }
+
+    static void dump_node(std::fstream& file, node_ptr node)
+    {
+        node->dump(file);
+
+        if (!node->empty())
+            for (auto i = 0; i < Eight; i++)
+                dump_node(file, node->children_[i]);
+    }
+
+    static void connect_nodes(std::fstream& file, node_ptr node)
+    {
+        if (node->empty())
+            return;
+
+        for (auto i = 0; i < Eight; i++)
+            file << "Node_" << node << ":" << i << ":s -> Node_" << node->children_[i] << ":_node_:n;" << std::endl;
+
+        for (auto i = 0; i < Eight; i++)
+            connect_nodes(file, node->children_[i]);
+    }
+
+    void tree_dump(std::fstream& file) const
+    {
+        if (empty())
+            return;
+
+        dump_node(file, root_);
+    
+        file << "edge[penwidth=3, color=black];" << std::endl;
+        connect_nodes(file, root_);
     }
 };
 

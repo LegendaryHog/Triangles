@@ -45,4 +45,13 @@ F distance (const Point<F>& first, const Point<F>& second)
         return std::sqrt (x_diff * x_diff + y_diff * y_diff + z_diff * z_diff);
     }
 }
+
+template<std::floating_point F>
+Point<F> scan_point()
+{
+    Point<F> point {};
+    std::cin >> point.x_ >> point.y_ >> point.z_;
+    return point;
+}
+
 } // namespace Geometry

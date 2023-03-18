@@ -1,4 +1,4 @@
-#include "task.hpp"
+#include "brute_force.hpp"
 
 int main()
 {

@@ -1,1 +1,2 @@
-add_executable(task task.cpp)
+add_subdirectory(brute_force)
+add_subdirectory(octo_force)

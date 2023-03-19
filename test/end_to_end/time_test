@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+while getopts c: way
+do
+    case ${way} in
+        c) path=${OPTARG};;
+    esac
+done
+
+brute=${path}/task/brute_force/brute_force
+octo=${path}/task/octo_force/octo_force
+
+for i in $(seq 3 1 $#)
+do
+    echo "$((i - 2)):"
+    echo "brute force:"
+    time ./$brute < $3 > 'tmp'
+    echo ''
+    echo "octo force:"
+    time ./$octo < $3> 'tmp'
+    rm tmp
+done
+

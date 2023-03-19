@@ -1,0 +1,1 @@
+add_executable(octo_force task.cpp)

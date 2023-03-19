@@ -1,0 +1,1 @@
+add_executable(brute_force task.cpp)

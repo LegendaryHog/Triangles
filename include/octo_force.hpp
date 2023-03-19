@@ -102,6 +102,7 @@ template<std::floating_point F>
 std::unordered_set<std::size_t> intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {
     auto depth = static_cast<std::size_t>(log2(static_cast<double>(shapes.size())) / 3 + 1);
+    std::cout << depth << std::endl;
     const auto& [center, half_width] = calc_center_half_width(shapes);
     OctoTree<F> octo_tree (center, half_width, depth);
     octo_tree.insert(shapes.cbegin(), shapes.cend());

@@ -4,6 +4,7 @@
 #include "segment.hpp"
 #include "triangle.hpp"
 #include "vector.hpp"
+#include "intersection.hpp"
 
 namespace Geometry
 {
@@ -43,6 +44,13 @@ Shape<F> scan_shape()
 {
     Geometry::Point p1 = scan_point<F>(), p2 = scan_point<F>(), p3 = scan_point<F>();
     return make_shape(p1, p2, p3);
+}
+
+template<std::floating_point F>
+bool are_intersecting(const Shape<F>& shape1, const Shape<F>& shape2)
+{
+    return std::visit([](const auto& sh1, const auto& sh2) {return Geometry::are_intersecting(sh1, sh2);},
+           shapes[i], shapes[j]);
 }
 
 } // namespace Geoemtry

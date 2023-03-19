@@ -83,7 +83,7 @@ struct Node
     void dump(std::fstream& file)
     {
         file << "Node_" << this << "[color=brown, fillcolor=lightgreen, fontcolor=black" << ", label = \"{<_node_>ptr:\\n " << this
-        << "| center: " << center_ << "| objects: ";
+        << "| center: " << center_ << "| half width: " << half_width_<< "| objects: ";
         for (auto x: objects_)
             file << x << ", ";
         file << "| {";
@@ -95,7 +95,7 @@ struct Node
 };
 
 template<std::floating_point Float>
-class OctoTree
+class OctoTree final
 {
     using node_type  = Node<Float>;
     using node_ptr   = Node<Float>*;
@@ -108,6 +108,54 @@ class OctoTree
 
     size_type depth_ = 0;
     node_ptr  root_  = nullptr;
+public:
+    OctoTree() = default;
+private:
+    void swap(OctoTree& other)
+    {
+        std::swap(depth_, other.depth_);
+        std::swap(root_, other.root_);
+    }
+public:
+    OctoTree(OctoTree&& other) noexcept
+    {
+        swap(other);
+    }
+
+    OctoTree& operator=(OctoTree&& rhs) noexcept
+    {
+        swap(rhs);
+        return *this;
+    }
+#if 0
+    OctoTree(const OctoTree& other)
+    :OctoTree(other.root_->center_, other.root_->half_width_, other.depth_)
+    {
+
+    }
+
+    OctoTree& operator=(const OctoTree& rhs)
+    {
+        OctoTree tmp {rhs};
+        swap(tmp);
+        return *this;
+    }
+#endif
+private:
+    static void destruct(node_ptr node)
+    {
+        if (node == nullptr)
+            return;
+
+        for (auto i = 0; i < Eight; i++)
+            destruct(node->children_[i]);
+
+        delete node;
+    }
+
+public:
+    ~OctoTree() {destruct(root_);}
+
 private:
     static node_ptr build_octo_tree(const Geometry::Point<Float>& center, Float half_width, size_type stop_depth)
     {
@@ -128,10 +176,34 @@ private:
         }
         return node;
     }
+private:
+    template<std::input_iterator InpIt>
+    static std::tuple<Geometry::Point<Float>, Float, size_type>
+    calculate_octo_tree(InpIt first, InpIt last)
+    {
+        Float min_coord = 0.0, max_coord = 0.0;
+        size_type size = 0;
+        while (first != last)
+        {
+            size++;
+            
+        }
+    }
 public:
     OctoTree(const Geometry::Point<Float>& center, Float half_width, size_type depth)
-    :depth_ {depth}, root_ {build_octo_tree(center, half_width, depth)}
-    {}
+    :depth_ {depth}
+    {
+        OctoTree tmp {};
+        tmp.depth_ = depth;
+        tmp.root_  = build_octo_tree(center, half_width, depth);
+        swap(tmp);
+    }
+
+    template<std::input_iterator InpIt>
+    OctoTree(InpIt first, InpIt last)
+    {
+
+    }
 
     bool empty() const
     {
@@ -194,6 +266,13 @@ public:
     void insert(const Geometry::Shape<Float>& shape)
     {
         insert_object(root_, make_object(shape));
+    }
+
+    template<std::forward_iterator FwdIt>
+    void insert(FwdIt first, FwdIt last)
+    {
+        while (first != last)
+            insert(*first++);
     }
 
 private:

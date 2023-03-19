@@ -32,8 +32,7 @@ void intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
     auto size = shapes.size();
     for (int i = 0; i < size - 1; i++)
         for (int j = i + 1; j < size; j++)
-            if (std::visit([](const auto& obj1, const auto& obj2) {return Geometry::are_intersecting(obj1, obj2);},
-            shapes[i], shapes[j]))
+            if (Geometry::are_intersecting(shapes[i], shapes[j]))
                 indexs.insert({i, j});
     
     for (auto index: indexs)

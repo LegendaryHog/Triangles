@@ -15,7 +15,7 @@ TEST(OctoTree, Constructor)
 
 TEST(OctoTree, insert)
 {
-    Task::OctoTree<double> tree1 (Geometry::Point{0.0, 0.0, 0.0}, 100);
+    Task::OctoTree<double> tree1 (Geometry::Point{0.0, 0.0, 0.0}, 100, 3);
     tree1.insert(Geometry::Point{0.0, 0.0, 0.0});
     tree1.debug_graph_dump("dump4");
 }

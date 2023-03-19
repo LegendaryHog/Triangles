@@ -1,8 +1,9 @@
 #pragma once
+#include <variant>
 #include "point.hpp"
 #include "segment.hpp"
 #include "triangle.hpp"
-#include "vector"
+#include "vector.hpp"
 
 namespace Geometry
 {

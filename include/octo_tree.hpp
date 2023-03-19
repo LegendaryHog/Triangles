@@ -21,25 +21,25 @@ struct ObjectSphere
 template<std::floating_point Float>
 std::ostream& operator<<(std::ostream& out, const ObjectSphere<Float>& obj)
 {
-    return std::visit([&out](const auto& sh) {return (out << sh);}, obj.shape_);
+    return std::visit([&out](const auto& sh) -> std::ostream& {return (out << sh);}, obj.shape_);
 }
 
 namespace detail
 {
 template<std::floating_point Float>
-ObjectSphere make_object(const Geometry::Point<Float>& p)
+ObjectSphere<Float> make_object(const Geometry::Point<Float>& p)
 {
-    return ObjectSphere{p, p, 1e-6};
+    return {p, p, 1e-6};
 }
 
 template<std::floating_point Float>
-ObjectSphere make_object(const Geometry::Segmnet<Float>& seg)
+ObjectSphere<Float> make_object(const Geometry::Segment<Float>& seg)
 {
-    return ObjectSphere{seg, (seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + 1e-6};
+    return {seg, (seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + 1e-6};
 }
 
 template<std::floating_point Float>
-ObjectSphere make_object(const Geometry::Triangle<Float>& tr)
+ObjectSphere<Float> make_object(const Geometry::Triangle<Float>& tr)
 {
     auto PQ = Geometry::distance(tr.P_, tr.Q_);
     auto QR = Geometry::distance(tr.Q_, tr.R_);
@@ -47,20 +47,20 @@ ObjectSphere make_object(const Geometry::Triangle<Float>& tr)
 
     if (PQ > QR)
         if (PQ > RP)
-            return ObjectSphere{tr, tr.R_, std::max(QR, RP)};
+            return {tr, tr.R_, std::max(QR, RP)};
         else
-            return ObjectSphere{tr, tr.Q_, std::max(PQ, QR)};
+            return {tr, tr.Q_, std::max(PQ, QR)};
     else
         if (QR > RP)
-            return ObjectSphere{tr, tr.P_, std::max(RP, PQ)};
+            return {tr, tr.P_, std::max(RP, PQ)};
         else
-            return ObjectSphere{tr, tr.Q_, std::max(PQ, QR)};
+            return {tr, tr.Q_, std::max(PQ, QR)};
 }
 
 }
 
 template<std::floating_point Float>
-ObjectSphere make_object(const Geometry::Shape<Float>& shape)
+ObjectSphere<Float> make_object(const Geometry::Shape<Float>& shape)
 {
     return std::visit([](const auto& sh){return detail::make_object(sh);}, shape);
 }
@@ -161,19 +161,19 @@ private:
         int index = 0;
 
         delta = obj.center_.x_ - node->center_.x_;
-        if (std::abs(delta) < node->half_width_ + obj->radius_)
+        if (std::abs(delta) < node->half_width_ + obj.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 0);
 
         delta = obj.center_.y_ - node->center_.y_;
-        if (std::abs(delta) < node->half_width_ + obj->radius_)
+        if (std::abs(delta) < node->half_width_ + obj.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 1);
 
         delta = obj.center_.z_ - node->center_.z_;
-        if (std::abs(delta) < node->half_width_ + obj->radius_)
+        if (std::abs(delta) < node->half_width_ + obj.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 2);

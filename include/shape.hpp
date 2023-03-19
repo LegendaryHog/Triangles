@@ -1,5 +1,6 @@
 #pragma once
 #include <variant>
+#include <vector>
 #include "point.hpp"
 #include "segment.hpp"
 #include "triangle.hpp"
@@ -47,10 +48,26 @@ Shape<F> scan_shape()
 }
 
 template<std::floating_point F>
+std::vector<Shape<F>> scan_shapes()
+{
+    std::size_t num_of_shapes = 0;
+    std::cin >> num_of_shapes;
+
+    std::vector<Shape<F>> shapes {};
+    shapes.reserve(num_of_shapes);
+
+    for (std::size_t i = 0; i < num_of_shapes; i++)
+        shapes.push_back(Geometry::scan_shape<F>());
+
+    return shapes;
+}
+
+
+template<std::floating_point F>
 bool are_intersecting(const Shape<F>& shape1, const Shape<F>& shape2)
 {
-    return std::visit([](const auto& sh1, const auto& sh2) {return Geometry::are_intersecting(sh1, sh2);},
-           shapes[i], shapes[j]);
+    return std::visit([](const auto& sh1, const auto& sh2) -> bool {return Geometry::are_intersecting(sh1, sh2);},
+           shape1, shape2);
 }
 
 } // namespace Geoemtry

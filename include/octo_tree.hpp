@@ -2,69 +2,16 @@
 #include <array>
 #include <list>
 #include <fstream>
-#include "point.hpp"
-#include "shape.hpp"
+#include <unordered_set>
+#include <vector>
+#include "bounding_sphere.hpp"
 
 namespace Task
 {
 
 constexpr int Eight = 8;
-
-template<std::floating_point Float>
-struct ObjectSphere
-{
-    Geometry::Shape<Float> shape_ {};
-    Geometry::Point<Float> center_ {};
-    Float radius_ = 0;
-};
-
-template<std::floating_point Float>
-std::ostream& operator<<(std::ostream& out, const ObjectSphere<Float>& obj)
-{
-    return std::visit([&out](const auto& sh) -> std::ostream& {return (out << sh);}, obj.shape_);
-}
-
 namespace detail
 {
-template<std::floating_point Float>
-ObjectSphere<Float> make_object(const Geometry::Point<Float>& p)
-{
-    return {p, p, 1e-6};
-}
-
-template<std::floating_point Float>
-ObjectSphere<Float> make_object(const Geometry::Segment<Float>& seg)
-{
-    return {seg, (seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + 1e-6};
-}
-
-template<std::floating_point Float>
-ObjectSphere<Float> make_object(const Geometry::Triangle<Float>& tr)
-{
-    auto PQ = Geometry::distance(tr.P_, tr.Q_);
-    auto QR = Geometry::distance(tr.Q_, tr.R_);
-    auto RP = Geometry::distance(tr.R_, tr.P_);
-
-    if (PQ > QR)
-        if (PQ > RP)
-            return {tr, tr.R_, std::max(QR, RP)};
-        else
-            return {tr, tr.Q_, std::max(PQ, QR)};
-    else
-        if (QR > RP)
-            return {tr, tr.P_, std::max(RP, PQ)};
-        else
-            return {tr, tr.Q_, std::max(PQ, QR)};
-}
-
-}
-
-template<std::floating_point Float>
-ObjectSphere<Float> make_object(const Geometry::Shape<Float>& shape)
-{
-    return std::visit([](const auto& sh){return detail::make_object(sh);}, shape);
-}
-
 template<std::floating_point Float>
 struct Node
 {
@@ -73,7 +20,7 @@ struct Node
     Geometry::Point<Float> center_ {};
     Float half_width_ = 0;
     std::array<node_ptr, Eight> children_ {};
-    std::list<ObjectSphere<Float>> objects_ {};
+    std::list<BoundingSphere<Float>> bounds_ {};
 
     bool childless() const
     {
@@ -83,9 +30,9 @@ struct Node
     void dump(std::fstream& file)
     {
         file << "Node_" << this << "[color=brown, fillcolor=lightgreen, fontcolor=black" << ", label = \"{<_node_>ptr:\\n " << this
-        << "| center: " << center_ << "| half width: " << half_width_<< "| objects: ";
-        for (auto x: objects_)
-            file << x << ", ";
+        << "| center: " << center_ << "| half width: " << half_width_<< "| bounds: ";
+        for (auto x: bounds_)
+            file << x << "\\n";
         file << "| {";
         for (int i = 0; i < Eight - 1; i++)
             file << "<" << i << ">" << i << ": \\n " << children_[i] << "| ";
@@ -94,13 +41,15 @@ struct Node
     }
 };
 
+} // namespace detail
+
 template<std::floating_point Float>
 class OctoTree final
 {
-    using node_type  = Node<Float>;
-    using node_ptr   = Node<Float>*;
+    using node_type  = detail::Node<Float>;
+    using node_ptr   = detail::Node<Float>*;
     using size_type  = std::size_t;
-    using value_type = ObjectSphere<Float>;
+    using value_type = BoundingSphere<Float>;
     using pointer    = value_type*;
     using reference  = value_type&;
     using const_reference = const value_type&;
@@ -176,19 +125,6 @@ private:
         }
         return node;
     }
-private:
-    template<std::input_iterator InpIt>
-    static std::tuple<Geometry::Point<Float>, Float, size_type>
-    calculate_octo_tree(InpIt first, InpIt last)
-    {
-        Float min_coord = 0.0, max_coord = 0.0;
-        size_type size = 0;
-        while (first != last)
-        {
-            size++;
-            
-        }
-    }
 public:
     OctoTree(const Geometry::Point<Float>& center, Float half_width, size_type depth)
     :depth_ {depth}
@@ -197,12 +133,6 @@ public:
         tmp.depth_ = depth;
         tmp.root_  = build_octo_tree(center, half_width, depth);
         swap(tmp);
-    }
-
-    template<std::input_iterator InpIt>
-    OctoTree(InpIt first, InpIt last)
-    {
-
     }
 
     bool empty() const
@@ -227,25 +157,25 @@ public:
     }
 
 private:
-    std::pair<bool, int> straddle_compute(node_ptr node, const_reference obj)
+    std::pair<bool, int> straddle_compute(node_ptr node, const_reference bound)
     {
-        Float delta = 0;
+        Float delta = 0.0;
         int index = 0;
 
-        delta = obj.center_.x_ - node->center_.x_;
-        if (std::abs(delta) < node->half_width_ + obj.radius_)
+        delta = bound.center_.x_ - node->center_.x_;
+        if (std::abs(delta) < bound.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 0);
 
-        delta = obj.center_.y_ - node->center_.y_;
-        if (std::abs(delta) < node->half_width_ + obj.radius_)
+        delta = bound.center_.y_ - node->center_.y_;
+        if (std::abs(delta) < bound.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 1);
 
-        delta = obj.center_.z_ - node->center_.z_;
-        if (std::abs(delta) < node->half_width_ + obj.radius_)
+        delta = bound.center_.z_ - node->center_.z_;
+        if (std::abs(delta) < bound.radius_)
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 2);
@@ -253,26 +183,54 @@ private:
         return {false, index};
     }
 
-    void insert_object(node_ptr node, const_reference obj)
+    void insert_bound(node_ptr node, const_reference bound)
     {
-        auto [straddle, index] = straddle_compute(node, obj);
+        auto [straddle, index] = straddle_compute(node, bound);
 
         if (!straddle && node->children_[index])
-            insert_object(node->children_[index], obj);
+            insert_bound(node->children_[index], bound);
         else
-            node->objects_.push_back(obj);
+            node->bounds_.push_back(bound);
     }
 public:
-    void insert(const Geometry::Shape<Float>& shape)
+    void insert(const Geometry::Shape<Float>& shape, std::size_t shape_index)
     {
-        insert_object(root_, make_object(shape));
+        insert_bound(root_, make_bound(shape, shape_index));
     }
 
     template<std::forward_iterator FwdIt>
     void insert(FwdIt first, FwdIt last)
     {
+        std::size_t index = 0;
         while (first != last)
-            insert(*first++);
+            insert(*first++, index++);
+    }
+private:
+    void recursive_intersection(node_ptr node, std::unordered_set<size_type>& indexs) const
+    {
+        static std::vector<node_ptr> ancestors {};
+
+        ancestors.push_back(node);
+
+        for (auto ancestor: ancestors)
+            for (const auto& bound_a: ancestor->bounds_)
+                for (const auto& bound_b: node->bounds_)
+                    if (bound_a.shape_index() != bound_b.shape_index() && Geometry::are_intersecting(bound_a.shape(), bound_b.shape()))
+                        indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
+
+
+        for (auto i = 0; i < Eight; i++)
+            if (node->children_[i] && !node->children_[i]->bounds_.empty())
+                recursive_intersection(node->children_[i], indexs);
+
+        ancestors.pop_back();
+    }
+public:
+    std::unordered_set<size_type> intersect_all() const
+    {
+        std::unordered_set<size_type> indexs {};
+        recursive_intersection(root_, indexs);
+        return indexs;
     }
 
 private:

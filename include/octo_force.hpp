@@ -1,7 +1,11 @@
 #pragma once
 #include "octo_tree.hpp"
+#include <chrono>
 
 namespace Task
+{
+
+namespace detail
 {
 
 template<std::floating_point F>
@@ -25,8 +29,6 @@ std::pair<F, F> sort(F f1, F f2, F f3)
         return {min, max};
 }
 
-namespace detail
-{
 template<std::floating_point F>
 std::pair<Geometry::Point<F>, Geometry::Point<F>>
 calc_bounding_box(const Geometry::Point<F>& p)
@@ -102,11 +104,29 @@ template<std::floating_point F>
 std::unordered_set<std::size_t> intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {
     auto depth = static_cast<std::size_t>(log2(static_cast<double>(shapes.size())) / 3 + 1);
-    std::cout << depth << std::endl;
+    //std::cout << depth << std::endl;
+    
+    auto start = std::chrono::steady_clock::now();
     const auto& [center, half_width] = calc_center_half_width(shapes);
+    auto end = std::chrono::steady_clock::now();
+    std::cout << "time on calc: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+
+    start = std::chrono::steady_clock::now();
     OctoTree<F> octo_tree (center, half_width, depth);
+    end = std::chrono::steady_clock::now();
+    std::cout << "time on construct: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+
+    start = std::chrono::steady_clock::now();
     octo_tree.insert(shapes.cbegin(), shapes.cend());
+    end = std::chrono::steady_clock::now();
+    std::cout << "time on insert: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+
     //octo_tree.debug_graph_dump("dump");
-    return octo_tree.intersect_all();
+    start = std::chrono::steady_clock::now();
+    const auto& indexs = octo_tree.intersect_all();
+    end = std::chrono::steady_clock::now();
+    std::cout << "time on intersection: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+    
+    return indexs;
 }
 } // namespace Task

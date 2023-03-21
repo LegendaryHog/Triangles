@@ -22,7 +22,7 @@ struct Node
     Geometry::Point<Float> center_ {};
     Float half_width_ = 0;
     std::array<node_ptr, Eight> children_ {};
-    std::vector<Geometry::BoundingSphere<Float>> bounds_ {};
+    std::vector<Geometry::BoundingBox<Float>> bounds_ {};
 
     bool childless() const
     {
@@ -51,7 +51,7 @@ class OctoTree final
     using node_type  = detail::Node<Float>;
     using node_ptr   = detail::Node<Float>*;
     using size_type  = std::size_t;
-    using value_type = Geometry::BoundingSphere<Float>;
+    using value_type = Geometry::BoundingBox<Float>;
     using reference  = value_type&;
     using const_reference = const value_type&;
     
@@ -150,19 +150,19 @@ private:
         int index = 0;
 
         delta = bound.center().x_ - node->center_.x_;
-        if (std::abs(delta) < bound.radius())
+        if (std::abs(delta) < bound.half_width_x())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 0);
 
         delta = bound.center().y_ - node->center_.y_;
-        if (std::abs(delta) < bound.radius())
+        if (std::abs(delta) < bound.half_width_y())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 1);
 
         delta = bound.center().z_ - node->center_.z_;
-        if (std::abs(delta) < bound.radius())
+        if (std::abs(delta) < bound.half_width_z())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 2);

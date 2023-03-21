@@ -2,79 +2,107 @@
 #include "point.hpp"
 #include "shape.hpp"
 
+namespace Math
+{
+
+template<std::floating_point F>
+std::pair<F, F> sort(F f1, F f2)
+{
+    if (f1 > f2)
+        return {f2, f1};
+    else
+        return {f1, f2};
+}
+
+template<std::floating_point F>
+std::pair<F, F> sort(F f1, F f2, F f3)
+{
+    auto [min, max] = sort(f1, f2);
+    if (f3 < min)
+        return {f3, max};
+    else if (f3 > max)
+        return {min, f3};
+    else
+        return {min, max};
+}
+
+} // namespace Math
+
 namespace Geometry
 {
 template<std::floating_point Float>
-class BoundingSphere final
+class BoundingBox final
 {
     const Shape<Float>* ptr_shape_ = nullptr;
     std::size_t  shape_index_ = 0;
+
     Point<Float> center_ {};
-    Float        radius_ = 0;
+    Float half_width_x_ = 0;
+    Float half_width_y_ = 0;
+    Float half_width_z_ = 0;
 
 public:
-    BoundingSphere() = default;
+    BoundingBox() = default;
 
-    BoundingSphere(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center, Float rad)
-    :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center}, radius_ {rad}
+    BoundingBox(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center,
+    Float hx, Float hy, Float hz)
+    :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center},
+     half_width_x_ {hx}, half_width_y_ {hy}, half_width_z_ {hz}
     {}
 
     const Shape<Float>& shape()  const {return *ptr_shape_;}
     std::size_t shape_index()    const {return shape_index_;}
     const Point<Float>& center() const {return center_;}
-    Float radius() const {return radius_;}
+    Float half_width_x() const {return half_width_x_;}
+    Float half_width_y() const {return half_width_y_;}
+    Float half_width_z() const {return half_width_z_;}
 };
 
 template<std::floating_point Float>
-std::ostream& operator<<(std::ostream& out, const BoundingSphere<Float>& obj)
+std::ostream& operator<<(std::ostream& out, const BoundingBox<Float>& obj)
 {
-    return std::visit([&](const auto& sh) -> std::ostream& {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
+    return std::visit([&](const auto& sh) -> std::ostream&
+    {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
 }
 
 namespace detail
 {
 
 template<std::floating_point Float>
-using Sphere = std::pair<Point<Float>, Float>;
+using Box = std::tuple<Point<Float>, Float, Float, Float>;
 
 template<std::floating_point Float>
-Sphere<Float> compute_sphere(const Point<Float>& p)
+Box<Float> compute_box(const Point<Float>& p)
 {
-    return {p, Math::epsilon<Float>};
+    return {p, Math::epsilon<Float>, Math::epsilon<Float>, Math::epsilon<Float>};
 }
 
 template<std::floating_point Float>
-Sphere<Float> compute_sphere(const Segment<Float>& seg)
+Box<Float> compute_box(const Segment<Float>& seg)
 {
-    return {(seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + Math::epsilon<Float>};
+    return {(seg.F_ + seg.S_) * 0.5, std::abs(seg.F_.x_ - seg.S_.x_) * 0.5,
+    std::abs(seg.F_.y_ - seg.S_.y_) * 0.5, std::abs(seg.F_.y_ - seg.S_.y_) * 0.5};
 }
 
 template<std::floating_point Float>
-Sphere<Float> compute_sphere(const Triangle<Float>& tr)
+Box<Float> compute_box(const Triangle<Float>& tr)
 {
-    auto PQ = Geometry::distance(tr.P_, tr.Q_);
-    auto QR = Geometry::distance(tr.Q_, tr.R_);
-    auto RP = Geometry::distance(tr.R_, tr.P_);
+    auto [min_x, max_x] = Math::sort(tr.P_.x_, tr.Q_.x_, tr.R_.x_);
+    auto [min_y, max_y] = Math::sort(tr.P_.y_, tr.Q_.y_, tr.R_.y_);
+    auto [min_z, max_z] = Math::sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
 
-    if (PQ > QR)
-        if (PQ > RP)
-            return {tr.R_, std::max(QR, RP) + Math::epsilon<Float>};
-        else
-            return {tr.Q_, std::max(PQ, QR) + Math::epsilon<Float>};
-    else
-        if (QR > RP)
-            return {tr.P_, std::max(RP, PQ) + Math::epsilon<Float>};
-        else
-            return {tr.Q_, std::max(PQ, QR) + Math::epsilon<Float>};
+    return {{(min_x + max_x) * 0.5, (min_y + max_y) * 0.5, (min_z + max_z) * 0.5},
+             max_x - min_x, max_y - min_y, max_z - min_z};
 }
 
 } // namespace detail
 
 template<std::floating_point Float>
-BoundingSphere<Float> make_bound(const Shape<Float>& shape, std::size_t index)
+BoundingBox<Float> make_bound(const Shape<Float>& shape, std::size_t index)
 {
-    auto [center, radius] = std::visit([](const auto& sh) -> detail::Sphere<Float> {return detail::compute_sphere(sh);}, shape);
-    return BoundingSphere<Float>{&shape, index, center, radius};
+    auto [center, half_width_x, half_width_y, half_width_z] = 
+    std::visit([](const auto& sh) -> detail::Box<Float> {return detail::compute_box(sh);}, shape);
+    return BoundingBox<Float>{&shape, index, center, half_width_x, half_width_y, half_width_z};
 }
 
 } // namespace Geometry

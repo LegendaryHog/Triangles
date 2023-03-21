@@ -9,27 +9,6 @@ namespace detail
 {
 
 template<std::floating_point F>
-std::pair<F, F> sort(F f1, F f2)
-{
-    if (f1 > f2)
-        return {f2, f1};
-    else
-        return {f1, f2};
-}
-
-template<std::floating_point F>
-std::pair<F, F> sort(F f1, F f2, F f3)
-{
-    auto [min, max] = sort(f1, f2);
-    if (f3 < min)
-        return {f3, max};
-    else if (f3 > max)
-        return {min, f3};
-    else
-        return {min, max};
-}
-
-template<std::floating_point F>
 std::pair<Geometry::Point<F>, Geometry::Point<F>>
 calc_bounding_box(const Geometry::Point<F>& p)
 {
@@ -41,9 +20,9 @@ template<std::floating_point F>
 std::pair<Geometry::Point<F>, Geometry::Point<F>>
 calc_bounding_box(const Geometry::Segment<F>& seg)
 {
-    auto [min_x, max_x] = sort(seg.F_.x_, seg.S_.x_);
-    auto [min_y, max_y] = sort(seg.F_.y_, seg.S_.y_);
-    auto [min_z, max_z] = sort(seg.F_.z_, seg.S_.z_);
+    auto [min_x, max_x] = Math::sort(seg.F_.x_, seg.S_.x_);
+    auto [min_y, max_y] = Math::sort(seg.F_.y_, seg.S_.y_);
+    auto [min_z, max_z] = Math::sort(seg.F_.z_, seg.S_.z_);
 
     return {{min_x - Math::epsilon<F>, min_y - Math::epsilon<F>, min_z - Math::epsilon<F>},
             {max_x + Math::epsilon<F>, max_y + Math::epsilon<F>, max_z + Math::epsilon<F>}};
@@ -53,9 +32,9 @@ template<std::floating_point F>
 std::pair<Geometry::Point<F>, Geometry::Point<F>>
 calc_bounding_box(const Geometry::Triangle<F>& tr)
 {
-    auto [min_x, max_x] = sort(tr.P_.x_, tr.Q_.x_, tr.R_.x_);
-    auto [min_y, max_y] = sort(tr.P_.y_, tr.Q_.y_, tr.R_.y_);
-    auto [min_z, max_z] = sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
+    auto [min_x, max_x] = Math::sort(tr.P_.x_, tr.Q_.x_, tr.R_.x_);
+    auto [min_y, max_y] = Math::sort(tr.P_.y_, tr.Q_.y_, tr.R_.y_);
+    auto [min_z, max_z] = Math::sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
 
     return {{min_x - Math::epsilon<F>, min_y - Math::epsilon<F>, min_z - Math::epsilon<F>},
             {max_x + Math::epsilon<F>, max_y + Math::epsilon<F>, max_z + Math::epsilon<F>}};
@@ -125,7 +104,7 @@ IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
     start = std::chrono::steady_clock::now();
     const auto& indexs = octo_tree.intersect_all();
     end = std::chrono::steady_clock::now();
-    //std::cout << "time on intersection: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+    std::cout << "time on intersection: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
     
     return indexs;
 }

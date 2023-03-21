@@ -4,9 +4,9 @@
 
 TEST(OctoTree, Constructor)
 {
-    Task::OctoTree<double> tree1 (Geometry::Point{0.0, 0.0, 0.0}, 100, 1);
-    Task::OctoTree<double> tree2 (Geometry::Point{0.0, 0.0, 0.0}, 100, 2);
-    Task::OctoTree<double> tree3 (Geometry::Point{0.0, 0.0, 0.0}, 100, 3);
+    Task::OctoTree<double> tree1 (Geometry::Point<double>{0.0, 0.0, 0.0}, 100, 1);
+    Task::OctoTree<double> tree2 (Geometry::Point<double>{0.0, 0.0, 0.0}, 100, 2);
+    Task::OctoTree<double> tree3 (Geometry::Point<double>{0.0, 0.0, 0.0}, 100, 3);
 
     tree1.debug_graph_dump("dump1");
     tree2.debug_graph_dump("dump2");
@@ -15,7 +15,7 @@ TEST(OctoTree, Constructor)
 
 TEST(OctoTree, insert)
 {
-    Task::OctoTree<double> tree1 (Geometry::Point{0.0, 0.0, 0.0}, 100, 3);
+    Task::OctoTree<double> tree1 (Geometry::Point<double>{0.0, 0.0, 0.0}, 100, 3);
     tree1.insert(Geometry::Point{0.0, 0.0, 0.0}, 0);
     tree1.debug_graph_dump("dump4");
 }

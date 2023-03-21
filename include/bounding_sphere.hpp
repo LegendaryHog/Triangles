@@ -51,6 +51,7 @@ public:
     Float half_width_x() const {return radius_;}
     Float half_width_y() const {return radius_;}
     Float half_width_z() const {return radius_;}
+    Float radius()       const {return radius_;}
 };
 
 template<std::floating_point Float>
@@ -104,6 +105,14 @@ BoundingSphere<Float> make_bound(const Shape<Float>& shape, ShapeIndT index)
 {
     auto [center, radius] = std::visit([](const auto& sh) -> detail::Sphere<Float> {return detail::compute_sphere(sh);}, shape);
     return BoundingSphere<Float>{&shape, index, center, radius};
+}
+
+template<std::floating_point Float>
+bool are_intersecting(const BoundingSphere<Float>& bound1, const BoundingSphere<Float>& bound2)
+{
+    if (distance(bound1.center(), bound2.center() > bound1.radius() + bound2.radius())
+        return false;
+    return are_intersecting(bound1.shape(), bound2.shape());
 }
 
 } // namespace Geometry

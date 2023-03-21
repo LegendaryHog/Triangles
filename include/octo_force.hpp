@@ -83,28 +83,50 @@ template<std::floating_point F>
 Geometry::IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {
     auto depth = static_cast<std::size_t>(log2(static_cast<double>(shapes.size())) / 3 + 1);
-    //std::cout << depth << std::endl;
-    
-    auto start = std::chrono::steady_clock::now();
-    const auto& [center, half_width] = calc_center_half_width(shapes);
-    auto end = std::chrono::steady_clock::now();
-    //std::cout << "time on calc: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
 
+#ifdef TIME
+    auto start = std::chrono::steady_clock::now();
+#endif
+
+    const auto& [center, half_width] = calc_center_half_width(shapes);
+
+#ifdef TIME
+    auto end = std::chrono::steady_clock::now();
+    std::cout << "time on calc: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+#endif
+
+#ifdef TIME
     start = std::chrono::steady_clock::now();
+#endif
+
     OctoTree<F> octo_tree (center, half_width, depth);
+
+#ifdef TIME
     end = std::chrono::steady_clock::now();
     std::cout << "time on construct: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+#endif
 
+#ifdef TIME
     start = std::chrono::steady_clock::now();
+#endif
+
     octo_tree.insert(shapes.cbegin(), shapes.cend());
+
+#ifdef TIME
     end = std::chrono::steady_clock::now();
     std::cout << "time on insert: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+#endif
 
-    //octo_tree.debug_graph_dump("dump");
+#ifdef TIME
     start = std::chrono::steady_clock::now();
+#endif
+
     const auto& indexs = octo_tree.intersect_all();
+    
+#ifdef TIME
     end = std::chrono::steady_clock::now();
     std::cout << "time on intersection: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+#endif
     
     return indexs;
 }

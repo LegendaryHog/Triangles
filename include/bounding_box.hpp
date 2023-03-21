@@ -51,8 +51,8 @@ public:
      half_width_x_ {hx}, half_width_y_ {hy}, half_width_z_ {hz}
     {}
 
-    const Shape<Float>& shape()  const {return *ptr_shape_;}
-    size_type shape_index()    const {return shape_index_;}
+    const Shape<Float>& shape() const {return *ptr_shape_;}
+    size_type shape_index() const {return shape_index_;}
     const Point<Float>& center() const {return center_;}
     Float half_width_x() const {return half_width_x_;}
     Float half_width_y() const {return half_width_y_;}
@@ -106,4 +106,18 @@ BoundingBox<Float> make_bound(const Shape<Float>& shape, ShapeIndT index)
     return BoundingBox<Float>{&shape, index, center, half_width_x, half_width_y, half_width_z};
 }
 
+template<std::floating_point Float>
+bool are_intersecting(const BoundingBox<Float>& bound1, const BoundingBox<Float>& bound2)
+{
+    if (std::abs(bound1.center().x_ - bound2.center().x_) > bound1.half_width_x() + bound2.half_width_x())
+        return false;
+
+    if (std::abs(bound1.center().y_ - bound2.center().y_) > bound1.half_width_y() + bound2.half_width_y())
+        return false;
+
+    if (std::abs(bound1.center().z_ - bound2.center().z_) > bound1.half_width_z() + bound2.half_width_z())
+        return false;
+    
+    return are_intersecting(bound1.shape(), bound2.shape());
+}
 } // namespace Geometry

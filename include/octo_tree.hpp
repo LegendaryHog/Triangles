@@ -192,6 +192,7 @@ public:
         while (first != last)
             insert(*first++, index++);
     }
+
 private:
     void recursive_intersection(node_ptr node, IndexsContainer& indexs) const
     {
@@ -202,8 +203,7 @@ private:
         for (auto ancestor: ancestors)
             for (const auto& bound_a: ancestor->bounds_)
                 for (const auto& bound_b: node->bounds_)
-                    if (bound_a.shape_index() != bound_b.shape_index() &&
-                        Geometry::are_intersecting(bound_a.shape(), bound_b.shape()))
+                    if (bound_a.shape_index() != bound_b.shape_index() && are_intersecting(bound_a, bound_b))
                         indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
 
         if (!node->childless())

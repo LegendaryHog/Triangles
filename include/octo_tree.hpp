@@ -2,14 +2,14 @@
 #include <array>
 #include <list>
 #include <fstream>
-#include <set>
+#include <unordered_set>
 #include <vector>
 #include "bounding_sphere.hpp"
 
 namespace Task
 {
 
-using IndexsContainer = std::set<std::size_t>;
+using IndexsContainer = std::unordered_set<std::size_t>;
 
 constexpr int Eight = 8;
 namespace detail
@@ -212,7 +212,7 @@ private:
         ancestors.pop_back();
     }
 public:
-    std::set<size_type> intersect_all() const
+    IndexsContainer intersect_all() const
     {
         IndexsContainer indexs {};
         recursive_intersection(root_, indexs);

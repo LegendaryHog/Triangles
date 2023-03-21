@@ -3,7 +3,7 @@
 int main()
 {
     auto indexs = Task::intersect_shapes(Geometry::scan_shapes<double>());
-#define PRINT
+//#define PRINT
 #ifdef PRINT    
     for (auto index: indexs)
         std::cout << index << ' ';

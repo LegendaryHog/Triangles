@@ -79,6 +79,7 @@ calc_center_half_width(const std::vector<Geometry::Shape<F>>& shapes)
     return {center, std::max(half_width_x, std::max(half_width_y, half_width_z))};
 }
 
+#define TIME
 template<std::floating_point F>
 Geometry::IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {

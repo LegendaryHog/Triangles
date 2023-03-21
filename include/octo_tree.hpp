@@ -83,8 +83,8 @@ private:
         if (node == nullptr)
             return;
 
-        for (auto i = 0; i < Eight; i++)
-            destruct(node->children_[i]);
+        for (auto child: node->children_)
+            destruct(child);
 
         delete node;
     }
@@ -103,7 +103,7 @@ private:
         Geometry::Point<Float> offset {};
         auto step = half_width * 0.5;
 
-        for (int i = 0; i < Eight; i++)
+        for (auto i = 0; i < Eight; i++)
         {
             offset.x_ = ((i & 1) ? step : -step);
             offset.y_ = ((i & 2) ? step : -step);
@@ -206,11 +206,12 @@ private:
                         indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
 
         if (!node->childless())
-            for (auto i = 0; i < Eight; i++)
-                recursive_intersection(node->children_[i], indexs);
+            for (auto child: node->children_)
+                recursive_intersection(child, indexs);
 
         ancestors.pop_back();
     }
+
 public:
     IndexsContainer intersect_all() const
     {
@@ -230,9 +231,11 @@ private:
     {
         node->dump(file);
 
-        if (!node->childless())
-            for (auto i = 0; i < Eight; i++)
-                dump_node(file, node->children_[i]);
+        if (node->childless())
+            return;
+
+        for (auto child: node->children_)
+            dump_node(file, child);
     }
 
     static void connect_nodes(std::fstream& file, node_ptr node)
@@ -240,11 +243,12 @@ private:
         if (node->childless())
             return;
 
-        for (auto i = 0; i < Eight; i++)
-            file << "Node_" << node << ":" << i << ":s -> Node_" << node->children_[i] << ":_node_:n;" << std::endl;
+        auto i = 0;
+        for (auto child: node->children_)
+            file << "Node_" << node << ":" << i++ << ":s -> Node_" << child << ":_node_:n;" << std::endl;
 
-        for (auto i = 0; i < Eight; i++)
-            connect_nodes(file, node->children_[i]);
+        for (auto child: node->children_)
+            connect_nodes(file, child);
     }
 
     void tree_dump(std::fstream& file) const

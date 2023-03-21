@@ -1,6 +1,9 @@
 #pragma once
+
 #include <variant>
 #include <vector>
+#include <unordered_set>
+
 #include "point.hpp"
 #include "segment.hpp"
 #include "triangle.hpp"
@@ -12,6 +15,10 @@ namespace Geometry
 
 template<std::floating_point F>
 using Shape = std::variant<Geometry::Point<F>, Geometry::Segment<F>, Geometry::Triangle<F>>;
+
+using ShapeIndT = std::size_t;
+
+using IndexsContainer = std::unordered_set<ShapeIndT>;
 
 template<std::floating_point F>
 Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Point<F> p3)

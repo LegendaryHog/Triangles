@@ -34,19 +34,19 @@ template<std::floating_point Float>
 class BoundingSphere final
 {
     const Shape<Float>* ptr_shape_ = nullptr;
-    std::size_t  shape_index_ = 0;
+    ShapeIndT  shape_index_ = 0;
     Point<Float> center_ {};
     Float        radius_ = 0;
 
 public:
     BoundingSphere() = default;
 
-    BoundingSphere(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center, Float rad)
+    BoundingSphere(const Shape<Float>* ptr_sh, ShapeIndT sh_ind, const Point<Float>& center, Float rad)
     :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center}, radius_ {rad}
     {}
 
     const Shape<Float>& shape()  const {return *ptr_shape_;}
-    std::size_t shape_index()    const {return shape_index_;}
+    ShapeIndT shape_index()    const {return shape_index_;}
     const Point<Float>& center() const {return center_;}
     Float half_width_x() const {return radius_;}
     Float half_width_y() const {return radius_;}
@@ -100,7 +100,7 @@ Sphere<Float> compute_sphere(const Triangle<Float>& tr)
 } // namespace detail
 
 template<std::floating_point Float>
-BoundingSphere<Float> make_bound(const Shape<Float>& shape, std::size_t index)
+BoundingSphere<Float> make_bound(const Shape<Float>& shape, ShapeIndT index)
 {
     auto [center, radius] = std::visit([](const auto& sh) -> detail::Sphere<Float> {return detail::compute_sphere(sh);}, shape);
     return BoundingSphere<Float>{&shape, index, center, radius};

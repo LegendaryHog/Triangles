@@ -33,8 +33,9 @@ namespace Geometry
 template<std::floating_point Float>
 class BoundingBox final
 {
+    using size_type = unsigned;
     const Shape<Float>* ptr_shape_ = nullptr;
-    std::size_t  shape_index_ = 0;
+    ShapeIndT shape_index_ = 0;
 
     Point<Float> center_ {};
     Float half_width_x_ = 0;
@@ -44,14 +45,14 @@ class BoundingBox final
 public:
     BoundingBox() = default;
 
-    BoundingBox(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center,
+    BoundingBox(const Shape<Float>* ptr_sh, ShapeIndT sh_ind, const Point<Float>& center,
     Float hx, Float hy, Float hz)
     :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center},
      half_width_x_ {hx}, half_width_y_ {hy}, half_width_z_ {hz}
     {}
 
     const Shape<Float>& shape()  const {return *ptr_shape_;}
-    std::size_t shape_index()    const {return shape_index_;}
+    size_type shape_index()    const {return shape_index_;}
     const Point<Float>& center() const {return center_;}
     Float half_width_x() const {return half_width_x_;}
     Float half_width_y() const {return half_width_y_;}
@@ -98,7 +99,7 @@ Box<Float> compute_box(const Triangle<Float>& tr)
 } // namespace detail
 
 template<std::floating_point Float>
-BoundingBox<Float> make_bound(const Shape<Float>& shape, std::size_t index)
+BoundingBox<Float> make_bound(const Shape<Float>& shape, ShapeIndT index)
 {
     auto [center, half_width_x, half_width_y, half_width_z] = 
     std::visit([](const auto& sh) -> detail::Box<Float> {return detail::compute_box(sh);}, shape);

@@ -1,17 +1,13 @@
 #pragma once
 #include <array>
-#include <list>
 #include <fstream>
-#include <unordered_set>
 #include <vector>
-#include "bounding_sphere.hpp"
+#include "bounding_box.hpp"
 
 namespace Task
 {
 template<std::floating_point Float>
-using Bound = Geometry::BoundingSphere<Float>;
-
-using IndexsContainer = std::unordered_set<std::size_t>;
+using Bound = Geometry::BoundingBox<Float>;
 
 constexpr int Eight = 8;
 namespace detail
@@ -56,6 +52,8 @@ class OctoTree final
     using value_type = Bound<Float>;
     using reference  = value_type&;
     using const_reference = const value_type&;
+    using IndexsContainer = Geometry::IndexsContainer;
+    using ShapeIndT       = Geometry::ShapeIndT;
     
     size_type depth_ = 0;
     node_ptr  root_  = nullptr;
@@ -182,7 +180,7 @@ private:
             node->bounds_.push_back(bound);
     }
 public:
-    void insert(const Geometry::Shape<Float>& shape, std::size_t shape_index)
+    void insert(const Geometry::Shape<Float>& shape, ShapeIndT shape_index)
     {
         insert_bound(root_, make_bound(shape, shape_index));
     }
@@ -190,7 +188,7 @@ public:
     template<std::forward_iterator FwdIt>
     void insert(FwdIt first, FwdIt last)
     {
-        std::size_t index = 0;
+        ShapeIndT index = 0;
         while (first != last)
             insert(*first++, index++);
     }
@@ -204,7 +202,8 @@ private:
         for (auto ancestor: ancestors)
             for (const auto& bound_a: ancestor->bounds_)
                 for (const auto& bound_b: node->bounds_)
-                    if (bound_a.shape_index() != bound_b.shape_index() && Geometry::are_intersecting(bound_a.shape(), bound_b.shape()))
+                    if (bound_a.shape_index() != bound_b.shape_index() &&
+                        Geometry::are_intersecting(bound_a.shape(), bound_b.shape()))
                         indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
 
         if (!node->childless())

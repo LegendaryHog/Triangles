@@ -2,12 +2,14 @@
 #include <array>
 #include <list>
 #include <fstream>
-#include <unordered_set>
+#include <set>
 #include <vector>
 #include "bounding_sphere.hpp"
 
 namespace Task
 {
+
+using IndexsContainer = std::set<std::size_t>;
 
 constexpr int Eight = 8;
 namespace detail
@@ -20,7 +22,7 @@ struct Node
     Geometry::Point<Float> center_ {};
     Float half_width_ = 0;
     std::array<node_ptr, Eight> children_ {};
-    std::list<BoundingSphere<Float>> bounds_ {};
+    std::vector<Geometry::BoundingSphere<Float>> bounds_ {};
 
     bool childless() const
     {
@@ -49,12 +51,10 @@ class OctoTree final
     using node_type  = detail::Node<Float>;
     using node_ptr   = detail::Node<Float>*;
     using size_type  = std::size_t;
-    using value_type = BoundingSphere<Float>;
-    using pointer    = value_type*;
+    using value_type = Geometry::BoundingSphere<Float>;
     using reference  = value_type&;
     using const_reference = const value_type&;
-    using const_pointer   = const value_type*;
-
+    
     size_type depth_ = 0;
     node_ptr  root_  = nullptr;
 public:
@@ -76,20 +76,7 @@ public:
         swap(rhs);
         return *this;
     }
-#if 0
-    OctoTree(const OctoTree& other)
-    :OctoTree(other.root_->center_, other.root_->half_width_, other.depth_)
-    {
 
-    }
-
-    OctoTree& operator=(const OctoTree& rhs)
-    {
-        OctoTree tmp {rhs};
-        swap(tmp);
-        return *this;
-    }
-#endif
 private:
     static void destruct(node_ptr node)
     {
@@ -157,25 +144,25 @@ public:
     }
 
 private:
-    std::pair<bool, int> straddle_compute(node_ptr node, const_reference bound)
+    static std::pair<bool, int> straddle_compute(node_ptr node, const_reference bound)
     {
         Float delta = 0.0;
         int index = 0;
 
-        delta = bound.center_.x_ - node->center_.x_;
-        if (std::abs(delta) < bound.radius_)
+        delta = bound.center().x_ - node->center_.x_;
+        if (std::abs(delta) < bound.radius())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 0);
 
-        delta = bound.center_.y_ - node->center_.y_;
-        if (std::abs(delta) < bound.radius_)
+        delta = bound.center().y_ - node->center_.y_;
+        if (std::abs(delta) < bound.radius())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 1);
 
-        delta = bound.center_.z_ - node->center_.z_;
-        if (std::abs(delta) < bound.radius_)
+        delta = bound.center().z_ - node->center_.z_;
+        if (std::abs(delta) < bound.radius())
             return {true, index};
         if (delta > 0.0)
             index |= (1 << 2);
@@ -206,7 +193,7 @@ public:
             insert(*first++, index++);
     }
 private:
-    void recursive_intersection(node_ptr node, std::unordered_set<size_type>& indexs) const
+    void recursive_intersection(node_ptr node, IndexsContainer& indexs) const
     {
         static std::vector<node_ptr> ancestors {};
 
@@ -218,17 +205,16 @@ private:
                     if (bound_a.shape_index() != bound_b.shape_index() && Geometry::are_intersecting(bound_a.shape(), bound_b.shape()))
                         indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
 
-
-        for (auto i = 0; i < Eight; i++)
-            if (node->children_[i] && !node->children_[i]->bounds_.empty())
+        if (!node->childless())
+            for (auto i = 0; i < Eight; i++)
                 recursive_intersection(node->children_[i], indexs);
 
         ancestors.pop_back();
     }
 public:
-    std::unordered_set<size_type> intersect_all() const
+    std::set<size_type> intersect_all() const
     {
-        std::unordered_set<size_type> indexs {};
+        IndexsContainer indexs {};
         recursive_intersection(root_, indexs);
         return indexs;
     }

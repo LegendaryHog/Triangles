@@ -33,8 +33,8 @@ template<std::floating_point F>
 std::pair<Geometry::Point<F>, Geometry::Point<F>>
 calc_bounding_box(const Geometry::Point<F>& p)
 {
-    return {{p.x_ - epsilon<F>, p.y_ - epsilon<F>, p.z_ - epsilon<F>},
-            {p.x_ + epsilon<F>, p.y_ + epsilon<F>, p.z_ + epsilon<F>}};
+    return {{p.x_ - Math::epsilon<F>, p.y_ - Math::epsilon<F>, p.z_ - Math::epsilon<F>},
+            {p.x_ + Math::epsilon<F>, p.y_ + Math::epsilon<F>, p.z_ + Math::epsilon<F>}};
 }
 
 template<std::floating_point F>
@@ -45,8 +45,8 @@ calc_bounding_box(const Geometry::Segment<F>& seg)
     auto [min_y, max_y] = sort(seg.F_.y_, seg.S_.y_);
     auto [min_z, max_z] = sort(seg.F_.z_, seg.S_.z_);
 
-    return {{min_x - epsilon<F>, min_y - epsilon<F>, min_z - epsilon<F>},
-            {max_x + epsilon<F>, max_y + epsilon<F>, max_z + epsilon<F>}};
+    return {{min_x - Math::epsilon<F>, min_y - Math::epsilon<F>, min_z - Math::epsilon<F>},
+            {max_x + Math::epsilon<F>, max_y + Math::epsilon<F>, max_z + Math::epsilon<F>}};
 }
 
 template<std::floating_point F>
@@ -57,8 +57,8 @@ calc_bounding_box(const Geometry::Triangle<F>& tr)
     auto [min_y, max_y] = sort(tr.P_.y_, tr.Q_.y_, tr.R_.y_);
     auto [min_z, max_z] = sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
 
-    return {{min_x - epsilon<F>, min_y - epsilon<F>, min_z - epsilon<F>},
-            {max_x + epsilon<F>, max_y + epsilon<F>, max_z + epsilon<F>}};
+    return {{min_x - Math::epsilon<F>, min_y - Math::epsilon<F>, min_z - Math::epsilon<F>},
+            {max_x + Math::epsilon<F>, max_y + Math::epsilon<F>, max_z + Math::epsilon<F>}};
 }
 
 } // namespace detail
@@ -101,10 +101,10 @@ calc_center_half_width(const std::vector<Geometry::Shape<F>>& shapes)
 }
 
 template<std::floating_point F>
-std::unordered_set<std::size_t> intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
+IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {
     auto depth = static_cast<std::size_t>(log2(static_cast<double>(shapes.size())) / 3 + 1);
-    //std::cout << depth << std::endl;
+    std::cout << depth << std::endl;
     
     auto start = std::chrono::steady_clock::now();
     const auto& [center, half_width] = calc_center_half_width(shapes);

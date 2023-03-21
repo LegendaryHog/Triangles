@@ -5,7 +5,7 @@ import sys, os
 # path to build          - 1 arg
 # name of file with test - after first arg
 
-run_path  = sys.argv[1]
+run_file  = sys.argv[1]
 number_of_tests = len(sys.argv) - 2
 
 def take_list_from_file(name_of_file):
@@ -14,7 +14,7 @@ def take_list_from_file(name_of_file):
     return answer
 
 def take_run_answer(ind):
-    os.system("./" + run_path + "/task/task" + " < " + sys.argv[ind + 2] + "_task > out")
+    os.system("./" + run_file + " < " + sys.argv[ind + 2] + "_task > out")
     run_answ = take_list_from_file("out")
     os.system("rm out")
     return run_answ

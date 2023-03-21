@@ -4,7 +4,7 @@
 
 namespace Task
 {
-
+#ifdef FIRST_FASTER
 namespace detail
 {
 
@@ -78,6 +78,39 @@ calc_center_half_width(const std::vector<Geometry::Shape<F>>& shapes)
 
     return {center, std::max(half_width_x, std::max(half_width_y, half_width_z))};
 }
+#else 
+template<std::floating_point F>
+std::pair<Geometry::Point<F>, F>
+calc_center_half_width(const std::vector<Geometry::Shape<F>>& shapes)
+{
+    auto inv_size = 1 / static_cast<double>(shapes.size());
+    auto [center_box, hw_box_x, hw_box_y, hw_box_z] = Geometry::compute_box(shapes.front());
+    auto min_x = center_box.x_ - hw_box_x, max_x = center_box.x_ + hw_box_x;
+    auto min_y = center_box.y_ - hw_box_y, max_y = center_box.y_ + hw_box_y;
+    auto min_z = center_box.z_ - hw_box_z, max_z = center_box.z_ + hw_box_z;
+
+    for (auto itr = shapes.begin() + 1, end = shapes.end(); itr != end; ++itr)
+    {
+        auto [center, hw_x, hw_y, hw_z] = Geometry::compute_box(*itr);
+        const auto& act_min_x = center_box.x_ - hw_x, act_max_x = center_box.x_ + hw_x;
+        const auto& act_min_y = center_box.y_ - hw_y, act_max_y = center_box.y_ + hw_y;
+        const auto& act_min_z = center_box.z_ - hw_z, act_max_z = center_box.z_ + hw_z;
+        
+        if (act_min_x < min_x) min_x = act_min_x;
+        if (act_min_y < min_y) min_y = act_min_y;
+        if (act_min_z < min_z) min_z = act_min_z;
+
+        if (act_max_x > max_x) max_x = act_max_x;
+        if (act_max_y > max_y) max_y = act_max_y;
+        if (act_max_z > max_z) max_z = act_max_z;
+
+        center_box += center * inv_size;
+    }
+
+    return {center_box, std::max({max_x - min_x, max_y - min_y, max_z - min_z})};
+}
+#endif
+
 
 #define TIME
 template<std::floating_point F>

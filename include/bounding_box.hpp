@@ -66,12 +66,11 @@ std::ostream& operator<<(std::ostream& out, const BoundingBox<Float>& obj)
     {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
 }
 
-namespace detail
-{
-
 template<std::floating_point Float>
 using Box = std::tuple<Point<Float>, Float, Float, Float>;
 
+namespace detail
+{
 template<std::floating_point Float>
 Box<Float> compute_box(const Point<Float>& p)
 {
@@ -99,10 +98,15 @@ Box<Float> compute_box(const Triangle<Float>& tr)
 } // namespace detail
 
 template<std::floating_point Float>
+Box<Float> compute_box(const Shape<Float>& shape)
+{
+    return std::visit([](const auto& sh) -> Box<Float> {return detail::compute_box(sh);}, shape);
+}
+
+template<std::floating_point Float>
 BoundingBox<Float> make_bound(const Shape<Float>& shape, ShapeIndT index)
 {
-    auto [center, half_width_x, half_width_y, half_width_z] = 
-    std::visit([](const auto& sh) -> detail::Box<Float> {return detail::compute_box(sh);}, shape);
+    auto [center, half_width_x, half_width_y, half_width_z] = compute_box(shape);
     return BoundingBox<Float>{&shape, index, center, half_width_x, half_width_y, half_width_z};
 }
 

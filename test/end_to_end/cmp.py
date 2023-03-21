@@ -27,7 +27,7 @@ def compare_answers(test_answ, run_answ, ind):
         print("\ttest answer:" + str(test_answ))
         print("\trun answer: " + str(run_answ))
     else:
-        print(str(ind) + ": Succes")
+        print(str(ind) + ": Success")
 
 def main():
     i = 0

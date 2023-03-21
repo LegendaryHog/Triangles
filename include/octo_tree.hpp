@@ -8,6 +8,8 @@
 
 namespace Task
 {
+template<std::floating_point Float>
+using Bound = Geometry::BoundingSphere<Float>;
 
 using IndexsContainer = std::unordered_set<std::size_t>;
 
@@ -22,7 +24,7 @@ struct Node
     Geometry::Point<Float> center_ {};
     Float half_width_ = 0;
     std::array<node_ptr, Eight> children_ {};
-    std::vector<Geometry::BoundingBox<Float>> bounds_ {};
+    std::vector<Bound<Float>> bounds_ {};
 
     bool childless() const
     {
@@ -51,7 +53,7 @@ class OctoTree final
     using node_type  = detail::Node<Float>;
     using node_ptr   = detail::Node<Float>*;
     using size_type  = std::size_t;
-    using value_type = Geometry::BoundingBox<Float>;
+    using value_type = Bound<Float>;
     using reference  = value_type&;
     using const_reference = const value_type&;
     

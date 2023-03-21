@@ -93,12 +93,12 @@ IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
     start = std::chrono::steady_clock::now();
     OctoTree<F> octo_tree (center, half_width, depth);
     end = std::chrono::steady_clock::now();
-    //std::cout << "time on construct: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+    std::cout << "time on construct: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
 
     start = std::chrono::steady_clock::now();
     octo_tree.insert(shapes.cbegin(), shapes.cend());
     end = std::chrono::steady_clock::now();
-    //std::cout << "time on insert: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
+    std::cout << "time on insert: " << static_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
 
     //octo_tree.debug_graph_dump("dump");
     start = std::chrono::steady_clock::now();

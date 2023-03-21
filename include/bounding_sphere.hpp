@@ -31,78 +31,79 @@ std::pair<F, F> sort(F f1, F f2, F f3)
 namespace Geometry
 {
 template<std::floating_point Float>
-class BoundingBox final
+class BoundingSphere final
 {
     const Shape<Float>* ptr_shape_ = nullptr;
     std::size_t  shape_index_ = 0;
-
     Point<Float> center_ {};
-    Float half_width_x_ = 0;
-    Float half_width_y_ = 0;
-    Float half_width_z_ = 0;
+    Float        radius_ = 0;
 
 public:
-    BoundingBox() = default;
+    BoundingSphere() = default;
 
-    BoundingBox(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center,
-    Float hx, Float hy, Float hz)
-    :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center},
-     half_width_x_ {hx}, half_width_y_ {hy}, half_width_z_ {hz}
+    BoundingSphere(const Shape<Float>* ptr_sh, std::size_t sh_ind, const Point<Float>& center, Float rad)
+    :ptr_shape_ {ptr_sh}, shape_index_ {sh_ind}, center_ {center}, radius_ {rad}
     {}
 
     const Shape<Float>& shape()  const {return *ptr_shape_;}
     std::size_t shape_index()    const {return shape_index_;}
     const Point<Float>& center() const {return center_;}
-    Float half_width_x() const {return half_width_x_;}
-    Float half_width_y() const {return half_width_y_;}
-    Float half_width_z() const {return half_width_z_;}
+    Float half_width_x() const {return radius_;}
+    Float half_width_y() const {return radius_;}
+    Float half_width_z() const {return radius_;}
 };
 
 template<std::floating_point Float>
-std::ostream& operator<<(std::ostream& out, const BoundingBox<Float>& obj)
+std::ostream& operator<<(std::ostream& out, const BoundingSphere<Float>& obj)
 {
-    return std::visit([&](const auto& sh) -> std::ostream&
-    {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
+    return std::visit([&](const auto& sh) -> std::ostream& 
+           {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
 }
 
 namespace detail
 {
 
 template<std::floating_point Float>
-using Box = std::tuple<Point<Float>, Float, Float, Float>;
+using Sphere = std::pair<Point<Float>, Float>;
 
 template<std::floating_point Float>
-Box<Float> compute_box(const Point<Float>& p)
+Sphere<Float> compute_sphere(const Point<Float>& p)
 {
-    return {p, Math::epsilon<Float>, Math::epsilon<Float>, Math::epsilon<Float>};
+    return {p, Math::epsilon<Float>};
 }
 
 template<std::floating_point Float>
-Box<Float> compute_box(const Segment<Float>& seg)
+Sphere<Float> compute_sphere(const Segment<Float>& seg)
 {
-    return {(seg.F_ + seg.S_) * 0.5, std::abs(seg.F_.x_ - seg.S_.x_) * 0.5,
-    std::abs(seg.F_.y_ - seg.S_.y_) * 0.5, std::abs(seg.F_.y_ - seg.S_.y_) * 0.5};
+    return {(seg.F_ + seg.S_) * 0.5, Geometry::distance(seg.F_, seg.S_) * 0.5 + Math::epsilon<Float>};
 }
 
 template<std::floating_point Float>
-Box<Float> compute_box(const Triangle<Float>& tr)
+Sphere<Float> compute_sphere(const Triangle<Float>& tr)
 {
-    auto [min_x, max_x] = Math::sort(tr.P_.x_, tr.Q_.x_, tr.R_.x_);
-    auto [min_y, max_y] = Math::sort(tr.P_.y_, tr.Q_.y_, tr.R_.y_);
-    auto [min_z, max_z] = Math::sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
+    auto PQ = Geometry::distance(tr.P_, tr.Q_);
+    auto QR = Geometry::distance(tr.Q_, tr.R_);
+    auto RP = Geometry::distance(tr.R_, tr.P_);
 
-    return {{(min_x + max_x) * 0.5, (min_y + max_y) * 0.5, (min_z + max_z) * 0.5},
-             max_x - min_x, max_y - min_y, max_z - min_z};
+    if (PQ > QR)
+        if (PQ > RP)
+            return {tr.R_, std::max(QR, RP) + Math::epsilon<Float>};
+        else
+            return {tr.Q_, std::max(PQ, QR) + Math::epsilon<Float>};
+    else
+        if (QR > RP)
+            return {tr.P_, std::max(RP, PQ) + Math::epsilon<Float>};
+        else
+            return {tr.Q_, std::max(PQ, QR) + Math::epsilon<Float>};
 }
 
 } // namespace detail
 
 template<std::floating_point Float>
-BoundingBox<Float> make_bound(const Shape<Float>& shape, std::size_t index)
+BoundingSphere<Float> make_bound(const Shape<Float>& shape, std::size_t index)
 {
-    auto [center, half_width_x, half_width_y, half_width_z] = 
-    std::visit([](const auto& sh) -> detail::Box<Float> {return detail::compute_box(sh);}, shape);
-    return BoundingBox<Float>{&shape, index, center, half_width_x, half_width_y, half_width_z};
+    auto [center, radius] = std::visit([](const auto& sh) -> detail::Sphere<Float> {return detail::compute_sphere(sh);}, shape);
+    return BoundingSphere<Float>{&shape, index, center, radius};
 }
 
 } // namespace Geometry

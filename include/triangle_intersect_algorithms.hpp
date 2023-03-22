@@ -58,8 +58,10 @@ bool test_intersection_R2 (const Triangle<F>& tr_1, const Triangle<F>& tr_2, con
         else
         {
             if (Location::define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
+            {
                 return !(Location::define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                         Location::define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
+                         Location::define_prds (tr_2.P_, tr_1.Q_, tr_1.R_, normal) == Location::Loc2D::Right);
+            }
             else 
                 return !(Location::define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left);
         }

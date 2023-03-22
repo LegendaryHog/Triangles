@@ -100,7 +100,7 @@ TEST(IntersectionTest_2D, Problem_Cyclic_Permutation_Deficit)
     EXPECT_TRUE (Algorithm::intersection_in_2D (green, blue));
 }
 
-TEST(IntersectionTest_2D, Problem)
+TEST(IntersectionTest_2D, Problem_With_Algorithm_From_The_Arcticle)
 {
     Triangle blue {Point{7.316825105697096, 3.8701882025938934, 0.0},
                    Point{8.99487815035528, 6.466567288049715, 0.0},

@@ -15,7 +15,10 @@ num_of_shapes = int(sys.argv[1])
 max_size      = float(sys.argv[2])
 size_of_space = float(sys.argv[3])
 name_of_file  = sys.argv[4]
-no_answ = (len(sys.argv) == 6)
+no_answ = False
+if len(sys.argv) == 6 and sys.argv[5] == '--no-answer':
+    no_answ = True
+
 
 def make_base_for_point():
     return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))

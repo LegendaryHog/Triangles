@@ -85,3 +85,17 @@ TEST (IntersectionTest_2D, PartialCase) {
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_5, T2));
     EXPECT_TRUE (Algorithm::intersection_in_2D (T1_6, T2));
 }
+
+TEST(IntersectionTest_2D, Problem_Cyclic_Permutation_Deficit)
+{
+    Triangle blue {Point{17.348719012630276, 14.44947008496748, 0.0}, 
+                   Point{6.924895189828961, 3.9257440970926503, 0.0},
+                   Point{11.656308581139456, 1.600646115179307, 0.0}};
+
+    Triangle red  {Point{7.136605526488715, 7.274655471373606, 0.0},
+                   Point{13.71521457273856,6.915583692871211, 0.0}, 
+                   Point{12.133772594648583, 38.23631927044342, 0.0}};
+
+    EXPECT_TRUE (Algorithm::intersection_in_2D (blue, red));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (red, blue));
+}

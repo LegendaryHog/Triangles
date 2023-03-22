@@ -80,8 +80,8 @@ Box<Float> compute_box(const Point<Float>& p)
 template<std::floating_point Float>
 Box<Float> compute_box(const Segment<Float>& seg)
 {
-    return {(seg.F_ + seg.S_) * 0.5, std::abs(seg.F_.x_ - seg.S_.x_) * 0.5,
-    std::abs(seg.F_.y_ - seg.S_.y_) * 0.5, std::abs(seg.F_.z_ - seg.S_.z_) * 0.5};
+    return {(seg.F_ + seg.S_) * 0.5, std::abs(seg.F_.x_ - seg.S_.x_) * 0.5 + Math::epsilon<Float>,
+    std::abs(seg.F_.y_ - seg.S_.y_) * 0.5 + Math::epsilon<Float>, std::abs(seg.F_.z_ - seg.S_.z_) * 0.5 + Math::epsilon<Float>};
 }
 
 template<std::floating_point Float>
@@ -92,7 +92,8 @@ Box<Float> compute_box(const Triangle<Float>& tr)
     auto [min_z, max_z] = Math::sort(tr.P_.z_, tr.Q_.z_, tr.R_.z_);
 
     return {{(min_x + max_x) * 0.5, (min_y + max_y) * 0.5, (min_z + max_z) * 0.5},
-             (max_x - min_x) * 0.5, (max_y - min_y) * 0.5, (max_z - min_z) * 0.5};
+            (max_x - min_x) * 0.5 + Math::epsilon<Float>, (max_y - min_y) * 0.5 + Math::epsilon<Float>,
+            (max_z - min_z) * 0.5 + Math::epsilon<Float>};
 }
 
 } // namespace detail

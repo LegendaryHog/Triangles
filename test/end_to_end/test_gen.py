@@ -18,10 +18,10 @@ name_of_file  = sys.argv[4]
 no_answ = (len(sys.argv) == 6)
 
 def make_base_for_point():
-    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
+    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)
     
 def generate_point(list_of_points):
-    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
+    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)
     list_of_points.append(p1)
     list_of_points.append(p1)
     list_of_points.append(p1)
@@ -30,7 +30,7 @@ def generate_point(list_of_points):
 def make_point(point: geom.Point):
     return geom.Point(rand.uniform(max(point.x - max_size, 0.0), min(point.x + max_size, size_of_space)),
                       rand.uniform(max(point.y - max_size, 0.0), min(point.y + max_size, size_of_space)),
-                      rand.uniform(max(point.z - max_size, 0.0), min(point.z + max_size, size_of_space)))
+                      0)
                       
 def is_triangle(tr: geom.ConvexPolygon):
     return not math.isclose(tr.area(), 0.0)

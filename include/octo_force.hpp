@@ -34,7 +34,7 @@ compute_space_box(const std::vector<Geometry::Shape<F>>& shapes)
             std::max({max_x - min_x, max_y - min_y, max_z - min_z}) * 0.5};
 }
 
-#define TIME
+//#define TIME
 template<std::floating_point F>
 Geometry::IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {

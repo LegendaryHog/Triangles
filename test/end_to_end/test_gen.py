@@ -18,10 +18,10 @@ name_of_file  = sys.argv[4]
 no_answ = (len(sys.argv) == 6)
 
 def make_base_for_point():
-    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)
+    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     
 def generate_point(list_of_points):
-    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)
+    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     list_of_points.append(p1)
     list_of_points.append(p1)
     list_of_points.append(p1)
@@ -30,7 +30,7 @@ def generate_point(list_of_points):
 def make_point(point: geom.Point):
     return geom.Point(rand.uniform(max(point.x - max_size, 0.0), min(point.x + max_size, size_of_space)),
                       rand.uniform(max(point.y - max_size, 0.0), min(point.y + max_size, size_of_space)),
-                      0)
+                      rand.uniform(max(point.z - max_size, 0.0), min(point.z + max_size, size_of_space)))
                       
 def is_triangle(tr: geom.ConvexPolygon):
     return not math.isclose(tr.area(), 0.0)
@@ -70,7 +70,7 @@ def generate_shapes():
     list_of_points = []
     for _ in range(num_of_shapes):
         shape_type = rand.randint(0, 10)
-        if shape_type in range(0, 7):
+        if shape_type in range(0,7):
             list_of_shapes.append(generate_triangle(list_of_points))
         elif shape_type in range(8, 9):
             list_of_shapes.append(generate_segment(list_of_points))

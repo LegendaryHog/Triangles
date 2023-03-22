@@ -2,7 +2,7 @@
 
 import sys, os
 
-# path to build          - 1 arg
+# path to run file       - 1st arg
 # name of file with test - after first arg
 
 run_file  = sys.argv[1]

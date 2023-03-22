@@ -122,10 +122,9 @@ public:
         swap(tmp);
     }
 
-    bool empty() const
-    {
-        return (depth_ == 0);
-    }
+    bool empty()      const { return (depth_ == 0); }
+    size_type depth() const { return depth_; }
+    node_ptr root()   const { return root_; }
 
     void debug_graph_dump(const std::string& filename) const
     {   

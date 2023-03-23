@@ -27,4 +27,3 @@ If last argument (answer gen) equal to --no-answer, than answer will not generat
 ```bash
 ./time_test [path to build directory]
 ```
-

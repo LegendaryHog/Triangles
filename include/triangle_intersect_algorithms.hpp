@@ -60,7 +60,7 @@ bool test_intersection_R2 (const Triangle<F>& tr_1, const Triangle<F>& tr_2, con
             if (Location::define_prds (tr_1.P_, tr_2.P_, tr_1.Q_, normal) == Location::Loc2D::Right)
             {
                 return !(Location::define_prds (tr_1.P_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right ||
-                         Location::define_prds (tr_2.R_, tr_2.P_, tr_1.R_, normal) == Location::Loc2D::Right);
+                         Location::define_prds (tr_2.P_, tr_1.Q_, tr_1.R_, normal) == Location::Loc2D::Right);
             }
             else 
                 return !(Location::define_prds (tr_1.P_, tr_2.Q_, tr_1.Q_, normal) == Location::Loc2D::Left);
@@ -74,7 +74,7 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
     Triangle<F> tr_1 = tr_1_, tr_2 = tr_2_;
     //  Return a normal vector by the 1st triangle
     Vector<F> normal = vector_product (Vector<F> {tr_1.P_, tr_1.Q_}, 
-                                       Vector<F> {tr_1.P_, tr_1.R_}).normalize();                                    
+                                       Vector<F> {tr_1.P_, tr_1.R_}).normalize();
 
     //  Swap tr_2.Q() and tr_2.R() if P2, Q2, R2 are clockwise
     if (Location::define_prds (tr_2.P_, tr_2.Q_, tr_2.R_, normal) == Location::Loc2D::Right)
@@ -108,14 +108,14 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
     }
 
     //  Position of P1 is inside of the Area R2 by the algorithm
-    else if (P1_P2_Q2 != Location::Loc2D::Left && P1_R2_P2 != Location::Loc2D::Left)
-    {
-        tr_2.swap_counterclockwise ();
-        return test_intersection_R2 (tr_1, tr_2, normal);
-    }
     else if (P1_P2_Q2 != Location::Loc2D::Left && P1_Q2_R2 != Location::Loc2D::Left)
     {
         tr_2.swap_clockwise ();
+        return test_intersection_R2 (tr_1, tr_2, normal);
+    }
+    else if (P1_P2_Q2 != Location::Loc2D::Left && P1_R2_P2 != Location::Loc2D::Left)
+    {
+        tr_2.swap_counterclockwise ();
         return test_intersection_R2 (tr_1, tr_2, normal);
     }
     else

@@ -92,10 +92,24 @@ TEST(IntersectionTest_2D, Problem_Cyclic_Permutation_Deficit)
                    Point{6.924895189828961, 3.9257440970926503, 0.0},
                    Point{11.656308581139456, 1.600646115179307, 0.0}};
 
-    Triangle red  {Point{7.136605526488715, 7.274655471373606, 0.0},
+    Triangle green{Point{7.136605526488715, 7.274655471373606, 0.0},
                    Point{13.71521457273856,6.915583692871211, 0.0}, 
                    Point{12.133772594648583, 38.23631927044342, 0.0}};
 
-    EXPECT_TRUE (Algorithm::intersection_in_2D (blue, red));
-    EXPECT_TRUE (Algorithm::intersection_in_2D (red, blue));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (blue, green));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (green, blue));
+}
+
+TEST(IntersectionTest_2D, Problem_With_Algorithm_From_The_Arcticle)
+{
+    Triangle blue {Point{7.316825105697096, 3.8701882025938934, 0.0},
+                   Point{8.99487815035528, 6.466567288049715, 0.0},
+                   Point{5.757177658271756, 4.918519254424907, 0.0}};
+    
+    Triangle green{Point{8.008480302821877, 6.553977693675142, 0.0},
+                   Point{8.42948662398759, 5.60698141117058, 0.0},
+                   Point{8.013269774616896, 8.768418936594259, 0.0}};
+
+    EXPECT_TRUE (Algorithm::intersection_in_2D (blue, green));
+    EXPECT_TRUE (Algorithm::intersection_in_2D (green, blue));
 }

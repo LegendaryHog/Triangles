@@ -4,10 +4,11 @@
 
 namespace Task
 {
+template<std::floating_point F>
+using SpaceBox = std::pair<Geometry::Point<F>, F>;
 
 template<std::floating_point F>
-std::pair<Geometry::Point<F>, F> 
-compute_space_box(const std::vector<Geometry::Shape<F>>& shapes)
+SpaceBox<F> compute_space_box(const std::vector<Geometry::Shape<F>>& shapes)
 {
     auto [center_box, hw_box_x, hw_box_y, hw_box_z] = Geometry::compute_box(shapes.front());
     auto min_x = center_box.x_ - hw_box_x, max_x = center_box.x_ + hw_box_x;
@@ -34,7 +35,7 @@ compute_space_box(const std::vector<Geometry::Shape<F>>& shapes)
             std::max({max_x - min_x, max_y - min_y, max_z - min_z}) * 0.5};
 }
 
-//#define TIME
+#define TIME
 template<std::floating_point F>
 Geometry::IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>& shapes)
 {

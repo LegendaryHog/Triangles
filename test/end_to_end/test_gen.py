@@ -21,10 +21,10 @@ if len(sys.argv) == 6 and sys.argv[5] == '--no-answer':
 
 
 def make_base_for_point():
-    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)#rand.uniform(0.0, size_of_space))
+    return geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     
 def generate_point(list_of_points):
-    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), 0)#rand.uniform(0.0, size_of_space))
+    p1 = geom.Point(rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space), rand.uniform(0.0, size_of_space))
     list_of_points.append(p1)
     list_of_points.append(p1)
     list_of_points.append(p1)
@@ -33,8 +33,7 @@ def generate_point(list_of_points):
 def make_point(point: geom.Point):
     return geom.Point(rand.uniform(max(point.x - max_size, 0.0), min(point.x + max_size, size_of_space)),
                       rand.uniform(max(point.y - max_size, 0.0), min(point.y + max_size, size_of_space)),
-                      0)
-                      #rand.uniform(max(point.z - max_size, 0.0), min(point.z + max_size, size_of_space)))
+                      rand.uniform(max(point.z - max_size, 0.0), min(point.z + max_size, size_of_space)))
                       
 def is_triangle(tr: geom.ConvexPolygon):
     return not math.isclose(tr.area(), 0.0)

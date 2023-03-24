@@ -2,16 +2,16 @@
 #include "intersection.hpp"
 using namespace Geometry;
 
-#define COMMON_PART                                                                         \
-do                                                                                          \
-{                                                                                           \
-    Algorithm::transform_triangle (tr_1, Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_),           \
-                              Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.Q_),           \
-                              Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.R_), tr_2);    \
-                                                                                            \
-    EXPECT_TRUE (new_tr_1 == tr_1);                                                         \
-    EXPECT_TRUE (new_tr_2 == tr_2);                                                         \
-}                                                                                           \
+#define COMMON_PART                                                                                   \
+do                                                                                                    \
+{                                                                                                     \
+    Algorithm::transform_triangle (tr_1, Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.P_),  \
+                              Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.Q_),             \
+                              Location::define_prhc (tr_2.P_, tr_2.Q_, tr_2.R_, tr_1.R_), tr_2);      \
+                                                                                                      \
+    EXPECT_TRUE (new_tr_1 == tr_1);                                                                   \
+    EXPECT_TRUE (new_tr_2 == tr_2);                                                                   \
+}                                                                                                     \
 while (0)
 
 // P_loc == Loc_3D::Above

@@ -2,32 +2,36 @@
 
 Our project with Dany aka "BileyHarryCopter" Gerasimenko (https://github.com/BileyHarryCopter). We solved HW3D problem of Konstantin Vladimirov:
 ```
-Input 0 < N < 1'000'000, after this N set of points in 3D which is vertex of triangles.
-Output: indexs of all triangles which has collision with other.
+Input:  0 < N < 1'000'000, after this N set of points in 3D which is vertex of triangles.
+Output: Indexs of all intersectred triangles.
 ```
 
-For this project we wrote and tested geometric primitives: Vector, Point, Segment, Triangle, Line, Plane. Also we wrote intersection algorithm for Point, Segment and Triangle.
+For this project we wrote and tested geometric primitives: Vector, Point, Segment, Triangle, Line, Plane. Also we implemented intersection algorithm for Point, Segment and Triangle from the [arcitcle](https://github.com/LegendaryHog/Triangles/article/RR-4488.pdf).
 
-At first we wrote brute force intersection of all shapes, but it is too long. Now we wrote spatial partitioning algorithm which use Octo Tree.
+At the first we wrote brute force intersection of all shapes, but it is too long. Now we wrote spatial partitioning algorithm which use Octo Tree.
 ## Building
-```bash
-cmake -B build -DCMAKE_CXX_COMPILETR=[compiler]-DCMAKE_BUILD_TYPE=[Release/Debug]
+```
+bash
+cmake -B build -DCMAKE_CXX_COMPILER=[compiler]-DCMAKE_BUILD_TYPE=[Release/Debug]
 cmake --build build/
 ```
 
 ## How to run brute force solution?
-```bash
+```
+bash
 ./build/task/brute_force/brute_force
 ```
 
 ## How to run Octo Tree solution?
-```bash
+```
+bash
 ./build/task/brute_force/brute_force
 ```
 
 ## Generating of end to end tests
 
-```bash
+```
+bash
 cd test/end_to_end
 chmod "+x" test_gen.py
 ./test_gen.py [number of shapes] [characteristic size] [side of cubic space] [name of test] [answer gen=--answer]

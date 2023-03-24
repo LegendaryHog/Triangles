@@ -117,4 +117,3 @@ TEST(OctoTree, insert)
     EXPECT_EQ(root->children_[3]->children_[5]->bounds_.back().shape_index(), 6);
     EXPECT_EQ(std::addressof(root->children_[3]->children_[5]->bounds_.back().shape()), std::addressof(tr4));
 }
-

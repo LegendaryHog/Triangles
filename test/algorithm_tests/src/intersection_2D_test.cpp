@@ -11,15 +11,15 @@ TEST(IntersectionTest_2D, Intersection_R1)
     Triangle T2      { Point { 2.0, 0.0, 0.0}, Point { 2.0, 3.0, 0.0}, Point { 0.0, 3.0, 0.0}};
     Triangle T2_swap { Point { 2.0, 3.0, 0.0}, Point { 2.0, 0.0, 0.0}, Point { 0.0, 3.0, 0.0}};
 
-    Triangle T1_1 { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 1.0, 1.0, 0.0}};
-    Triangle T1_2 { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 3.0,-1.0, 0.0}};
-    Triangle T1_3 { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point {-1.0, 4.0, 0.0}};
-    Triangle T1_4 { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 3.0, 1.0, 0.0}};
-    Triangle T1_5 { Point {-1.0, 2.0, 0.0}, Point {-1.0, 4.0, 0.0}, Point {-2.0, 4.0, 0.0}};
-    Triangle T1_6 { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point { 3.0,-1.0, 0.0}};
-    Triangle T1_7 { Point {-1.0, 2.0, 0.0}, Point { 3.0, 1.0, 0.0}, Point { 2.0, 4.0, 0.0}};
-    Triangle T1_8 { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point {-1.0, 2.0, 0.0}};
-    Triangle T1_9 { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point { 2.0,10.0, 0.0}};
+    Triangle T1_1    { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 1.0, 1.0, 0.0}};
+    Triangle T1_2    { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 3.0,-1.0, 0.0}};
+    Triangle T1_3    { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point {-1.0, 4.0, 0.0}};
+    Triangle T1_4    { Point {-1.0, 2.0, 0.0}, Point { 0.0, 1.0, 0.0}, Point { 3.0, 1.0, 0.0}};
+    Triangle T1_5    { Point {-1.0, 2.0, 0.0}, Point {-1.0, 4.0, 0.0}, Point {-2.0, 4.0, 0.0}};
+    Triangle T1_6    { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point { 3.0,-1.0, 0.0}};
+    Triangle T1_7    { Point {-1.0, 2.0, 0.0}, Point { 3.0, 1.0, 0.0}, Point { 2.0, 4.0, 0.0}};
+    Triangle T1_8    { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point {-1.0, 2.0, 0.0}};
+    Triangle T1_9    { Point {-1.0, 1.0, 0.0}, Point { 4.0,-2.0, 0.0}, Point { 2.0,10.0, 0.0}};
 
     //  With T2:
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_1, T2));
@@ -82,39 +82,116 @@ TEST(IntersectionTest_2D, Intersection_R1)
 
 TEST(IntersectionTest_2D, Intersection_R2)
 {
-    Triangle T2    { Point { 2.0,  0.0, 0.0}, Point { 0.0, 3.0, 0.0}, Point { 0.0, 0.0, 0.0}};
+    Triangle T2      { Point { 2.0,  0.0, 0.0}, Point { 0.0, 3.0, 0.0}, Point { 0.0, 0.0, 0.0}};
+    Triangle T2_swap { Point { 2.0,  0.0, 0.0}, Point { 0.0, 3.0, 0.0}, Point { 0.0, 0.0, 0.0}};
 
-    Triangle T1_1  { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point { 1.0,-1.0, 0.0}};
-    Triangle T1_2  { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point { 5.0, 1.0, 0.0}};
-    Triangle T1_3  { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point {-1.0, 2.0, 0.0}};
-    Triangle T1_4  { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point {-2.0, 1.0, 0.0}};
-    Triangle T1_5  { Point {-2.0, -2.0, 0.0}, Point {-1.0,-2.0, 0.0}, Point { 2.0, 3.0, 0.0}};
-    Triangle T1_6  { Point {-2.0, -1.0, 0.0}, Point {-1.0,-1.0, 0.0}, Point {-1.0, 3.0, 0.0}};
-    Triangle T1_7  { Point {-1.0, -2.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {-3.0, 0.0, 0.0}};
-    Triangle T1_8  { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {-1.0, 3.0, 0.0}};
-    Triangle T1_9  { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point { 1.0, 6.0, 0.0}};
-    Triangle T1_10 { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point { 2.0, 6.0, 0.0}};
-    Triangle T1_11 { Point {-2.0, -1.0, 0.0}, Point { 1.0, 6.0, 0.0}, Point {-2.0, 4.0, 0.0}};
-    Triangle T1_12 { Point {-2.0, -1.0, 0.0}, Point { 2.0, 3.0, 0.0}, Point {-2.0, 4.0, 0.0}};
-    Triangle T1_13 { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point { 4.0, 1.0, 0.0}};
-    Triangle T1_14 { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point {-2.0,-2.0, 0.0}};
-    Triangle T1_15 { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point { 2.0, 2.0, 0.0}};
+    Triangle T1_1    { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point { 1.0,-1.0, 0.0}};
+    Triangle T1_2    { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point { 5.0, 1.0, 0.0}};
+    Triangle T1_3    { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point {-1.0, 2.0, 0.0}};
+    Triangle T1_4    { Point {-1.0, -2.0, 0.0}, Point { 3.0,-2.0, 0.0}, Point {-2.0, 1.0, 0.0}};
+    Triangle T1_5    { Point {-2.0, -2.0, 0.0}, Point {-1.0,-2.0, 0.0}, Point { 2.0, 3.0, 0.0}};
+    Triangle T1_6    { Point {-2.0, -1.0, 0.0}, Point {-1.0,-1.0, 0.0}, Point {-1.0, 3.0, 0.0}};
+    Triangle T1_7    { Point {-1.0, -2.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {-3.0, 0.0, 0.0}};
+    Triangle T1_8    { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point {-1.0, 3.0, 0.0}};
+    Triangle T1_9    { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point { 1.0, 6.0, 0.0}};
+    Triangle T1_10   { Point {-3.0, -1.0, 0.0}, Point {-1.0, 1.0, 0.0}, Point { 2.0, 6.0, 0.0}};
+    Triangle T1_11   { Point {-2.0, -1.0, 0.0}, Point { 1.0, 6.0, 0.0}, Point {-2.0, 4.0, 0.0}};
+    Triangle T1_12   { Point {-2.0, -1.0, 0.0}, Point { 2.0, 3.0, 0.0}, Point {-2.0, 4.0, 0.0}};
+    Triangle T1_13   { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point { 4.0, 1.0, 0.0}};
+    Triangle T1_14   { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point {-2.0,-2.0, 0.0}};
+    Triangle T1_15   { Point {-1.0, -2.0, 0.0}, Point { 5.0, 1.0, 0.0}, Point { 2.0, 2.0, 0.0}};
 
+    //  With T2:
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_1,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_1));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_2,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_2));
+
     EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_3,  T2));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2,  T1_3));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_4,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_4));
+
     EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_5,  T2));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2,  T1_5));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_6,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_6));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_7,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_7));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_8,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_8));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_9,  T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2,  T1_9));
+
     EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_10, T2));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2, T1_10));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_11, T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2, T1_11));
+
     EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_12, T2));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2, T1_12));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_13, T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2, T1_13));
+
     EXPECT_FALSE (Algorithm::intersection_in_2D (T1_14, T2));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2, T1_14));
+
     EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_15, T2));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2, T1_15));
+
+    //  With T2_swap:
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_1,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_1));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_2,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_2));
+
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_3,  T2_swap));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2_swap,  T1_3));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_4,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_4));
+
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_5,  T2_swap));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2_swap,  T1_5));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_6,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_6));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_7,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_7));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_8,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_8));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_9,  T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap,  T1_9));
+
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_10, T2_swap));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2_swap, T1_10));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_11, T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap, T1_11));
+
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_12, T2_swap));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2_swap, T1_12));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_13, T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap, T1_13));
+
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T1_14, T2_swap));
+    EXPECT_FALSE (Algorithm::intersection_in_2D (T2_swap, T1_14));
+
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T1_15, T2_swap));
+    EXPECT_TRUE  (Algorithm::intersection_in_2D (T2_swap, T1_15));
 }
 
 TEST(IntersectionTest_2D, PartialCase) { 

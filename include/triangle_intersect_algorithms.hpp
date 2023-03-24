@@ -87,10 +87,9 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
     // Position of P1 is inside of the tr_2, or on a side of tr_2.
     if (P1_P2_Q2 == Location::Loc2D::Left && P1_Q2_R2 == Location::Loc2D::Left && P1_R2_P2 == Location::Loc2D::Left)
         return true;
-    else if ((P1_P2_Q2 * P1_Q2_R2 * P1_R2_P2 == Location::Loc2D::On) &&
-             (P1_P2_Q2 != Location::Loc2D::Right && P1_Q2_R2 != Location::Loc2D::Right ||
-              P1_Q2_R2 != Location::Loc2D::Right && P1_R2_P2 != Location::Loc2D::Right ||
-              P1_R2_P2 != Location::Loc2D::Right && P1_P2_Q2 != Location::Loc2D::Right))
+    else if ((P1_P2_Q2 == Location::Loc2D::On && P1_Q2_R2 != Location::Loc2D::Right && P1_R2_P2 != Location::Loc2D::Right) ||
+             (P1_Q2_R2 == Location::Loc2D::On && P1_R2_P2 != Location::Loc2D::Right && P1_P2_Q2 != Location::Loc2D::Right) ||
+             (P1_R2_P2 == Location::Loc2D::On && P1_P2_Q2 != Location::Loc2D::Right && P1_Q2_R2 != Location::Loc2D::Right))
         return true;
 
     //  Position of P1 is inside of the Area R1 by the algorithm
@@ -106,7 +105,7 @@ bool intersection_in_2D (const Triangle<F>& tr_1_, const Triangle<F>& tr_2_)
         tr_2.swap_clockwise ();
         return test_intersection_R1 (tr_1, tr_2, normal);
     }
-
+    
     //  Position of P1 is inside of the Area R2 by the algorithm
     else if (P1_P2_Q2 != Location::Loc2D::Left && P1_Q2_R2 != Location::Loc2D::Left)
     {

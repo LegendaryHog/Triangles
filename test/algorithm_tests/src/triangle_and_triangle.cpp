@@ -27,3 +27,44 @@ TEST(CommonCase, Problem_Permutation_Point_Red)
     EXPECT_FALSE(are_intersecting(red, green));
     EXPECT_FALSE(are_intersecting(green, red));
 }
+
+TEST(PartialCase, Intersecgtion_By_A_Point)
+{
+    Triangle T2   {Point{0.0, 0.0, 0.0}, Point{2.0, 0.0, 0.0}, Point{0.0, 2.0, 0.0}};
+
+    Triangle T1_1 {Point{0.0, 0.0, 0.0}, Point{0.0, 0.0, 2.0}, Point{1.0, 2.0, 2.0}};
+    Triangle T1_2 {Point{0.0, 0.0, 2.0}, Point{0.0, 0.0, 0.0}, Point{1.0, 2.0, 2.0}};
+    Triangle T1_3 {Point{0.0, 0.0, 2.0}, Point{1.0, 2.0, 2.0}, Point{0.0, 0.0, 0.0}};
+
+    EXPECT_TRUE (are_intersecting(T1_1, T2));
+    EXPECT_TRUE (are_intersecting(T2, T1_1));
+
+    EXPECT_TRUE (are_intersecting(T1_2, T2));
+    EXPECT_TRUE (are_intersecting(T2, T1_2));
+
+    EXPECT_TRUE (are_intersecting(T1_3, T2));
+    EXPECT_TRUE (are_intersecting(T2, T1_3));
+}
+
+TEST(PartialCase, Intersecgtion_By_A_Side)
+{
+    Triangle T2   {Point{ 0.0, 0.0, 0.0}, Point{2.0, 0.0, 0.0}, Point{0.0, 2.0, 0.0}};
+ 
+    Triangle T1_1 {Point{ 1.0, 1.0, 0.0}, Point{ 0.5, 1.5, 0.0}, Point{0.0, 0.0, 1.0}};
+    Triangle T1_2 {Point{ 1.0, 1.0, 0.0}, Point{-1.0, 3.0, 0.0}, Point{0.0, 0.0, 1.0}};
+    Triangle T1_3 {Point{ 3.0,-1.0, 0.0}, Point{-1.0, 3.0, 0.0}, Point{0.0, 0.0, 1.0}};
+
+    Triangle T1_4 {Point{-0.5, 2.5, 0.0}, Point{-1.0, 3.0, 0.0}, Point{0.0, 0.0, 1.0}};
+
+    EXPECT_TRUE (are_intersecting(T2, T1_1));
+    EXPECT_TRUE (are_intersecting(T1_1, T2));
+
+    EXPECT_TRUE (are_intersecting(T2, T1_2));
+    EXPECT_TRUE (are_intersecting(T1_2, T2));
+
+    EXPECT_TRUE (are_intersecting(T2, T1_3));
+    EXPECT_TRUE (are_intersecting(T1_3, T2));
+
+    EXPECT_FALSE (are_intersecting(T2, T1_4));
+    EXPECT_FALSE (are_intersecting(T1_4, T2));
+}

@@ -62,8 +62,7 @@ public:
 template<std::floating_point Float>
 std::ostream& operator<<(std::ostream& out, const BoundingBox<Float>& obj)
 {
-    return std::visit([&](const auto& sh) -> std::ostream&
-    {return (out << "ind: " << obj.shape_index() << ", " << sh);}, obj.shape());
+    return (out << "ind: " << obj.shape_index() << ", " << obj.shape());
 }
 
 template<std::floating_point Float>

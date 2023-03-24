@@ -20,6 +20,13 @@ using ShapeIndT = std::size_t;
 
 using IndexsContainer = std::unordered_set<ShapeIndT>;
 
+template<std::floating_point Float>
+std::ostream& operator<<(std::ostream& out, const Shape<Float>& shape)
+{
+    return std::visit([&](const auto& sh) -> std::ostream& {return (out << sh);}, shape);
+}
+
+
 template<std::floating_point F>
 Shape<F> make_shape(Geometry::Point<F> p1, Geometry::Point<F> p2, Geometry::Point<F> p3)
 {

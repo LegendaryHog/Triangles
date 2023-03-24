@@ -136,6 +136,8 @@ private:
     template<std::input_iterator InpIt>
     static std::pair<SpaceBox, size_type> compute_space_box_and_size(InpIt first, InpIt last)
     {
+        if (first == last)
+            return {};
         size_type num_of_shapes = 1;
         auto [center_box, hw_box_x, hw_box_y, hw_box_z] = compute_box(*first++);
         auto min_x = center_box.x_ - hw_box_x, max_x = center_box.x_ + hw_box_x;
@@ -179,6 +181,7 @@ public:
         insert_bound(root_, make_bound(shape, shape_index));
     }
 
+private:
     template<std::forward_iterator FwdIt>
     void insert(FwdIt first, FwdIt last)
     {
@@ -187,7 +190,6 @@ public:
             insert(*first++, index++);
     }
 
-private:
     static std::pair<bool, int> straddle_compute(node_ptr node, const_reference bound)
     {
         Float delta = 0.0;

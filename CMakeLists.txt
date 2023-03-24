@@ -7,6 +7,8 @@ if (${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
     message(FATAL_ERROR "In-source build is forbidden")
 endif()
 
+find_package(Threads REQUIRED)
+
 find_package(GTest REQUIRED)
 enable_testing()
 

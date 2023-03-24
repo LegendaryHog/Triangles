@@ -6,7 +6,7 @@ Input:  0 < N < 1'000'000, after this N set of points in 3D which is vertex of t
 Output: Indexs of all intersectred triangles.
 ```
 
-For this project we wrote and tested geometric primitives: Vector, Point, Segment, Triangle, Line, Plane. Also we implemented intersection algorithm for Point, Segment and Triangle from the [arcitcle](blob/master/article/RR-4488.pdf). (We also detect a little problem in the article in case **5a** of decision tree when p1 belongs to region R2 (*page 17, Figure 10*): there is should be checked condition of [p2,q1,r1], instead of [r2,p2,r1])
+For this project we wrote and tested geometric primitives: Vector, Point, Segment, Triangle, Line, Plane. Also we implemented intersection algorithm for Point, Segment and Triangle from the [arcitcle](/article/RR-4488.pdf). (We also detect a little problem in the article in case **5a** of decision tree when p1 belongs to region R2 (*page 17, Figure 10*): there is should be checked condition of [p2,q1,r1], instead of [r2,p2,r1])
 
 At the first we wrote brute force intersection of all shapes, but it is too long. Now we wrote spatial partitioning algorithm which use Octo Tree.
 ## Building

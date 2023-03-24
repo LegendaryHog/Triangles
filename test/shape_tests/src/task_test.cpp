@@ -113,6 +113,29 @@ TEST(Task, make_shape_segment)
     EXPECT_EQ(shape_res4, origin);
     EXPECT_EQ(shape_res5, origin);
     EXPECT_EQ(shape_res6, origin);
+
+    Point C1 {47.0020025995995, 12.31053506688523, 16.152460708286874};
+    Point C2 {47.00207827133622, 12.885672173487198, 24.10804409365877};
+    Point C3 {47.00204043546786, 12.598103620186214, 20.13025240097282};
+
+    Point B1 {34.01277621741285, 13.885420399738456, 9.127259440689663};
+    Point B2 {47.693609448366374, 3.0528520775851318, 25.362178038371134};
+    Point B3 {40.85319283288961, 8.469136238661793, 17.2447187395304};
+
+    auto shapeC = make_shape(C1, C2, C3);
+    auto shapeB = make_shape(B1, B2, B3);
+
+    Segment C1C3 {C1, C2}, B1B3 {B1, B2};
+    EXPECT_TRUE(is_segment(shapeC));
+    EXPECT_FALSE(is_triangle(shapeC));
+    EXPECT_TRUE(is_segment(shapeB));
+
+    Segment<double> shapeC_res {}, shapeB_res {};
+    EXPECT_NO_THROW(shapeC_res = std::get<Segment<double>>(shapeC));
+    EXPECT_NO_THROW(shapeB_res = std::get<Segment<double>>(shapeB));
+
+    EXPECT_EQ(shapeC_res, C1C3);
+    EXPECT_EQ(shapeB_res, B1B3);
 }
 
 TEST(Task, make_shape_segment_epsilon)

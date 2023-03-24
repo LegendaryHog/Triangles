@@ -114,7 +114,6 @@ bool seg_tr_intersecting_3D(const Segment<Float>& seg, const Triangle<Float>& tr
     else
         outside = Location::Loc3D::Above;
 
-
     return Location::define_prhc(P, R, F, S) != outside &&
            Location::define_prhc(R, Q, F, S) != outside &&
            Location::define_prhc(Q, P, F, S) != outside;

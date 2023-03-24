@@ -10,7 +10,7 @@ TEST (Points, Equality)
 {
     Point pt_1 {1.0, 2.0, 3.0};
     Point pt_2 {2.0, 3.0, 4.0};
-    Point pt_3 {1.000001, 2.000002, 3.000003};
+    Point pt_3 {1.00000001, 2.00000002, 3.00000003};
 
     EXPECT_TRUE (pt_1 == pt_1);
 
@@ -25,7 +25,7 @@ TEST (Points, Inequality)
 {
     Point pt_1 {1.0, 2.0, 3.0};
     Point pt_2 {2.0, 3.0, 4.0};
-    Point pt_3 {1.000001, 2.000002, 3.000003};
+    Point pt_3 {1.00000001, 2.00000002, 3.00000003};
 
     EXPECT_FALSE (pt_1 != pt_1);
 
@@ -38,8 +38,8 @@ TEST (Points, Inequality)
 
 TEST (Points, Distance)
 {
-    Point A {10000000.0};
-    Point B {10000001.0};
+    Point A {1000000000.0};
+    Point B {1000000001.0};
     EXPECT_TRUE (Compare::are_equal (distance (A, B), 0.0));
 
     Point C {7824.911267, 0.00007648923, -1327012.8};

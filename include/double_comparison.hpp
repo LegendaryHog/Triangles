@@ -6,7 +6,7 @@
 namespace Math
 {
 template<std::floating_point F>
-constexpr F epsilon = 1e-6;
+constexpr F epsilon = 1e-7;
 } // namespace Math
 
 namespace Compare

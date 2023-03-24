@@ -109,7 +109,17 @@ TEST(Degenerate_Cases, Segmnet_and_Segment)
     EXPECT_FALSE(are_intersecting(seg7, seg9));
     EXPECT_FALSE(are_intersecting(seg10, seg11));
     EXPECT_FALSE(are_intersecting(seg11, seg10));
+
+    Segment blue {Point{47.0020025995995, 12.31053506688523, 16.152460708286874},
+                  Point{47.00207827133622, 12.885672173487198, 24.10804409365877}};
+                  
+    Segment green {Point{34.01277621741285, 13.885420399738456, 9.127259440689663},
+                   Point{47.693609448366374, 3.0528520775851318, 25.362178038371134}};
+
+    EXPECT_FALSE(are_intersecting(blue, green));
+    EXPECT_FALSE(are_intersecting(green, blue));
 }
+
 
 TEST(Degenerate_Cases, Segment_and_Triangle_2D)
 {

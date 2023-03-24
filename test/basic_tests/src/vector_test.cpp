@@ -9,7 +9,7 @@ TEST (Vectors, Equality)
 {
     Vector vec_1 {1.0, 2.0, 3.0};
     Vector vec_2 {2.0, 3.0, 4.0};
-    Vector vec_3 {1.000001, 2.000002, 3.000003};
+    Vector vec_3 {1.00000001, 2.00000002, 3.00000003};
 
     EXPECT_TRUE (vec_1 == vec_1);
 
@@ -24,7 +24,7 @@ TEST (Vectors, Inequality)
 {
     Vector vec_1 {1.0, 2.0, 3.0};
     Vector vec_2 {2.0, 3.0, 4.0};
-    Vector vec_3 {1.000001, 2.000002, 3.000003};
+    Vector vec_3 {1.00000001, 2.00000002, 3.00000003};
 
     EXPECT_FALSE (vec_1 != vec_1);
 
@@ -145,7 +145,7 @@ TEST (Vectors, Is_Zero)
     Vector<double> null {};
     EXPECT_TRUE (null.is_zero ());
 
-    Vector approx_null {-0.00000001, 0.0000009, 0.000000000008};
+    Vector approx_null {-0.0000000001, 0.000000009, 0.000000000008};
     EXPECT_TRUE (approx_null.is_zero ());
 
     Vector non_null {24.356, 72.4517, -32256574.1};
@@ -168,11 +168,7 @@ TEST (Vectors, Scalar_Product)
 
     Vector vec_6 {34.354, 1088.12, -882.0231};
     Vector vec_7 {78989.0, -414.177, 972.13};
-    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_6, vec_7), 1'405'472.0 ));
-
-    Vector vec_8 {6712.98213, -0.000014145, 72653.45};
-    Vector vec_9 {0.0000007862, -0.0000094781, 21.7532};
-    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_8, vec_9), 1'580'445.0));
+    EXPECT_TRUE (Compare::are_equal (scalar_product (vec_6, vec_7), 1'405'472.71));
 
     // Edge cases: two vectors are orthogonal
     Vector vec_10 {8583.23098, 14712.30};

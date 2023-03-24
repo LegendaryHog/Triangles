@@ -20,7 +20,7 @@ struct PointDoubleCmp
 };
 
 
-TEST(OctoTree, Constructor)
+TEST(OctoTree, SpaceConstructor)
 {
     OctoTree<double> tree_empty  (Point<double>{0.0, 0.0, 0.0}, 100.0, 0);
     OctoTree<double> tree_one_lv (Point<double>{0.0, 0.0, 0.0}, 100.0, 1);

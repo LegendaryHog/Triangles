@@ -1,6 +1,5 @@
 #pragma once
 #include "octo_tree.hpp"
-#include <chrono>
 
 namespace Task
 {
@@ -10,7 +9,6 @@ Geometry::IndexsContainer intersect_shapes(const std::vector<Geometry::Shape<F>>
 {
     Geometry::OctoTree<F> octo_tree(shapes.cbegin(), shapes.cend());
     const auto& indexs = octo_tree.find_all_intersections();
-    
     return indexs;
 }
 } // namespace Task

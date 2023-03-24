@@ -167,8 +167,10 @@ private:
 
     static size_type calculate_depth(size_type num_of_shapes)
     {
+        if (num_of_shapes == 0)
+            return 0;
         constexpr size_type MAX_SIZE = 6;
-        return std::min(static_cast<size_type>(log2(static_cast<double>(num_of_shapes)) / 3 + 1), MAX_SIZE);
+        return std::min(static_cast<size_type>(log2(static_cast<double>(num_of_shapes)) / 3.0 + 1.0), MAX_SIZE);
     }
 
 public:
@@ -182,8 +184,8 @@ public:
     }
 
 private:
-    template<std::forward_iterator FwdIt>
-    void insert(FwdIt first, FwdIt last)
+    template<std::input_iterator InpIt>
+    void insert(InpIt first, InpIt last)
     {
         ShapeIndT index = 0;
         while (first != last)

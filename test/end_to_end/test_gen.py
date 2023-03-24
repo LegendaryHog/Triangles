@@ -73,9 +73,9 @@ def generate_shapes():
     list_of_points = []
     for _ in range(num_of_shapes):
         shape_type = rand.randint(0, 10)
-        if shape_type in range(0,5):
+        if shape_type in range(0,7):
             list_of_shapes.append(generate_triangle(list_of_points))
-        elif shape_type in range(6, 10):
+        elif shape_type in range(8, 9):
             list_of_shapes.append(generate_segment(list_of_points))
         else:
             list_of_shapes.append(generate_point(list_of_points))

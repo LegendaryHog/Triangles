@@ -2,7 +2,7 @@
 
 #include <variant>
 #include <vector>
-#include <unordered_set>
+#include <set>
 
 #include "point.hpp"
 #include "segment.hpp"
@@ -18,7 +18,7 @@ using Shape = std::variant<Geometry::Point<F>, Geometry::Segment<F>, Geometry::T
 
 using ShapeIndT = std::size_t;
 
-using IndexsContainer = std::unordered_set<ShapeIndT>;
+using IndexsContainer = std::set<ShapeIndT>;
 
 template<std::floating_point Float>
 std::ostream& operator<<(std::ostream& out, const Shape<Float>& shape)

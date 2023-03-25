@@ -47,10 +47,10 @@ cmake --build build/
 ```bash
 cd test/end_to_end
 chmod "+x" test_gen.py
-./test_gen.py [number of shapes] [characteristic size] [side of cubic space] [name of test] [answer gen=--answer]
+./test_gen.py [number of shapes] [characteristic size] [side of cubic space] [name of test] [answer genneration flag=--answer]
 ```
 
-If the last argument (answer gen) equals to --no-answer, than answer will not generated, it will boost generating of tests
+If the last argument (answer generation flag) equals to --no-answer, than answer will not generated, it will boost generating of tests
 
 ## Test correctness of work
 ```bash

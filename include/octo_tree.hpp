@@ -228,7 +228,7 @@ private:
             node->bounds_.push_back(bound);
     }
 
-    void recursive_intersection(node_ptr node, IndexsContainer& indexs) const
+    void recursive_intersection(node_ptr node, IndexesContainer& indexes) const
     {
         static std::vector<node_ptr> ancestors {};
 
@@ -238,21 +238,21 @@ private:
             for (const auto& bound_a: ancestor->bounds_)
                 for (const auto& bound_b: node->bounds_)
                     if (bound_a.shape_index() != bound_b.shape_index() && are_intersecting(bound_a, bound_b))
-                        indexs.insert({bound_a.shape_index(), bound_b.shape_index()});
+                        indexes.insert({bound_a.shape_index(), bound_b.shape_index()});
 
         if (!node->childless())
             for (auto child: node->children_)
-                recursive_intersection(child, indexs);
+                recursive_intersection(child, indexes);
 
         ancestors.pop_back();
     }
 
 public:
-    IndexsContainer find_all_intersections() const
+    IndexesContainer find_all_intersections() const
     {
-        IndexsContainer indexs {};
-        recursive_intersection(root_, indexs);
-        return indexs;
+        IndexesContainer indexes {};
+        recursive_intersection(root_, indexes);
+        return indexes;
     }
 
     void debug_graph_dump(const std::string& filename) const
